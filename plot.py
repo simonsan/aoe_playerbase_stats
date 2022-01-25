@@ -35,16 +35,16 @@ LOGGER.info("Data file opened.")
 def transform(input_data):
     dates = []
     aoe2_rm = []
-    aoe2_trm = []
+    aoe2_team_rm = []
     aoe2_ew = []
-    aoe2_tew = []
-    aoe2_ur = []
+    aoe2_team_ew = []
+    aoe2_unranked = []
 
-    aoe4_cst = []
-    aoe4_1v1 = []
-    aoe4_2v2 = []
-    aoe4_3v3 = []
-    aoe4_4v4 = []
+    aoe4_custom = []
+    aoe4_qm_1v1 = []
+    aoe4_qm_2v2 = []
+    aoe4_qm_3v3 = []
+    aoe4_qm_4v4 = []
 
     for entry in input_data:
         if DEBUG_YAML:
@@ -54,47 +54,47 @@ def transform(input_data):
         aoe2_rm.append(entry["aoe2"]["rm"]) if entry["aoe2"][
             "rm"
         ] is not None else aoe2_rm.append(float("nan"))
-        aoe2_trm.append(entry["aoe2"]["team_rm"]) if entry["aoe2"][
+        aoe2_team_rm.append(entry["aoe2"]["team_rm"]) if entry["aoe2"][
             "team_rm"
-        ] is not None else aoe2_trm.append(float("nan"))
+        ] is not None else aoe2_team_rm.append(float("nan"))
         aoe2_ew.append(entry["aoe2"]["ew"]) if entry["aoe2"][
             "ew"
         ] is not None else aoe2_ew.append(float("nan"))
-        aoe2_tew.append(entry["aoe2"]["team_ew"]) if entry["aoe2"][
+        aoe2_team_ew.append(entry["aoe2"]["team_ew"]) if entry["aoe2"][
             "team_ew"
-        ] is not None else aoe2_tew.append(float("nan"))
-        aoe2_ur.append(entry["aoe2"]["unranked"]) if entry["aoe2"][
+        ] is not None else aoe2_team_ew.append(float("nan"))
+        aoe2_unranked.append(entry["aoe2"]["unranked"]) if entry["aoe2"][
             "unranked"
-        ] is not None else aoe2_ur.append(float("nan"))
-        aoe4_cst.append(entry["aoe4"]["custom"]) if entry["aoe4"][
+        ] is not None else aoe2_unranked.append(float("nan"))
+        aoe4_custom.append(entry["aoe4"]["custom"]) if entry["aoe4"][
             "custom"
-        ] is not None else aoe4_cst.append(float("nan"))
-        aoe4_1v1.append(entry["aoe4"]["qm_1v1"]) if entry["aoe4"][
+        ] is not None else aoe4_custom.append(float("nan"))
+        aoe4_qm_1v1.append(entry["aoe4"]["qm_1v1"]) if entry["aoe4"][
             "qm_1v1"
-        ] is not None else aoe4_1v1.append(float("nan"))
-        aoe4_2v2.append(entry["aoe4"]["qm_2v2"]) if entry["aoe4"][
+        ] is not None else aoe4_qm_1v1.append(float("nan"))
+        aoe4_qm_2v2.append(entry["aoe4"]["qm_2v2"]) if entry["aoe4"][
             "qm_2v2"
-        ] is not None else aoe4_2v2.append(float("nan"))
-        aoe4_3v3.append(entry["aoe4"]["qm_3v3"]) if entry["aoe4"][
+        ] is not None else aoe4_qm_2v2.append(float("nan"))
+        aoe4_qm_3v3.append(entry["aoe4"]["qm_3v3"]) if entry["aoe4"][
             "qm_3v3"
-        ] is not None else aoe4_3v3.append(float("nan"))
-        aoe4_4v4.append(entry["aoe4"]["qm_4v4"]) if entry["aoe4"][
+        ] is not None else aoe4_qm_3v3.append(float("nan"))
+        aoe4_qm_4v4.append(entry["aoe4"]["qm_4v4"]) if entry["aoe4"][
             "qm_4v4"
-        ] is not None else aoe4_4v4.append(float("nan"))
+        ] is not None else aoe4_qm_4v4.append(float("nan"))
 
     # create dict as basis for ColumnDataSource
     data = {
         "dates": dates,
         "aoe2_rm": aoe2_rm,
-        "aoe2_trm": aoe2_trm,
+        "aoe2_team_rm": aoe2_team_rm,
         "aoe2_ew": aoe2_ew,
-        "aoe2_tew": aoe2_tew,
-        "aoe2_ur": aoe2_ur,
-        "aoe4_cst": aoe4_cst,
-        "aoe4_1v1": aoe4_1v1,
-        "aoe4_2v2": aoe4_2v2,
-        "aoe4_3v3": aoe4_3v3,
-        "aoe4_4v4": aoe4_4v4,
+        "aoe2_team_ew": aoe2_team_ew,
+        "aoe2_unranked": aoe2_unranked,
+        "aoe4_custom": aoe4_custom,
+        "aoe4_qm_1v1": aoe4_qm_1v1,
+        "aoe4_qm_2v2": aoe4_qm_2v2,
+        "aoe4_qm_3v3": aoe4_qm_3v3,
+        "aoe4_qm_4v4": aoe4_qm_4v4,
     }
 
     if DEBUG_PLOT:
