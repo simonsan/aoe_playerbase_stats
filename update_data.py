@@ -27,6 +27,7 @@ data_entry = {
 
 # Get data from the server
 for leaderboard in leaderboard_settings:
+    # We have time, we don't need async
     req = requests.get(f"{leaderboard.url}")
     req = req.json()
 
