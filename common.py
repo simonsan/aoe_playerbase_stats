@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-DATA_FILE = "./data/aoe-leaderboards.yaml"
+DATA_FILE = "./data/leaderboard_data.json"
 
 # Settings and descriptions for plotting
 LeaderboardSetting = namedtuple(
@@ -8,57 +8,57 @@ LeaderboardSetting = namedtuple(
 )
 leaderboard_settings = [
     LeaderboardSetting(
-        "aoe2", "rm", "AoE2 RM", "https://aoe2.net/#aoe2de-leaderboard-rm-1v1"
+        "aoe2", "rm", "AoE2 RM", "https://aoe2.net/leaderboard/aoe2de/rm-1v1"
     ),
     LeaderboardSetting(
         "aoe2",
-        "trm",
+        "team_rm",
         "AoE2 Team-RM",
-        "https://aoe2.net/#aoe2de-leaderboard-rm-team",
+        "https://aoe2.net/leaderboard/aoe2de/rm-team",
     ),
     LeaderboardSetting(
-        "aoe2", "ew", "AoE2 EW", "https://aoe2.net/#aoe2de-leaderboard-ew-1v1"
+        "aoe2", "ew", "AoE2 EW", "https://aoe2.net/leaderboard/aoe2de/ew-1v1"
     ),
     LeaderboardSetting(
         "aoe2",
-        "tew",
+        "team_ew",
         "AoE2 Team-EW",
-        "https://aoe2.net/#aoe2de-leaderboard-ew-team",
+        "https://aoe2.net/leaderboard/aoe2de/ew-team",
     ),
     LeaderboardSetting(
         "aoe2",
-        "ur",
+        "unranked",
         "AoE2 Unranked",
-        "https://aoe2.net/#aoe2de-leaderboard-unranked",
+        "https://aoe2.net/leaderboard/aoe2de/unranked",
     ),
     LeaderboardSetting(
         "aoe4",
-        "cst",
+        "custom",
         "AoE4 Custom",
-        "https://aoeiv.net/#aoe4-leaderboard-custom",
+        "https://aoeiv.net/leaderboard/aoe4/custom",
     ),
     LeaderboardSetting(
         "aoe4",
-        "1v1",
+        "qm_1v1",
         "AoE4 QM-1v1",
-        "https://aoeiv.net/#aoe4-leaderboard-qm-1v1",
+        "https://aoeiv.net/leaderboard/aoe4/qm-1v1",
     ),
     LeaderboardSetting(
         "aoe4",
-        "2v2",
+        "qm_2v2",
         "AoE4 QM-2v2",
-        "https://aoeiv.net/#aoe4-leaderboard-qm-2v2",
+        "https://aoeiv.net/leaderboard/aoe4/qm-2v2",
     ),
     LeaderboardSetting(
         "aoe4",
-        "3v3",
+        "qm_3v3",
         "AoE4 QM-3v3",
-        "https://aoeiv.net/#aoe4-leaderboard-qm-3v3",
+        "https://aoeiv.net/leaderboard/aoe4/qm-3v3",
     ),
     LeaderboardSetting(
         "aoe4",
-        "4v4",
+        "qm_4v4",
         "AoE4 QM-4v4",
-        "https://aoeiv.net/#aoe4-leaderboard-qm-4v4",
+        "https://aoeiv.net/leaderboard/aoe4/qm-4v4",
     ),
 ]

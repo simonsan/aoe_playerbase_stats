@@ -10,6 +10,6 @@ setup(
     package_data={"compare_leaderboards": ["data/*"]},
     install_requires=[
         "bokeh>=2.4.2",
-        "ruamel.yaml>=0.16.12",
+        "requests>=2.27.1",
     ],
 )
