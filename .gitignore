@@ -1,3 +1,5 @@
 /.vscode
 compare_leaderboards.egg-info
 /build
+/web
+/__pycache__
