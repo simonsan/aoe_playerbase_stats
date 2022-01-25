@@ -1,5 +1,5 @@
 import logging
-import sys
+import json
 
 # itertools handles the cycling through palette colours
 import itertools
@@ -8,8 +8,6 @@ import itertools
 from common import DATA_FILE, leaderboard_settings
 
 # Extern
-from ruamel.yaml import YAML
-
 # Bokeh
 from bokeh.layouts import layout
 from bokeh.plotting import figure, save, output_file
@@ -26,10 +24,9 @@ curdoc().theme = "dark_minimal"
 
 # Main
 LOGGER.info("Opening data file ...")
-yaml = YAML()
 with open(DATA_FILE, "r") as handle:
-    yaml_data = yaml.load(handle)
-LOGGER.info("Data file opened.")
+    leaderboard_data = json.load(handle)
+LOGGER.info("Data file loaded.")
 
 
 def transform(input_data):
@@ -48,7 +45,7 @@ def transform(input_data):
 
     for entry in input_data:
         if DEBUG_YAML:
-            yaml.dump(entry, sys.stdout)
+            print(json.dumps(entry))
 
         dates.append(entry["date"])
         aoe2_rm.append(entry["aoe2"]["rm"]) if entry["aoe2"][
@@ -103,7 +100,7 @@ def transform(input_data):
     return data
 
 
-data = transform(yaml_data)
+data = transform(leaderboard_data)
 
 source = ColumnDataSource(data=data)
 
