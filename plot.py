@@ -1,10 +1,11 @@
 import logging
 import sys
 
-from collections import namedtuple
-
 # itertools handles the cycling through palette colours
 import itertools
+
+# Intern
+from common import DATA_FILE, leaderboard_settings
 
 # Extern
 from ruamel.yaml import YAML
@@ -18,26 +19,10 @@ from bokeh.palettes import Dark2_5 as palette
 
 DEBUG_YAML = False
 DEBUG_PLOT = True
-DATA_FILE = "./data/aoe-leaderboards.yaml"
 LOGGER = logging.getLogger(__name__)
 output_file("./web/index.html")
 
 curdoc().theme = "dark_minimal"
-
-# Settings and descriptions for plotting
-LineSetting = namedtuple("LineSetting", "game leaderboard legend")
-line_settings = [
-    LineSetting("aoe2", "rm", "AoE2 RM"),
-    LineSetting("aoe2", "trm", "AoE2 Team-RM"),
-    LineSetting("aoe2", "ew", "AoE2 EW"),
-    LineSetting("aoe2", "tew", "AoE2 Team-EW"),
-    LineSetting("aoe2", "ur", "AoE2 Unranked"),
-    LineSetting("aoe4", "cst", "AoE4 Custom"),
-    LineSetting("aoe4", "1v1", "AoE4 QM-1v1"),
-    LineSetting("aoe4", "2v2", "AoE4 QM-2v2"),
-    LineSetting("aoe4", "3v3", "AoE4 QM-3v3"),
-    LineSetting("aoe4", "4v4", "AoE4 QM-4v4"),
-]
 
 # Main
 LOGGER.info("Opening data file ...")
@@ -149,7 +134,7 @@ plot.add_tools(
 )
 
 # add multiple renderers
-for line_setting in line_settings:
+for line_setting in leaderboard_settings:
     plot.line(
         x="dates",
         y=f"{line_setting.game}_{line_setting.leaderboard}",
