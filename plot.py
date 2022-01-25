@@ -16,7 +16,7 @@ from bokeh.io import curdoc
 from bokeh.palettes import Dark2_5 as palette
 
 DEBUG_YAML = False
-DEBUG_PLOT = True
+DEBUG_PLOT = False
 LOGGER = logging.getLogger(__name__)
 output_file("./web/index.html")
 
