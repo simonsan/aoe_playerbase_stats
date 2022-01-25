@@ -113,7 +113,7 @@ plot = figure(
     title="Player amount on AoE2:DE and AoE4 leaderboards plotted over time",
     x_axis_label="Date",
     y_axis_label="Amount of players on the leaderboard",
-    width=1000,
+    width=1200,
     height=700,
     sizing_mode="stretch_width",
     toolbar_location="below",
@@ -161,7 +161,7 @@ plot.yaxis.bounds = (0, 300000)
 plot.legend.click_policy = "mute"
 
 # move legend location
-plot.legend.location = "bottom_right"
+plot.legend.location = "top_left"
 plot.legend.title = "Games"
 
 # disable scientific format of y-axis
