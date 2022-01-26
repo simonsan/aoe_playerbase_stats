@@ -24,6 +24,12 @@ if DEBUG:
 elif not DEBUG:
     logging.basicConfig(level=logging.INFO)
 
+for leaderboard_setting in leaderboard_settings:
+    for entry in main_data[leaderboard_setting.game][
+        leaderboard_setting.leaderboard
+    ]:
+        print(len(entry))
+
 # What can be derived:
 # - we can make the players unique on each leaderboard
 #   and count them -> same as now, but unique
