@@ -112,7 +112,13 @@ async def main():
             api_data = await asyncio.gather(*tasks)
 
         for ((game, leaderboard), data) in api_data:
-            main_data[game][leaderboard] = data
+
+            # Flatten
+            temp_collector = []
+            for part in data:
+                temp_collector.append(part)
+
+            main_data[game][leaderboard] = temp_collector
 
         # Write data back to data file
         if SAVE_CACHE:
