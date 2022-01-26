@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: pip install -e .
 
-      - name: Build plot
+      - name: Fetch data and update data file
         run: python update_data.py
 
       - name: Update repository with new data
