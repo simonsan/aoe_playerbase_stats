@@ -13,7 +13,7 @@ from bokeh.layouts import layout
 from bokeh.plotting import figure, save, output_file
 from bokeh.models import ColumnDataSource, RangeSlider, HoverTool, Range1d
 from bokeh.io import curdoc
-from bokeh.palettes import Dark2_5 as palette
+from bokeh.palettes import Category20_20 as palette
 
 DEBUG_YAML = False
 DEBUG_PLOT = False
