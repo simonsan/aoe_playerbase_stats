@@ -138,7 +138,7 @@ for line_setting in leaderboard_settings:
         source=source,
         legend_label=f"{line_setting.legend}",
         name=f"{line_setting.legend}",
-        line_width=2,
+        line_width=3,
         color=next(colors),
         alpha=1.0,
     )
