@@ -201,7 +201,7 @@ for line_setting in leaderboard_settings:
             alpha=1.0,
         )
     elif line_setting.game == "aoe3":
-        plot.inverted_triangle(
+        plot.square(
             x="dates",
             y=f"{line_setting.game}_{line_setting.leaderboard}",
             source=source,
@@ -213,7 +213,7 @@ for line_setting in leaderboard_settings:
             alpha=1.0,
         )
     elif line_setting.game == "aoe4":
-        plot.triangle(
+        plot.hex_dot(
             x="dates",
             y=f"{line_setting.game}_{line_setting.leaderboard}",
             source=source,
