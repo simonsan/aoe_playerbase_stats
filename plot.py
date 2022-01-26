@@ -1,5 +1,6 @@
 import logging
 import json
+import datetime
 
 # itertools handles the cycling through palette colours
 import itertools
@@ -11,7 +12,13 @@ from common import DATA_FILE, leaderboard_settings
 # Bokeh
 from bokeh.layouts import layout
 from bokeh.plotting import figure, save, output_file
-from bokeh.models import ColumnDataSource, RangeSlider, HoverTool, Range1d
+from bokeh.models import (
+    ColumnDataSource,
+    RangeSlider,
+    HoverTool,
+    Range1d,
+    DatetimeTickFormatter,
+)
 from bokeh.io import curdoc
 from bokeh.palettes import Category20_20 as palette
 
@@ -58,7 +65,7 @@ def transform(input_data):
             print(json.dumps(entry))
 
         # Dates
-        dates.append(entry["date"])
+        dates.append(datetime.datetime.fromisoformat(entry["date"]))
 
         # AoE2:DE
         aoe2_rm.append(entry["aoe2"]["rm"]) if entry["aoe2"][
@@ -145,7 +152,8 @@ source = ColumnDataSource(data=data)
 colors = itertools.cycle(palette)
 
 plot = figure(
-    x_range=data["dates"],
+    # x_range=data["dates"],
+    x_axis_type="datetime",
     y_range=Range1d(0, 250000),
     title="Player amount on AoE2:DE, AoE3:DE and AoE4 leaderboards"
     " plotted over time",
@@ -219,6 +227,14 @@ for line_setting in leaderboard_settings:
 
 # Set y-axis bounds
 plot.yaxis.bounds = (0, 300000)
+
+# Set datetime formatter
+plot.xaxis.formatter = DatetimeTickFormatter(
+    hours=["%d-%m-%Y"],
+    days=["%d-%m-%Y"],
+    months=["%d-%m-%Y"],
+    years=["%d-%m-%Y"],
+)
 
 # Legend customization
 # make graphs hideble
