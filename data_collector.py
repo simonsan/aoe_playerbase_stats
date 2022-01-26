@@ -122,13 +122,3 @@ async def main():
 
 
 asyncio.get_event_loop().run_until_complete(main())
-
-# What can be derived:
-# - we can make the players unique on each leaderboard
-#   and count them -> same as now, but unique
-# - we can count players within a certain amount of activity,
-#   e.g. within last day, last 3 days, last 7 days, last 14 days
-# - we can join all the unique players across the leaderboards
-#   and create overall game activity
-# - we can join all the unique players across the games and create
-#   overall franchise (AoE2DE, AoE3DE, AoE4) multiplayer activity
