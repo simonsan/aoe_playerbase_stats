@@ -4,6 +4,7 @@ import os
 import json
 import asyncio
 import time
+import sys
 
 # Intern
 from common import leaderboard_settings
@@ -21,8 +22,6 @@ CACHE = True
 # Check for cache hit
 if os.path.exists("./data_temp/cache.json"):
     CACHE_HIT = True
-    with open("./data_temp/cache.json", encoding="utf8", mode="r") as handle:
-        main_data = json.load(handle)
 else:
     CACHE_HIT = False
     if CACHE:
@@ -119,6 +118,10 @@ async def main():
         if SAVE_CACHE:
             with open("./data_temp/cache.json", "w") as handle:
                 json.dump(main_data, handle, indent=4)
+    else:
+        print("We're done, it's cached. ;)")
+
+    sys.exit(0)
 
 
 asyncio.get_event_loop().run_until_complete(main())
