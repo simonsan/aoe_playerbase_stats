@@ -168,8 +168,8 @@ plot = figure(
 plot.add_tools(
     HoverTool(
         tooltips=[
-            ("Game", "$name"),
-            ("Players", "$y{0,0}"),
+            ("Leaderboard", "$name"),
+            ("Accounts", "$y{0,0}"),
             ("Date", "@dates{%d-%m-%Y}"),
         ],
         formatters={
