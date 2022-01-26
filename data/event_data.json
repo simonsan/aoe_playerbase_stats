@@ -5,5 +5,12 @@
         "game": "aoe4",
         "type": "patch",
         "desc": "7274"
+    },
+    {
+        "timespan": false,
+        "date": "2022-01-30",
+        "game": "aoe2",
+        "type": "dlc",
+        "desc": "test"
     }
 ]
