@@ -1,0 +1,16 @@
+pre_bump_hooks = []
+post_bump_hooks = []
+
+[commit_types]
+
+[changelog]
+path = "CHANGELOG.md"
+template = "remote"
+remote = "github.com"
+repository = "leaderboard_comparison"
+owner = "simonsan"
+authors = [
+  { username = "simonsan", signature = "Simon San"}
+]
+
+[bump_profiles]
