@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="compare_leaderboards",
-    version="0.1.0",
+    version="0.2.0",
     description="Player amount on AoE2:DE and AoE4 leaderboards plotted over"
     " time",
     url="https://github.com/simonsan/leaderboard_comparison",
