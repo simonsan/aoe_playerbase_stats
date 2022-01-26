@@ -10,6 +10,15 @@ LOGGER = logging.getLogger(__name__)
 
 DEBUG = True
 
+
+def unpack_list(_list):
+    if len(_list) == 0:
+        return _list
+    if isinstance(_list[0], list):
+        return unpack_list(_list[0]) + unpack_list(_list[1:])
+    return _list[:1] + unpack_list(_list[1:])
+
+
 # Check for cache hit
 if os.path.exists("./data_temp/cache.json"):
     CACHE_HIT = True
@@ -25,10 +34,8 @@ elif not DEBUG:
     logging.basicConfig(level=logging.INFO)
 
 for leaderboard_setting in leaderboard_settings:
-    for entry in main_data[leaderboard_setting.game][
-        leaderboard_setting.leaderboard
-    ]:
-        print(len(entry))
+    # TODO: Temporary Flatten
+    print(len(unpacked))
 
 # What can be derived:
 # - we can make the players unique on each leaderboard

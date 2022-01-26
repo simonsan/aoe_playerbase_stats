@@ -113,7 +113,7 @@ async def main():
 
         for ((game, leaderboard), data) in api_data:
 
-            # Flatten
+            # TODO: Check if flatten works
             temp_collector = []
             for part in data:
                 temp_collector.append(part)
