@@ -168,10 +168,13 @@ plot = figure(
 plot.add_tools(
     HoverTool(
         tooltips=[
-            ("Game:", "$name"),
-            ("Players:", "$y{0,0}"),
-            ("Date:", "@dates"),
+            ("Game", "$name"),
+            ("Players", "$y{0,0}"),
+            ("Date", "@dates{%d-%m-%Y}"),
         ],
+        formatters={
+            "@dates": "datetime",
+        },
         mode="mouse",
     )
 )
