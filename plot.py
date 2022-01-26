@@ -30,13 +30,23 @@ LOGGER.info("Data file loaded.")
 
 
 def transform(input_data):
+    # Dates
     dates = []
+
+    # AoE2:DE
     aoe2_rm = []
     aoe2_team_rm = []
     aoe2_ew = []
     aoe2_team_ew = []
     aoe2_unranked = []
 
+    # AoE3:DE
+    aoe3_supremacy_1v1 = []
+    aoe3_supremacy_team = []
+    aoe3_treaty = []
+    aoe3_deathmatch = []
+
+    # AoE4:DE
     aoe4_custom = []
     aoe4_qm_1v1 = []
     aoe4_qm_2v2 = []
@@ -47,7 +57,10 @@ def transform(input_data):
         if DEBUG_YAML:
             print(json.dumps(entry))
 
+        # Dates
         dates.append(entry["date"])
+
+        # AoE2:DE
         aoe2_rm.append(entry["aoe2"]["rm"]) if entry["aoe2"][
             "rm"
         ] is not None else aoe2_rm.append(float("nan"))
@@ -63,6 +76,26 @@ def transform(input_data):
         aoe2_unranked.append(entry["aoe2"]["unranked"]) if entry["aoe2"][
             "unranked"
         ] is not None else aoe2_unranked.append(float("nan"))
+
+        # AoE3:DE
+        aoe3_supremacy_1v1.append(entry["aoe3"]["supremacy_1v1"]) if entry[
+            "aoe3"
+        ]["supremacy_1v1"] is not None else aoe3_supremacy_1v1.append(
+            float("nan")
+        )
+        aoe3_supremacy_team.append(entry["aoe3"]["supremacy_team"]) if entry[
+            "aoe3"
+        ]["supremacy_team"] is not None else aoe3_supremacy_team.append(
+            float("nan")
+        )
+        aoe3_treaty.append(entry["aoe3"]["treaty"]) if entry["aoe3"][
+            "treaty"
+        ] is not None else aoe3_treaty.append(float("nan"))
+        aoe3_deathmatch.append(entry["aoe3"]["deathmatch"]) if entry["aoe3"][
+            "deathmatch"
+        ] is not None else aoe3_deathmatch.append(float("nan"))
+
+        # AoE4
         aoe4_custom.append(entry["aoe4"]["custom"]) if entry["aoe4"][
             "custom"
         ] is not None else aoe4_custom.append(float("nan"))
@@ -87,6 +120,10 @@ def transform(input_data):
         "aoe2_ew": aoe2_ew,
         "aoe2_team_ew": aoe2_team_ew,
         "aoe2_unranked": aoe2_unranked,
+        "aoe3_supremacy_1v1": aoe3_supremacy_1v1,
+        "aoe3_supremacy_team": aoe3_supremacy_team,
+        "aoe3_treaty": aoe3_treaty,
+        "aoe3_deathmatch": aoe3_deathmatch,
         "aoe4_custom": aoe4_custom,
         "aoe4_qm_1v1": aoe4_qm_1v1,
         "aoe4_qm_2v2": aoe4_qm_2v2,
@@ -110,7 +147,8 @@ colors = itertools.cycle(palette)
 plot = figure(
     x_range=data["dates"],
     y_range=Range1d(0, 250000),
-    title="Player amount on AoE2:DE and AoE4 leaderboards plotted over time",
+    title="Player amount on AoE2:DE, AoE3:DE and AoE4 leaderboards"
+    " plotted over time",
     x_axis_label="Date",
     y_axis_label="Amount of players on the leaderboard",
     width=1200,
@@ -155,7 +193,7 @@ for line_setting in leaderboard_settings:
             alpha=1.0,
         )
     elif line_setting.game == "aoe3":
-        plot.diamond_cross(
+        plot.inverted_triangle(
             x="dates",
             y=f"{line_setting.game}_{line_setting.leaderboard}",
             source=source,

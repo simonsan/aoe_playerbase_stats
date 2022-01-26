@@ -8,28 +8,58 @@ LeaderboardSetting = namedtuple(
 )
 leaderboard_settings = [
     LeaderboardSetting(
-        "aoe2", "rm", "AoE2 RM", "https://aoe2.net/leaderboard/aoe2de/rm-1v1"
+        "aoe2",
+        "rm",
+        "AoE2:DE RM",
+        "https://aoe2.net/leaderboard/aoe2de/rm-1v1",
     ),
     LeaderboardSetting(
         "aoe2",
         "team_rm",
-        "AoE2 Team-RM",
+        "AoE2:DE Team-RM",
         "https://aoe2.net/leaderboard/aoe2de/rm-team",
     ),
     LeaderboardSetting(
-        "aoe2", "ew", "AoE2 EW", "https://aoe2.net/leaderboard/aoe2de/ew-1v1"
+        "aoe2",
+        "ew",
+        "AoE2:DE EW",
+        "https://aoe2.net/leaderboard/aoe2de/ew-1v1",
     ),
     LeaderboardSetting(
         "aoe2",
         "team_ew",
-        "AoE2 Team-EW",
+        "AoE2:DE Team-EW",
         "https://aoe2.net/leaderboard/aoe2de/ew-team",
     ),
     LeaderboardSetting(
         "aoe2",
         "unranked",
-        "AoE2 Unranked",
+        "AoE2:DE Unranked",
         "https://aoe2.net/leaderboard/aoe2de/unranked",
+    ),
+    LeaderboardSetting(
+        "aoe3",
+        "supremacy_1v1",
+        "AoE3:DE Supremacy 1v1",
+        "https://aoe3.net/leaderboard/aoe3de/supremacy-1v1",
+    ),
+    LeaderboardSetting(
+        "aoe3",
+        "supremacy_team",
+        "AoE3:DE Supremacy Team",
+        "https://aoe3.net/leaderboard/aoe3de/supremacy-team",
+    ),
+    LeaderboardSetting(
+        "aoe3",
+        "treaty",
+        "AoE3:DE Treaty",
+        "https://aoe3.net/leaderboard/aoe3de/treaty",
+    ),
+    LeaderboardSetting(
+        "aoe3",
+        "deathmatch",
+        "AoE3:DE Deathmatch",
+        "https://aoe3.net/leaderboard/aoe3de/deathmatch",
     ),
     LeaderboardSetting(
         "aoe4",

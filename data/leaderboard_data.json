@@ -8,6 +8,12 @@
             "team_ew": 2962,
             "unranked": 183402
         },
+        "aoe3": {
+            "supremacy_1v1": null,
+            "supremacy_team": null,
+            "treaty": null,
+            "deathmatch": null
+        },
         "aoe4": {
             "custom": 157350,
             "qm_1v1": 45375,
@@ -24,6 +30,12 @@
             "ew": null,
             "team_ew": null,
             "unranked": 179912
+        },
+        "aoe3": {
+            "supremacy_1v1": null,
+            "supremacy_team": null,
+            "treaty": null,
+            "deathmatch": null
         },
         "aoe4": {
             "custom": 177612,
@@ -42,6 +54,12 @@
             "team_ew": null,
             "unranked": 178383
         },
+        "aoe3": {
+            "supremacy_1v1": null,
+            "supremacy_team": null,
+            "treaty": null,
+            "deathmatch": null
+        },
         "aoe4": {
             "custom": 143149,
             "qm_1v1": 49487,
@@ -58,6 +76,12 @@
             "ew": null,
             "team_ew": null,
             "unranked": 172525
+        },
+        "aoe3": {
+            "supremacy_1v1": null,
+            "supremacy_team": null,
+            "treaty": null,
+            "deathmatch": null
         },
         "aoe4": {
             "custom": 139343,
@@ -76,6 +100,12 @@
             "team_ew": 2466,
             "unranked": 172525
         },
+        "aoe3": {
+            "supremacy_1v1": null,
+            "supremacy_team": null,
+            "treaty": null,
+            "deathmatch": null
+        },
         "aoe4": {
             "custom": 135450,
             "qm_1v1": 45052,
@@ -87,18 +117,24 @@
     {
         "date": "26/01/2022",
         "aoe2": {
-            "rm": 39727,
-            "team_rm": 64662,
-            "ew": 1824,
-            "team_ew": 2458,
+            "rm": 39733,
+            "team_rm": 64643,
+            "ew": 1816,
+            "team_ew": 2457,
             "unranked": 172525
         },
+        "aoe3": {
+            "supremacy_1v1": 2952,
+            "supremacy_team": 2877,
+            "treaty": 599,
+            "deathmatch": 22
+        },
         "aoe4": {
-            "custom": 134929,
-            "qm_1v1": 44945,
-            "qm_2v2": 58445,
-            "qm_3v3": 53867,
-            "qm_4v4": 45418
+            "custom": 134613,
+            "qm_1v1": 44860,
+            "qm_2v2": 58275,
+            "qm_3v3": 53771,
+            "qm_4v4": 45370
         }
     }
 ]

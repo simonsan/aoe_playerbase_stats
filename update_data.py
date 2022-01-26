@@ -34,6 +34,7 @@ async def main():
         "date": f"{now.strftime('%d')}/{now.strftime('%m')}/"
         f"{now.strftime('%Y')}",
         "aoe2": {},
+        "aoe3": {},
         "aoe4": {},
     }
 
