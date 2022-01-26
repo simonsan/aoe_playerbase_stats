@@ -2,4 +2,4 @@
 
 ## Preview
 
-![Plot](./static/plot.png)
+[![Plot](./static/plot.png)](https://simonsan.github.io/leaderboard_comparison/)
