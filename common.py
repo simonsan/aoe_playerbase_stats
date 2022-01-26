@@ -92,3 +92,24 @@ leaderboard_settings = [
         "https://aoeiv.net/leaderboard/aoe4/qm-4v4",
     ),
 ]
+
+
+# Settings and descriptionsof patches for plotting
+PatchSetting = namedtuple("PatchSetting", "game legend rss")
+patch_settings = [
+    PatchSetting(
+        "aoe2",
+        "AoE2:DE Patch",
+        "https://steamdb.info/api/PatchnotesRSS/?appid=813780",
+    ),
+    PatchSetting(
+        "aoe3",
+        "AoE3:DE Patch",
+        "https://steamdb.info/api/PatchnotesRSS/?appid=933110",
+    ),
+    PatchSetting(
+        "aoe4",
+        "AoE4 Patch",
+        "https://steamdb.info/api/PatchnotesRSS/?appid=1466860",
+    ),
+]
