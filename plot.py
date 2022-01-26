@@ -147,7 +147,7 @@ for line_setting in leaderboard_settings:
         y=f"{line_setting.game}_{line_setting.leaderboard}",
         source=source,
         fill_color="white",
-        size=8,
+        size=11,
         legend_label=f"{line_setting.legend}",
         name=f"{line_setting.legend}",
         alpha=1.0,
