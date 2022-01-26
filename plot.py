@@ -142,16 +142,42 @@ for line_setting in leaderboard_settings:
         color=next(colors),
         alpha=1.0,
     )
-    plot.circle(
-        x="dates",
-        y=f"{line_setting.game}_{line_setting.leaderboard}",
-        source=source,
-        fill_color="white",
-        size=11,
-        legend_label=f"{line_setting.legend}",
-        name=f"{line_setting.legend}",
-        alpha=1.0,
-    )
+    if line_setting.game == "aoe2":
+        plot.circle(
+            x="dates",
+            y=f"{line_setting.game}_{line_setting.leaderboard}",
+            source=source,
+            fill_color="white",
+            size=11,
+            line_color="black",
+            legend_label=f"{line_setting.legend}",
+            name=f"{line_setting.legend}",
+            alpha=1.0,
+        )
+    elif line_setting.game == "aoe3":
+        plot.diamond_cross(
+            x="dates",
+            y=f"{line_setting.game}_{line_setting.leaderboard}",
+            source=source,
+            fill_color="blue",
+            size=13,
+            line_color="black",
+            legend_label=f"{line_setting.legend}",
+            name=f"{line_setting.legend}",
+            alpha=1.0,
+        )
+    elif line_setting.game == "aoe4":
+        plot.triangle(
+            x="dates",
+            y=f"{line_setting.game}_{line_setting.leaderboard}",
+            source=source,
+            fill_color="yellow",
+            size=13,
+            line_color="black",
+            legend_label=f"{line_setting.legend}",
+            name=f"{line_setting.legend}",
+            alpha=1.0,
+        )
 
 # Set y-axis bounds
 plot.yaxis.bounds = (0, 300000)
