@@ -1,3 +1,5 @@
+# flake8: noqa: E501
+
 from collections import namedtuple
 
 DATA_FILE = "./data/leaderboard_data.json"

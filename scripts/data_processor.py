@@ -1,14 +1,14 @@
+# Intern
+from common import leaderboard_settings, CACHE_FILE
+
 import logging
-import datetime
+
+# import datetime
 import os
 import json
 import sys
 
 sys.setrecursionlimit(1800)
-
-# Intern
-from common import leaderboard_settings, CACHE_FILE
-from util import unpack_list
 
 LOGGER = logging.getLogger(__name__)
 
