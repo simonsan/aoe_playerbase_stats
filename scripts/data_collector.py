@@ -9,8 +9,6 @@ import sys
 # Intern
 from common import leaderboard_settings, CACHE_FILE
 
-# from common import DATA_FILE
-
 # Extern
 import aiohttp
 
@@ -97,14 +95,14 @@ async def main():
 
             tasks = []
             # Get data from the server
-            for leaderboard in leaderboard_settings:
+            for game, leaderboard, _, url in leaderboard_settings:
                 tasks.append(
                     asyncio.ensure_future(
                         get_all_player_data_from_leaderboard(
                             session,
-                            leaderboard.url,
-                            leaderboard.game,
-                            leaderboard.leaderboard,
+                            url,
+                            game,
+                            leaderboard,
                         )
                     )
                 )
@@ -112,8 +110,6 @@ async def main():
             api_data = await asyncio.gather(*tasks)
 
         for ((game, leaderboard), data) in api_data:
-
-            # TODO: Check if flatten works
             temp_collector = []
             for part in data:
                 temp_collector.append(part)

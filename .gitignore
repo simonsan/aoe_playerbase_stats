@@ -2,6 +2,6 @@
 compare_leaderboards.egg-info
 /build
 /web/*.html
-scripts/__pycache__/
+scripts/__pycache__
 /data_temp/*.json
-scripts/__pycache__/common.cpython-310.pyc
+*.pyc
