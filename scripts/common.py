@@ -4,6 +4,11 @@ DATA_FILE = "./data/leaderboard_data.json"
 CACHE_FILE = "./data_temp/cache.json"
 PLOT_OUTPUT = "./web/index.html"
 
+AOC_REF_DATA = (
+    "https://raw.githubusercontent.com/SiegeEngineers/"
+    "aoc-reference-data/master/data/auto_generated/players.json"
+)
+
 # Settings and descriptions for plotting
 LeaderboardSetting = namedtuple(
     "LeaderboardSetting", "game leaderboard legend url"

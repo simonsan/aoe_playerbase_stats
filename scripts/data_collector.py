@@ -7,7 +7,7 @@ import time
 import sys
 
 # Intern
-from common import leaderboard_settings, CACHE_FILE
+from common import leaderboard_settings, CACHE_FILE, AOC_REF_DATA
 
 # Extern
 import aiohttp
@@ -32,6 +32,25 @@ elif not DEBUG:
     logging.basicConfig(level=logging.INFO)
 
 
+# Get aoc-ref-data
+async def get_aoc_ref_data(session, url=AOC_REF_DATA):
+    LOGGER.debug("querying aoc_ref_data")
+
+    async with session.get(url) as resp:
+        if resp.status == 200:
+            data = await resp.json(encoding="utf8")
+            LOGGER.debug(f"Data length: {len(data['data'])} of aoc_ref_data")
+            with open("./data_temp/aoc_ref_data.json", "w") as handle:
+                json.dump(data, handle, indent=4)
+        else:
+            LOGGER.error(
+                f"Response status not 'SUCCESS != {resp.status}'"
+                " for aoc_ref_data"
+            )
+            return
+    return (("aoc_ref", None), data)
+
+
 # Get *all* account entries from *all* leaderboards
 async def get_all_player_data_from_leaderboard(
     session, url, game, leaderboard
@@ -41,7 +60,10 @@ async def get_all_player_data_from_leaderboard(
     offset = 0
 
     # This is the allowed maximum by the API
-    length = 10000
+    if game == "aoe2":
+        length = 10000
+    else:
+        length = 1000
 
     collector = []
 
@@ -56,8 +78,10 @@ async def get_all_player_data_from_leaderboard(
             if resp.status == 200:
                 # Deactivate content type check for instable API
                 data = await resp.json(content_type=None, encoding="utf8")
+                LOGGER.debug(f"Data length: {len(data['data'])} of {req_url}")
                 collector.append(data["data"])
             else:
+                LOGGER.error(f"Response status not 'SUCCESS != {resp.status}'")
                 return
 
         if len(data["data"]) < length:
@@ -84,6 +108,7 @@ async def main():
         # Setup basic data layout for leaderboard file
         main_data = {
             "date": today.isoformat(),
+            "aoc_ref": [],
             "aoe2": {},
             "aoe3": {},
             "aoe4": {},
@@ -96,6 +121,7 @@ async def main():
         ) as session:
 
             tasks = []
+
             # Get data from the server
             for game, leaderboard, _, url in leaderboard_settings:
                 tasks.append(
@@ -109,10 +135,15 @@ async def main():
                     )
                 )
 
+            tasks.append(get_aoc_ref_data(session=session))
+
             api_data = await asyncio.gather(*tasks)
 
         for ((game, leaderboard), data) in api_data:
-            main_data[game][leaderboard] = data
+            if leaderboard is not None and game != "aoc_ref":
+                main_data[game][leaderboard] = data
+            elif leaderboard is None and game == "aoc_ref":
+                main_data[game] = data
 
         # Write data back to data file
         if SAVE_CACHE:
