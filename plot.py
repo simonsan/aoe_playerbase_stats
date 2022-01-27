@@ -180,51 +180,51 @@ plot.add_tools(
 )
 
 # add multiple renderers
-for line_setting in leaderboard_settings:
+for game, leaderboard, legend, _ in leaderboard_settings:
     plot.line(
         x="dates",
-        y=f"{line_setting.game}_{line_setting.leaderboard}",
+        y=f"{game}_{leaderboard}",
         source=source,
-        legend_label=f"{line_setting.legend}",
-        name=f"{line_setting.legend}",
+        legend_label=f"{legend}",
+        name=f"{legend}",
         line_width=3,
         color=next(colors),
         alpha=1.0,
     )
-    if line_setting.game == "aoe2":
+    if game == "aoe2":
         plot.circle(
             x="dates",
-            y=f"{line_setting.game}_{line_setting.leaderboard}",
+            y=f"{game}_{leaderboard}",
             source=source,
             fill_color="white",
             size=11,
             line_color="black",
-            legend_label=f"{line_setting.legend}",
-            name=f"{line_setting.legend}",
+            legend_label=f"{legend}",
+            name=f"{legend}",
             alpha=1.0,
         )
-    elif line_setting.game == "aoe3":
+    elif game == "aoe3":
         plot.square(
             x="dates",
-            y=f"{line_setting.game}_{line_setting.leaderboard}",
+            y=f"{game}_{leaderboard}",
             source=source,
             fill_color="blue",
             size=13,
             line_color="black",
-            legend_label=f"{line_setting.legend}",
-            name=f"{line_setting.legend}",
+            legend_label=f"{legend}",
+            name=f"{legend}",
             alpha=1.0,
         )
-    elif line_setting.game == "aoe4":
+    elif game == "aoe4":
         plot.hex_dot(
             x="dates",
-            y=f"{line_setting.game}_{line_setting.leaderboard}",
+            y=f"{game}_{leaderboard}",
             source=source,
             fill_color="yellow",
             size=13,
             line_color="black",
-            legend_label=f"{line_setting.legend}",
-            name=f"{line_setting.legend}",
+            legend_label=f"{legend}",
+            name=f"{legend}",
             alpha=1.0,
         )
 

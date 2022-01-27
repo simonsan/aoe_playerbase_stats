@@ -2,6 +2,9 @@ import logging
 import datetime
 import os
 import json
+import sys
+
+sys.setrecursionlimit(1800)
 
 # Intern
 from common import leaderboard_settings, CACHE_FILE
@@ -26,13 +29,13 @@ elif not DEBUG:
     logging.basicConfig(level=logging.INFO)
 
 
-for leaderboard_setting in leaderboard_settings:
+for game, leaderboard, _, _ in leaderboard_settings:
     temp_flatten = []
     # TODO: Temporary Flatten
-    for entry in main_data[leaderboard_setting.game][
-        leaderboard_setting.leaderboard
-    ]:
-        print(entry)
+    main_data[game][leaderboard]
+
+    print("Hello!")
+
 
 # What can be derived:
 # - we can make the players unique on each leaderboard

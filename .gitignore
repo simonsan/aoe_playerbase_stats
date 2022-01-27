@@ -1,6 +1,7 @@
 /.vscode
 compare_leaderboards.egg-info
 /build
-/web
-/__pycache__
-data_temp/*.json
+/web/*.html
+scripts/__pycache__/
+/data_temp/*.json
+scripts/__pycache__/common.cpython-310.pyc

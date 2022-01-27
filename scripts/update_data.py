@@ -43,21 +43,21 @@ async def main():
 
         tasks = []
         # Get data from the server
-        for leaderboard in leaderboard_settings:
+        for game, leaderboard, _, url in leaderboard_settings:
             tasks.append(
                 asyncio.ensure_future(
                     get_player_amount(
                         session,
-                        leaderboard.url,
-                        leaderboard.game,
-                        leaderboard.leaderboard,
+                        url,
+                        game,
+                        leaderboard,
                     )
                 )
             )
 
         api_data = await asyncio.gather(*tasks)
 
-    for ((game, leaderboard), data) in api_data:
+    for (game, leaderboard), data in api_data:
         data_entry[game][leaderboard] = data
 
     # Append the new data
