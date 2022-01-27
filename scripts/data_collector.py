@@ -3,18 +3,24 @@ import datetime
 import os
 import json
 import asyncio
+
 import time
 import sys
 
 # Intern
-from common import leaderboard_settings, CACHE_FILE, AOC_REF_DATA
+from common import (
+    leaderboard_settings,
+    CACHE_FILE,
+    AOC_REF_DATA,
+    AOC_REF_DATA_FILE,
+)
 
 # Extern
 import aiohttp
 
 LOGGER = logging.getLogger(__name__)
 
-DEBUG = True
+DEBUG = False
 CACHE = True
 
 # Check for cache hit
@@ -38,9 +44,9 @@ async def get_aoc_ref_data(session, url=AOC_REF_DATA):
 
     async with session.get(url) as resp:
         if resp.status == 200:
-            data = await resp.json(encoding="utf8")
-            LOGGER.debug(f"Data length: {len(data['data'])} of aoc_ref_data")
-            with open("./data_temp/aoc_ref_data.json", "w") as handle:
+            data = await resp.json(content_type=None, encoding="utf8")
+            LOGGER.debug(f"Data length: {len(data)} of aoc_ref_data")
+            with open(AOC_REF_DATA_FILE, "w") as handle:
                 json.dump(data, handle, indent=4)
         else:
             LOGGER.error(
@@ -55,8 +61,11 @@ async def get_aoc_ref_data(session, url=AOC_REF_DATA):
 async def get_all_player_data_from_leaderboard(
     session, url, game, leaderboard
 ):
+
+    start_time = time.time()
+
     # Wait seconds between requests
-    secs = 1
+    # secs = 1
     offset = 0
 
     # This is the allowed maximum by the API
@@ -66,20 +75,26 @@ async def get_all_player_data_from_leaderboard(
         length = 1000
 
     collector = []
+    items = 0
 
     while True:
 
-        req_url = f"{url}?start={offset}&length={length}"
+        req_url = f"{url}&start={offset}&length={length}"
 
         LOGGER.debug(f"querying at {game}_{leaderboard} with offset {offset}")
-        LOGGER.debug(f"DEBUG REQUEST: {req_url}")
+        # LOGGER.debug(f"DEBUG REQUEST: {req_url}")
 
         async with session.get(req_url) as resp:
             if resp.status == 200:
                 # Deactivate content type check for instable API
                 data = await resp.json(content_type=None, encoding="utf8")
-                LOGGER.debug(f"Data length: {len(data['data'])} of {req_url}")
-                collector.append(data["data"])
+                data_length = len(data["data"])
+                LOGGER.debug(
+                    f"Data length: {data_length} of {game}_{leaderboard}"
+                )
+                items += data_length
+                for item in data["data"]:
+                    collector.append(item)
             else:
                 LOGGER.error(f"Response status not 'SUCCESS != {resp.status}'")
                 return
@@ -95,14 +110,26 @@ async def get_all_player_data_from_leaderboard(
         else:
             offset += length
 
-        time.sleep(secs)
+        # TODO: Production
+        # time.sleep(secs)
 
+    LOGGER.info(
+        f"Overall collected {items} item(s) from {game}_{leaderboard} in "
+        f"{time.time() - start_time} seconds."
+    )
     return ((game, leaderboard), collector)
 
 
 # Main
 async def main():
+
+    LOGGER.info("Data collection started.")
+
+    start_time = time.time()
+
     if not CACHE_HIT:
+        LOGGER.info("Cache not hit, collecting data ...")
+
         today = datetime.date.today()
 
         # Setup basic data layout for leaderboard file
@@ -145,13 +172,26 @@ async def main():
             elif leaderboard is None and game == "aoc_ref":
                 main_data[game] = data
 
+        LOGGER.info(
+            f"Data collection took: {time.time() - start_time} seconds"
+        )
+
+        start_time = time.time()
+
         # Write data back to data file
+        LOGGER.info(f"Writing data to Cache: {CACHE_FILE}")
         if SAVE_CACHE:
             with open(CACHE_FILE, "w") as handle:
                 json.dump(main_data, handle, indent=4)
+
+        LOGGER.info(
+            f"Writing to cache took: {time.time() - start_time} seconds"
+        )
+
     else:
         print("We're done, it's cached. ;)")
 
+    LOGGER.info("Finished.")
     sys.exit(0)
 
 

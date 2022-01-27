@@ -31,7 +31,7 @@ elif not DEBUG:
 
 for game, leaderboard, _, _ in leaderboard_settings:
     temp_flatten = []
-    # TODO: Temporary Flatten
+
     main_data[game][leaderboard]
 
     print("Hello!")
