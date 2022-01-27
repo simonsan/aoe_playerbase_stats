@@ -1,5 +1,5 @@
 # Intern
-from common import leaderboard_settings, CACHE_FILE
+from common import CACHE_FILE
 from util.data_processor import DataProcessor
 
 import logging
@@ -31,12 +31,11 @@ elif not DEBUG:
 
 
 data_processor = DataProcessor.new_with_data(main_data)
+data_processor.calculate_activity_profiles()
 
+data_processor.export_dataset()
 
 sys.exit(0)
-# for game, leaderboard, _, _ in leaderboard_settings:
-#     main_data[game][leaderboard]
-
 
 # What can be derived:
 # - we can make the players unique on each leaderboard

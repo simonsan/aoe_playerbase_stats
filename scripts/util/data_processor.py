@@ -1,12 +1,15 @@
-from common import leaderboard_settings
+from common import leaderboard_settings, DATASET_FILE
 from util.leaderboard_entry import LeaderboardEntry
+from util.dataset import DataSet
 import datetime
+import json
 
 
 class DataProcessor(object):
     def __init__(self):
         self.date = None
         self.data = {}
+        self.dataset = DataSet()
 
     def new_with_data(data):
         d = DataProcessor()
@@ -53,3 +56,52 @@ class DataProcessor(object):
             d.data[game][leaderboard] = collector
 
         return d
+
+    def export_dataset(self, file=DATASET_FILE):
+        with open(file, "w") as handle:
+            json.dump(self.dataset.export, handle, indent=4)
+
+    def calculate_activity_profiles(self):
+        self.dataset.export["date"] = self.date.isoformat()
+        for (
+            game,
+            leaderboard,
+            _,
+            _,
+        ) in leaderboard_settings:
+            activity_30d = 0
+            activity_14d = 0
+            activity_7d = 0
+            activity_3d = 0
+            activity_1d = 0
+
+            if leaderboard == "unranked" and game == "aoe2":
+                pass
+
+            for entry in self.data[game][leaderboard]:
+                if entry.last_activity(self.date, 30):
+                    activity_30d += 1
+                if entry.last_activity(self.date, 14):
+                    activity_14d += 1
+                if entry.last_activity(self.date, 7):
+                    activity_7d += 1
+                if entry.last_activity(self.date, 3):
+                    activity_3d += 1
+                if entry.last_activity(self.date, 1):
+                    activity_1d += 1
+
+            self.dataset.export["activity"]["30d"][game][
+                leaderboard
+            ] = activity_30d
+            self.dataset.export["activity"]["14d"][game][
+                leaderboard
+            ] = activity_14d
+            self.dataset.export["activity"]["7d"][game][
+                leaderboard
+            ] = activity_7d
+            self.dataset.export["activity"]["3d"][game][
+                leaderboard
+            ] = activity_3d
+            self.dataset.export["activity"]["1d"][game][
+                leaderboard
+            ] = activity_1d
