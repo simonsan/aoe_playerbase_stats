@@ -1,7 +1,8 @@
 from collections import namedtuple
 
-DATA_FILE = "../data/leaderboard_data.json"
-CACHE_FILE = "../data_temp/cache.json"
+DATA_FILE = "./data/leaderboard_data.json"
+CACHE_FILE = "./data_temp/cache.json"
+PLOT_OUTPUT = "./web/index.html"
 
 # Settings and descriptions for plotting
 LeaderboardSetting = namedtuple(

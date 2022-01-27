@@ -6,7 +6,7 @@ import datetime
 import itertools
 
 # Intern
-from common import DATA_FILE, leaderboard_settings
+from common import DATA_FILE, PLOT_OUTPUT, leaderboard_settings
 
 # Extern
 # Bokeh
@@ -25,7 +25,7 @@ from bokeh.palettes import Category20_20 as palette
 DEBUG_YAML = False
 DEBUG_PLOT = False
 LOGGER = logging.getLogger(__name__)
-output_file("./web/index.html")
+output_file(PLOT_OUTPUT)
 
 curdoc().theme = "dark_minimal"
 

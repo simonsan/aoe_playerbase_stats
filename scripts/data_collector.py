@@ -64,7 +64,7 @@ async def get_all_player_data_from_leaderboard(
             # Write data back to file
             if SAVE_CACHE:
                 with open(
-                    f"../data_temp/{game}_{leaderboard}.json", "w"
+                    f"./data_temp/{game}_{leaderboard}.json", "w"
                 ) as handle:
                     json.dump(collector, handle, indent=4)
             break

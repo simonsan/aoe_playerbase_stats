@@ -5,6 +5,7 @@ import json
 
 # Intern
 from common import leaderboard_settings, CACHE_FILE
+from util import unpack_list
 
 LOGGER = logging.getLogger(__name__)
 
@@ -24,9 +25,14 @@ if DEBUG:
 elif not DEBUG:
     logging.basicConfig(level=logging.INFO)
 
+
 for leaderboard_setting in leaderboard_settings:
+    temp_flatten = []
     # TODO: Temporary Flatten
-    
+    for entry in main_data[leaderboard_setting.game][
+        leaderboard_setting.leaderboard
+    ]:
+        print(entry)
 
 # What can be derived:
 # - we can make the players unique on each leaderboard
