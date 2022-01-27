@@ -4,25 +4,16 @@ import os
 import json
 
 # Intern
-from common import leaderboard_settings
+from common import leaderboard_settings, CACHE_FILE
 
 LOGGER = logging.getLogger(__name__)
 
 DEBUG = True
 
-
-def unpack_list(_list):
-    if len(_list) == 0:
-        return _list
-    if isinstance(_list[0], list):
-        return unpack_list(_list[0]) + unpack_list(_list[1:])
-    return _list[:1] + unpack_list(_list[1:])
-
-
 # Check for cache hit
-if os.path.exists("./data_temp/cache.json"):
+if os.path.exists(CACHE_FILE):
     CACHE_HIT = True
-    with open("./data_temp/cache.json", encoding="utf8", mode="r") as handle:
+    with open(CACHE_FILE, encoding="utf8", mode="r") as handle:
         main_data = json.load(handle)
 else:
     CACHE_HIT = False
@@ -35,7 +26,7 @@ elif not DEBUG:
 
 for leaderboard_setting in leaderboard_settings:
     # TODO: Temporary Flatten
-    print(len(unpacked))
+    
 
 # What can be derived:
 # - we can make the players unique on each leaderboard

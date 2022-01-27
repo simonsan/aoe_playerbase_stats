@@ -7,7 +7,7 @@ import time
 import sys
 
 # Intern
-from common import leaderboard_settings
+from common import leaderboard_settings, CACHE_FILE
 
 # from common import DATA_FILE
 
@@ -20,7 +20,7 @@ DEBUG = True
 CACHE = True
 
 # Check for cache hit
-if os.path.exists("./data_temp/cache.json"):
+if os.path.exists(CACHE_FILE):
     CACHE_HIT = True
 else:
     CACHE_HIT = False
@@ -64,7 +64,7 @@ async def get_all_player_data_from_leaderboard(
             # Write data back to file
             if SAVE_CACHE:
                 with open(
-                    f"./data_temp/{game}_{leaderboard}.json", "w"
+                    f"../data_temp/{game}_{leaderboard}.json", "w"
                 ) as handle:
                     json.dump(collector, handle, indent=4)
             break
@@ -122,7 +122,7 @@ async def main():
 
         # Write data back to data file
         if SAVE_CACHE:
-            with open("./data_temp/cache.json", "w") as handle:
+            with open(CACHE_FILE, "w") as handle:
                 json.dump(main_data, handle, indent=4)
     else:
         print("We're done, it's cached. ;)")
