@@ -3,3 +3,4 @@ compare_leaderboards.egg-info
 /build
 /web
 /__pycache__
+data_temp/*.json
