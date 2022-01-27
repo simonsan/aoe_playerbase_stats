@@ -1,14 +1,15 @@
 # Intern
 from common import leaderboard_settings, CACHE_FILE
+from util.data_processor import DataProcessor
 
 import logging
 
 # import datetime
 import os
-import json
 import sys
+import json
 
-sys.setrecursionlimit(1800)
+# import sys
 
 LOGGER = logging.getLogger(__name__)
 
@@ -29,12 +30,12 @@ elif not DEBUG:
     logging.basicConfig(level=logging.INFO)
 
 
-for game, leaderboard, _, _ in leaderboard_settings:
-    temp_flatten = []
+data_processor = DataProcessor.new_with_data(main_data)
 
-    main_data[game][leaderboard]
 
-    print("Hello!")
+sys.exit(0)
+# for game, leaderboard, _, _ in leaderboard_settings:
+#     main_data[game][leaderboard]
 
 
 # What can be derived:
