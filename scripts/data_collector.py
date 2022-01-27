@@ -57,6 +57,8 @@ async def get_all_player_data_from_leaderboard(
                 # Deactivate content type check for instable API
                 data = await resp.json(content_type=None, encoding="utf8")
                 collector.append(data["data"])
+            else:
+                return
 
         if len(data["data"]) < length:
             # Write data back to file
@@ -110,11 +112,7 @@ async def main():
             api_data = await asyncio.gather(*tasks)
 
         for ((game, leaderboard), data) in api_data:
-            temp_collector = []
-            for part in data:
-                temp_collector.append(part)
-
-            main_data[game][leaderboard] = temp_collector
+            main_data[game][leaderboard] = data
 
         # Write data back to data file
         if SAVE_CACHE:
