@@ -22,6 +22,7 @@ LOGGER = logging.getLogger(__name__)
 
 DEBUG = False
 CACHE = True
+GRANULAR = False
 
 # Check for cache hit
 if os.path.exists(CACHE_FILE):
@@ -30,6 +31,8 @@ else:
     CACHE_HIT = False
     if CACHE:
         SAVE_CACHE = True
+        if GRANULAR:
+            SAVE_INTERMEDIATE_CACHE = True
 
 # Set Debug logging if necessary
 if DEBUG:
@@ -101,7 +104,7 @@ async def get_all_player_data_from_leaderboard(
 
         if len(data["data"]) < length:
             # Write data back to file
-            if SAVE_CACHE:
+            if SAVE_INTERMEDIATE_CACHE:
                 with open(
                     f"./data_temp/{game}_{leaderboard}.json", "w"
                 ) as handle:
