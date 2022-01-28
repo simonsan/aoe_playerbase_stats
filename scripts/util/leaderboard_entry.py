@@ -44,7 +44,7 @@ class LeaderboardEntry(object):
         self.rating24h = rating24h
         self.games24h = games24h
         self.wins24h = wins24h
-        self.last_match = datetime.date.fromtimestamp(last_match)
+        self.last_match = datetime.datetime.fromtimestamp(last_match)
 
     def last_activity(self, base_date, max_days):
         if (base_date - self.last_match).days <= max_days:

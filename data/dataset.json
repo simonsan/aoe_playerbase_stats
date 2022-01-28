@@ -1,229 +1,231 @@
-{
-    "date": "2022-01-27T22:17:09.156189",
-    "leaderboard_activity": {
-        "30d": {
-            "aoe2": {
-                "rm": 39641,
-                "team_rm": 64581,
-                "ew": 1787,
-                "team_ew": 2447,
-                "unranked": 118977
+[
+    {
+        "date": "2022-01-27T22:17:09.156189",
+        "leaderboard_activity": {
+            "30d": {
+                "aoe2": {
+                    "rm": 39641,
+                    "team_rm": 64581,
+                    "ew": 1787,
+                    "team_ew": 2447,
+                    "unranked": 118977
+                },
+                "aoe3": {
+                    "supremacy_1v1": 2944,
+                    "supremacy_team": 2867,
+                    "treaty": 604,
+                    "deathmatch": 23
+                },
+                "aoe4": {
+                    "custom": 133021,
+                    "qm_1v1": 44386,
+                    "qm_2v2": 57611,
+                    "qm_3v3": 53335,
+                    "qm_4v4": 45044
+                }
             },
-            "aoe3": {
-                "supremacy_1v1": 2944,
-                "supremacy_team": 2867,
-                "treaty": 604,
-                "deathmatch": 23
+            "14d": {
+                "aoe2": {
+                    "rm": 32019,
+                    "team_rm": 53283,
+                    "ew": 1343,
+                    "team_ew": 1829,
+                    "unranked": 0
+                },
+                "aoe3": {
+                    "supremacy_1v1": 2262,
+                    "supremacy_team": 2173,
+                    "treaty": 483,
+                    "deathmatch": 17
+                },
+                "aoe4": {
+                    "custom": 94484,
+                    "qm_1v1": 33264,
+                    "qm_2v2": 43358,
+                    "qm_3v3": 40627,
+                    "qm_4v4": 34546
+                }
             },
-            "aoe4": {
-                "custom": 133021,
-                "qm_1v1": 44386,
-                "qm_2v2": 57611,
-                "qm_3v3": 53335,
-                "qm_4v4": 45044
+            "7d": {
+                "aoe2": {
+                    "rm": 25548,
+                    "team_rm": 43696,
+                    "ew": 1012,
+                    "team_ew": 1358,
+                    "unranked": 0
+                },
+                "aoe3": {
+                    "supremacy_1v1": 1780,
+                    "supremacy_team": 1698,
+                    "treaty": 351,
+                    "deathmatch": 14
+                },
+                "aoe4": {
+                    "custom": 68704,
+                    "qm_1v1": 26365,
+                    "qm_2v2": 33509,
+                    "qm_3v3": 31840,
+                    "qm_4v4": 27369
+                }
+            },
+            "3d": {
+                "aoe2": {
+                    "rm": 18380,
+                    "team_rm": 31408,
+                    "ew": 673,
+                    "team_ew": 811,
+                    "unranked": 0
+                },
+                "aoe3": {
+                    "supremacy_1v1": 1302,
+                    "supremacy_team": 1177,
+                    "treaty": 230,
+                    "deathmatch": 5
+                },
+                "aoe4": {
+                    "custom": 42381,
+                    "qm_1v1": 19032,
+                    "qm_2v2": 22709,
+                    "qm_3v3": 21705,
+                    "qm_4v4": 19251
+                }
+            },
+            "1d": {
+                "aoe2": {
+                    "rm": 13105,
+                    "team_rm": 22333,
+                    "ew": 462,
+                    "team_ew": 515,
+                    "unranked": 0
+                },
+                "aoe3": {
+                    "supremacy_1v1": 950,
+                    "supremacy_team": 816,
+                    "treaty": 156,
+                    "deathmatch": 4
+                },
+                "aoe4": {
+                    "custom": 27103,
+                    "qm_1v1": 13739,
+                    "qm_2v2": 14937,
+                    "qm_3v3": 14205,
+                    "qm_4v4": 13350
+                }
             }
         },
-        "14d": {
-            "aoe2": {
-                "rm": 32019,
-                "team_rm": 53283,
-                "ew": 1343,
-                "team_ew": 1829,
-                "unranked": 0
+        "game_activity": {
+            "30d": {
+                "aoe2": 177291,
+                "aoe3": 5096,
+                "aoe4": 213250,
+                "franchise": 395637
             },
-            "aoe3": {
-                "supremacy_1v1": 2262,
-                "supremacy_team": 2173,
-                "treaty": 483,
-                "deathmatch": 17
+            "14d": {
+                "aoe2": 67115,
+                "aoe3": 3970,
+                "aoe4": 161032,
+                "franchise": 232117
             },
-            "aoe4": {
-                "custom": 94484,
-                "qm_1v1": 33264,
-                "qm_2v2": 43358,
-                "qm_3v3": 40627,
-                "qm_4v4": 34546
+            "7d": {
+                "aoe2": 56203,
+                "aoe3": 3147,
+                "aoe4": 126529,
+                "franchise": 185879
+            },
+            "3d": {
+                "aoe2": 42189,
+                "aoe3": 2299,
+                "aoe4": 88452,
+                "franchise": 132940
+            },
+            "1d": {
+                "aoe2": 31340,
+                "aoe3": 1695,
+                "aoe4": 63024,
+                "franchise": 96059
             }
         },
-        "7d": {
-            "aoe2": {
-                "rm": 25548,
-                "team_rm": 43696,
-                "ew": 1012,
-                "team_ew": 1358,
-                "unranked": 0
-            },
-            "aoe3": {
-                "supremacy_1v1": 1780,
-                "supremacy_team": 1698,
-                "treaty": 351,
-                "deathmatch": 14
-            },
-            "aoe4": {
-                "custom": 68704,
-                "qm_1v1": 26365,
-                "qm_2v2": 33509,
-                "qm_3v3": 31840,
-                "qm_4v4": 27369
-            }
-        },
-        "3d": {
-            "aoe2": {
-                "rm": 18380,
-                "team_rm": 31408,
-                "ew": 673,
-                "team_ew": 811,
-                "unranked": 0
-            },
-            "aoe3": {
-                "supremacy_1v1": 1302,
-                "supremacy_team": 1177,
-                "treaty": 230,
-                "deathmatch": 5
-            },
-            "aoe4": {
-                "custom": 42381,
-                "qm_1v1": 19032,
-                "qm_2v2": 22709,
-                "qm_3v3": 21705,
-                "qm_4v4": 19251
-            }
-        },
-        "1d": {
-            "aoe2": {
-                "rm": 13105,
-                "team_rm": 22333,
-                "ew": 462,
-                "team_ew": 515,
-                "unranked": 0
-            },
-            "aoe3": {
-                "supremacy_1v1": 950,
-                "supremacy_team": 816,
-                "treaty": 156,
-                "deathmatch": 4
-            },
-            "aoe4": {
-                "custom": 27103,
-                "qm_1v1": 13739,
-                "qm_2v2": 14937,
-                "qm_3v3": 14205,
-                "qm_4v4": 13350
-            }
-        }
-    },
-    "game_activity": {
-        "30d": {
-            "aoe2": 177291,
+        "playerbase": {
+            "aoe2": 223757,
             "aoe3": 5096,
-            "aoe4": 213250,
-            "franchise": 395637
+            "aoe4": 213251,
+            "franchise": 438077
         },
-        "14d": {
-            "aoe2": 67115,
-            "aoe3": 3970,
-            "aoe4": 161032,
-            "franchise": 232117
+        "platforms": {
+            "aoe2": {
+                "steam": 92.36,
+                "relic": 7.64,
+                "n/a": 0.0
+            },
+            "aoe3": {
+                "steam": 93.15,
+                "relic": 6.85,
+                "n/a": 0.0
+            },
+            "aoe4": {
+                "steam": 64.95,
+                "relic": 35.05,
+                "n/a": 0.0
+            },
+            "franchise": {
+                "steam": 79.04,
+                "relic": 20.96,
+                "n/a": 0.0
+            }
         },
-        "7d": {
-            "aoe2": 56203,
-            "aoe3": 3147,
-            "aoe4": 126529,
-            "franchise": 185879
-        },
-        "3d": {
-            "aoe2": 42189,
-            "aoe3": 2299,
-            "aoe4": 88452,
-            "franchise": 132940
-        },
-        "1d": {
-            "aoe2": 31340,
-            "aoe3": 1695,
-            "aoe4": 63024,
-            "franchise": 96059
-        }
-    },
-    "playerbase": {
-        "aoe2": 223757,
-        "aoe3": 5096,
-        "aoe4": 213251,
-        "franchise": 438077
-    },
-    "platforms": {
-        "aoe2": {
-            "steam": 92.36,
-            "relic": 7.64,
-            "n/a": 0.0
-        },
-        "aoe3": {
-            "steam": 93.15,
-            "relic": 6.85,
-            "n/a": 0.0
-        },
-        "aoe4": {
-            "steam": 64.95,
-            "relic": 35.05,
-            "n/a": 0.0
-        },
-        "franchise": {
-            "steam": 79.04,
-            "relic": 20.96,
-            "n/a": 0.0
-        }
-    },
-    "country": {
-        "aoe2": {
-            "US": 12.08,
-            "DE": 12.06,
-            "CN": 6.03,
-            "AR": 5.46,
-            "FR": 5.15,
-            "TW": 4.35,
-            "GB": 3.65,
-            "CA": 3.21,
-            "AU": 3.12,
-            "ES": 2.83,
-            "no_country_set": 7.65
-        },
-        "aoe3": {
-            "US": 2.39,
-            "DE": 2.0,
-            "ES": 0.98,
-            "TR": 0.98,
-            "CN": 0.94,
-            "FR": 0.82,
-            "MX": 0.8,
-            "BR": 0.65,
-            "CA": 0.57,
-            "TW": 0.55,
-            "no_country_set": 82.28
-        },
-        "aoe4": {
-            "US": 2.76,
-            "DE": 2.67,
-            "FR": 1.27,
-            "CN": 0.99,
-            "CA": 0.61,
-            "AU": 0.57,
-            "GB": 0.55,
-            "CH": 0.38,
-            "NL": 0.31,
-            "ES": 0.3,
-            "no_country_set": 85.86
-        },
-        "franchise": {
-            "US": 7.39,
-            "DE": 7.34,
-            "CN": 3.5,
-            "FR": 3.21,
-            "AR": 2.85,
-            "TW": 2.34,
-            "GB": 2.11,
-            "CA": 1.91,
-            "AU": 1.85,
-            "ES": 1.59,
-            "no_country_set": 46.55
+        "country": {
+            "aoe2": {
+                "US": 12.08,
+                "DE": 12.06,
+                "CN": 6.03,
+                "AR": 5.46,
+                "FR": 5.15,
+                "TW": 4.35,
+                "GB": 3.65,
+                "CA": 3.21,
+                "AU": 3.12,
+                "ES": 2.83,
+                "no_country_set": 7.65
+            },
+            "aoe3": {
+                "US": 2.39,
+                "DE": 2.0,
+                "ES": 0.98,
+                "TR": 0.98,
+                "CN": 0.94,
+                "FR": 0.82,
+                "MX": 0.8,
+                "BR": 0.65,
+                "CA": 0.57,
+                "TW": 0.55,
+                "no_country_set": 82.28
+            },
+            "aoe4": {
+                "US": 2.76,
+                "DE": 2.67,
+                "FR": 1.27,
+                "CN": 0.99,
+                "CA": 0.61,
+                "AU": 0.57,
+                "GB": 0.55,
+                "CH": 0.38,
+                "NL": 0.31,
+                "ES": 0.3,
+                "no_country_set": 85.86
+            },
+            "franchise": {
+                "US": 7.39,
+                "DE": 7.34,
+                "CN": 3.5,
+                "FR": 3.21,
+                "AR": 2.85,
+                "TW": 2.34,
+                "GB": 2.11,
+                "CA": 1.91,
+                "AU": 1.85,
+                "ES": 1.59,
+                "no_country_set": 46.55
+            }
         }
     }
-}
+]
