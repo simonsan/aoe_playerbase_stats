@@ -3,6 +3,7 @@ from util.leaderboard_entry import LeaderboardEntry
 from util.dataset import DataSet
 import datetime
 import json
+import operator
 
 
 class DataProcessor(object):
@@ -110,7 +111,7 @@ class DataProcessor(object):
 
             self.dataset.export["unique_players"][game] = unique_players[game]
 
-    def calculate_activity_profiles_per_leaderboard(self):
+    def calculate_leaderboard_activity(self):
         for (
             game,
             leaderboard,
@@ -147,29 +148,26 @@ class DataProcessor(object):
                         ):
                             activity_1d += 1
 
-            self.dataset.export["activity"]["30d"][game][
+            self.dataset.export["leaderboard_activity"]["30d"][game][
                 leaderboard
             ] = activity_30d
-            self.dataset.export["activity"]["14d"][game][
+            self.dataset.export["leaderboard_activity"]["14d"][game][
                 leaderboard
             ] = activity_14d
-            self.dataset.export["activity"]["7d"][game][
+            self.dataset.export["leaderboard_activity"]["7d"][game][
                 leaderboard
             ] = activity_7d
-            self.dataset.export["activity"]["3d"][game][
+            self.dataset.export["leaderboard_activity"]["3d"][game][
                 leaderboard
             ] = activity_3d
-            self.dataset.export["activity"]["1d"][game][
+            self.dataset.export["leaderboard_activity"]["1d"][game][
                 leaderboard
             ] = activity_1d
 
-    def calculate_activity_profiles_per_game(self):
-        for (
-            game,
-            leaderboard,
-            _,
-            _,
-        ) in leaderboard_settings:
+    def calculate_game_activity(self):
+
+        for game in FRANCHISE_GAMES:
+
             activity_30d = 0
             activity_14d = 0
             activity_7d = 0
@@ -178,75 +176,77 @@ class DataProcessor(object):
 
             for profile in self.unique_profiles.values():
                 if game in profile:
-                    if leaderboard in profile[game]:
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 30
-                        ):
-                            activity_30d += 1
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 14
-                        ):
-                            activity_14d += 1
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 7
-                        ):
-                            activity_7d += 1
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 3
-                        ):
-                            activity_3d += 1
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 1
-                        ):
-                            activity_1d += 1
+                    max_date = max(
+                        profile[game].items(), key=operator.itemgetter(1)
+                    )[1]
 
-            self.dataset.export["activity"]["30d"][game][
-                leaderboard
-            ] = activity_30d
-            self.dataset.export["activity"]["14d"][game][
-                leaderboard
-            ] = activity_14d
-            self.dataset.export["activity"]["7d"][game][
-                leaderboard
-            ] = activity_7d
-            self.dataset.export["activity"]["3d"][game][
-                leaderboard
-            ] = activity_3d
-            self.dataset.export["activity"]["1d"][game][
-                leaderboard
-            ] = activity_1d
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 30
+                    ):
+                        activity_30d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 14
+                    ):
+                        activity_14d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 7
+                    ):
+                        activity_7d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 3
+                    ):
+                        activity_3d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 1
+                    ):
+                        activity_1d += 1
 
-    def calculate_activity_profiles_in_franchise(self):
+            self.dataset.export["game_activity"]["30d"][game] = activity_30d
+            self.dataset.export["game_activity"]["14d"][game] = activity_14d
+            self.dataset.export["game_activity"]["7d"][game] = activity_7d
+            self.dataset.export["game_activity"]["3d"][game] = activity_3d
+            self.dataset.export["game_activity"]["1d"][game] = activity_1d
+
+    def calculate_franchise_activity(self):
         activity_30d = 0
         activity_14d = 0
         activity_7d = 0
         activity_3d = 0
         activity_1d = 0
 
-        for (
-            game,
-            leaderboard,
-            _,
-            _,
-        ) in leaderboard_settings:
+        for game in FRANCHISE_GAMES:
+            for profile in self.unique_profiles.values():
+                if game in profile:
+                    max_date = max(
+                        profile[game].items(), key=operator.itemgetter(1)
+                    )[1]
 
-            for entry in self.data[game][leaderboard]:
-                if entry.last_activity(self.date, 30):
-                    activity_30d += 1
-                if entry.last_activity(self.date, 14):
-                    activity_14d += 1
-                if entry.last_activity(self.date, 7):
-                    activity_7d += 1
-                if entry.last_activity(self.date, 3):
-                    activity_3d += 1
-                if entry.last_activity(self.date, 1):
-                    activity_1d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 30
+                    ):
+                        activity_30d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 14
+                    ):
+                        activity_14d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 7
+                    ):
+                        activity_7d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 3
+                    ):
+                        activity_3d += 1
+                    if LeaderboardEntry.last_activity_from_date(
+                        self.date, max_date, 1
+                    ):
+                        activity_1d += 1
 
-        self.dataset.export["activity"]["30d"]["franchise"] = activity_30d
-        self.dataset.export["activity"]["14d"]["franchise"] = activity_14d
-        self.dataset.export["activity"]["7d"]["franchise"] = activity_7d
-        self.dataset.export["activity"]["3d"]["franchise"] = activity_3d
-        self.dataset.export["activity"]["1d"]["franchise"] = activity_1d
+        self.dataset.export["game_activity"]["30d"]["franchise"] = activity_30d
+        self.dataset.export["game_activity"]["14d"]["franchise"] = activity_14d
+        self.dataset.export["game_activity"]["7d"]["franchise"] = activity_7d
+        self.dataset.export["game_activity"]["3d"]["franchise"] = activity_3d
+        self.dataset.export["game_activity"]["1d"]["franchise"] = activity_1d
 
     def countries_per_leaderboard(self):
         # languages = {}

@@ -2,7 +2,7 @@ class DataSet(object):
     def __init__(self):
         self.export = {
             "date": None,
-            "activity": {
+            "leaderboard_activity": {
                 "30d": {
                     "aoe2": {},
                     "aoe3": {},
@@ -34,11 +34,37 @@ class DataSet(object):
                     "franchise": {},
                 },
             },
-            "unique_players": {
-                "aoe2": None,
-                "aoe3": None,
-                "aoe4": None,
-                "franchise": None,
+            "game_activity": {
+                "30d": {
+                    "aoe2": {},
+                    "aoe3": {},
+                    "aoe4": {},
+                    "franchise": {},
+                },
+                "14d": {
+                    "aoe2": {},
+                    "aoe3": {},
+                    "aoe4": {},
+                    "franchise": {},
+                },
+                "7d": {
+                    "aoe2": {},
+                    "aoe3": {},
+                    "aoe4": {},
+                    "franchise": {},
+                },
+                "3d": {
+                    "aoe2": {},
+                    "aoe3": {},
+                    "aoe4": {},
+                    "franchise": {},
+                },
+                "1d": {
+                    "aoe2": {},
+                    "aoe3": {},
+                    "aoe4": {},
+                    "franchise": {},
+                },
             },
             "language": {
                 "aoe2": {},
