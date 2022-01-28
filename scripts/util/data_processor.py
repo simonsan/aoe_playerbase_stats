@@ -115,6 +115,16 @@ class DataProcessor(object):
                             else None,
                         }
                     )
+                
+                if "hasSteamID" not in self.unique_profiles[entry.profile_id]:
+                    self.unique_profiles[entry.profile_id].update({
+                        "hasSteamID": True if entry.steam_id is not None else False,
+                    })
+
+                if "hasRelicLinkID" not in self.unique_profiles[entry.profile_id]:
+                    self.unique_profiles[entry.profile_id].update({
+                        "hasRelicLinkID": True if entry.profile_id is not None else False,
+                    })
 
                 # TODO: DEBUG
                 # if entry.profile_id == 199325:
@@ -341,3 +351,5 @@ class DataProcessor(object):
         top10.update({"no_country_set": no_country})
 
         self.dataset.export["country"]["franchise"] = top10
+
+    def 

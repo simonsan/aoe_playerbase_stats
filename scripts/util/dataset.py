@@ -67,6 +67,24 @@ class DataSet(object):
                 "aoe4": None,
                 "franchise": None,
             },
+            "platforms": {
+                "aoe2": {
+                    "steam": None,
+                    "relic": None,
+                },
+                "aoe3": {
+                    "steam": None,
+                    "relic": None,
+                },
+                "aoe4": {
+                    "steam": None,
+                    "relic": None,
+                },
+                "franchise": {
+                    "steam": None,
+                    "relic": None,
+                },
+            },
             "country": {
                 "aoe2": {},
                 "aoe3": {},
