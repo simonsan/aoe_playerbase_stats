@@ -52,5 +52,11 @@ class LeaderboardEntry(object):
         else:
             return False
 
+    def last_activity_from_date(date_of_dataset, date_to_compare, max_days):
+        if (date_of_dataset - date_to_compare).days <= max_days:
+            return True
+        else:
+            return False
+
     def parse_leaderboard_entry(entry):
         pass

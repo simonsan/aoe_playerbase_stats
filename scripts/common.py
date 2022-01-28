@@ -14,6 +14,8 @@ AOC_REF_DATA = (
 )
 AOC_REF_DATA_FILE = "data_temp/aoc_ref_data.json"
 
+FRANCHISE_GAMES = ["aoe2", "aoe3", "aoe4"]
+
 # Settings and descriptions for plotting
 LeaderboardSetting = namedtuple(
     "LeaderboardSetting", "game leaderboard legend url"
