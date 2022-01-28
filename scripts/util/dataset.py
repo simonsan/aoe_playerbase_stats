@@ -7,26 +7,31 @@ class DataSet(object):
                     "aoe2": {},
                     "aoe3": {},
                     "aoe4": {},
+                    "franchise": {},
                 },
                 "14d": {
                     "aoe2": {},
                     "aoe3": {},
                     "aoe4": {},
+                    "franchise": {},
                 },
                 "7d": {
                     "aoe2": {},
                     "aoe3": {},
                     "aoe4": {},
+                    "franchise": {},
                 },
                 "3d": {
                     "aoe2": {},
                     "aoe3": {},
                     "aoe4": {},
+                    "franchise": {},
                 },
                 "1d": {
                     "aoe2": {},
                     "aoe3": {},
                     "aoe4": {},
+                    "franchise": {},
                 },
             },
             "unique_players": {
@@ -34,6 +39,12 @@ class DataSet(object):
                 "aoe3": None,
                 "aoe4": None,
                 "franchise": None,
+            },
+            "language": {
+                "aoe2": {},
+                "aoe3": {},
+                "aoe4": {},
+                "franchise": {},
             },
         }
 

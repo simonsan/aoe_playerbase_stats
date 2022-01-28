@@ -99,7 +99,7 @@ class DataProcessor(object):
                 unique_players[game]
             )
 
-    def calculate_activity_profiles(self):
+    def calculate_activity_profiles_per_leaderboard(self):
         for (
             game,
             leaderboard,
@@ -139,3 +139,53 @@ class DataProcessor(object):
             self.dataset.export["activity"]["1d"][game][
                 leaderboard
             ] = activity_1d
+
+    def calculate_activity_profiles_in_franchise(self):
+        activity_30d = 0
+        activity_14d = 0
+        activity_7d = 0
+        activity_3d = 0
+        activity_1d = 0
+
+        for (
+            game,
+            leaderboard,
+            _,
+            _,
+        ) in leaderboard_settings:
+
+            for entry in self.data[game][leaderboard]:
+                if entry.last_activity(self.date, 30):
+                    activity_30d += 1
+                if entry.last_activity(self.date, 14):
+                    activity_14d += 1
+                if entry.last_activity(self.date, 7):
+                    activity_7d += 1
+                if entry.last_activity(self.date, 3):
+                    activity_3d += 1
+                if entry.last_activity(self.date, 1):
+                    activity_1d += 1
+
+        self.dataset.export["activity"]["30d"]["franchise"] = activity_30d
+        self.dataset.export["activity"]["14d"]["franchise"] = activity_14d
+        self.dataset.export["activity"]["7d"]["franchise"] = activity_7d
+        self.dataset.export["activity"]["3d"]["franchise"] = activity_3d
+        self.dataset.export["activity"]["1d"]["franchise"] = activity_1d
+
+    def countries_per_leaderboard(self):
+        # languages = {}
+
+        # for (
+        #     game,
+        #     leaderboard,
+        #     _,
+        #     _,
+        # ) in leaderboard_settings:
+
+        #     for entry in self.data[game][leaderboard]:
+        #         unique_players[game][entry.profile_id] = True
+
+        #     self.dataset.export["unique_players"][game] = len(
+        #         unique_players[game]
+        #     )
+        pass
