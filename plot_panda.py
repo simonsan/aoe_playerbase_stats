@@ -30,7 +30,7 @@ from bokeh.palettes import Category20_20 as palette
 DEBUG_YAML = False
 DEBUG_PLOT = False
 LOGGER = logging.getLogger(__name__)
-output_file(PLOT_OUTPUT)
+output_file(PLOT_OUTPUT, title="AoE Playerbase Stats")
 
 curdoc().theme = "dark_minimal"
 
