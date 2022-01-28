@@ -150,6 +150,28 @@
         "aoe4": 213251,
         "franchise": 438077
     },
+    "platforms": {
+        "aoe2": {
+            "steam": 92.36,
+            "relic": 7.64,
+            "n/a": 0.0
+        },
+        "aoe3": {
+            "steam": 93.15,
+            "relic": 6.85,
+            "n/a": 0.0
+        },
+        "aoe4": {
+            "steam": 64.95,
+            "relic": 35.05,
+            "n/a": 0.0
+        },
+        "franchise": {
+            "steam": 79.04,
+            "relic": 20.96,
+            "n/a": 0.0
+        }
+    },
     "country": {
         "aoe2": {
             "US": 12.08,

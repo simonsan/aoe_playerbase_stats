@@ -71,25 +71,21 @@ class DataSet(object):
                 "aoe2": {
                     "steam": None,
                     "relic": None,
-                    "both": None,
                     "n/a": None,
                 },
                 "aoe3": {
                     "steam": None,
                     "relic": None,
-                    "both": None,
                     "n/a": None,
                 },
                 "aoe4": {
                     "steam": None,
                     "relic": None,
-                    "both": None,
                     "n/a": None,
                 },
                 "franchise": {
                     "steam": None,
                     "relic": None,
-                    "both": None,
                     "n/a": None,
                 },
             },

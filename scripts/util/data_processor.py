@@ -368,7 +368,6 @@ class DataProcessor(object):
 
             steam = 0
             relic = 0
-            both = 0
             nothing = 0
 
             for profile in self.unique_profiles.values():
@@ -387,7 +386,7 @@ class DataProcessor(object):
                         profile["hasSteamID"] is True
                         and profile["hasRelicLinkID"] is True
                     ):
-                        both += 1
+                        steam += 1
                     elif (
                         profile["hasSteamID"] is False
                         and profile["hasRelicLinkID"] is False
@@ -396,51 +395,44 @@ class DataProcessor(object):
 
             steam = round(steam / self.profile_stats[game] * 100, 2)
             relic = round(relic / self.profile_stats[game] * 100, 2)
-            both = round(both / self.profile_stats[game] * 100, 2)
             nothing = round(nothing / self.profile_stats[game] * 100, 2)
 
             self.dataset.export["platforms"][game]["steam"] = steam
             self.dataset.export["platforms"][game]["relic"] = relic
-            self.dataset.export["platforms"][game]["both"] = both
             self.dataset.export["platforms"][game]["n/a"] = nothing
 
     def platforms_for_franchise(self):
 
         steam = 0
         relic = 0
-        both = 0
         nothing = 0
 
-        for game in FRANCHISE_GAMES:
-            for profile in self.unique_profiles.values():
-                if game in profile:
-                    if (
-                        profile["hasSteamID"] is True
-                        and profile["hasRelicLinkID"] is False
-                    ):
-                        steam += 1
-                    elif (
-                        profile["hasSteamID"] is False
-                        and profile["hasRelicLinkID"] is True
-                    ):
-                        relic += 1
-                    elif (
-                        profile["hasSteamID"] is True
-                        and profile["hasRelicLinkID"] is True
-                    ):
-                        both += 1
-                    elif (
-                        profile["hasSteamID"] is False
-                        and profile["hasRelicLinkID"] is False
-                    ):
-                        nothing += 1
+        for profile in self.unique_profiles.values():
+            if (
+                profile["hasSteamID"] is True
+                and profile["hasRelicLinkID"] is False
+            ):
+                steam += 1
+            elif (
+                profile["hasSteamID"] is False
+                and profile["hasRelicLinkID"] is True
+            ):
+                relic += 1
+            elif (
+                profile["hasSteamID"] is True
+                and profile["hasRelicLinkID"] is True
+            ):
+                steam += 1
+            elif (
+                profile["hasSteamID"] is False
+                and profile["hasRelicLinkID"] is False
+            ):
+                nothing += 1
 
-            steam = round(steam / self.profile_stats["franchise"] * 100, 2)
-            relic = round(relic / self.profile_stats["franchise"] * 100, 2)
-            both = round(both / self.profile_stats["franchise"] * 100, 2)
-            nothing = round(nothing / self.profile_stats["franchise"] * 100, 2)
+        steam = round(steam / self.profile_stats["franchise"] * 100, 2)
+        relic = round(relic / self.profile_stats["franchise"] * 100, 2)
+        nothing = round(nothing / self.profile_stats["franchise"] * 100, 2)
 
-            self.dataset.export["platforms"]['franchise']["steam"] = steam
-            self.dataset.export["platforms"]['franchise']["relic"] = relic
-            self.dataset.export["platforms"]['franchise']["both"] = both
-            self.dataset.export["platforms"]['franchise']["n/a"] = nothing
+        self.dataset.export["platforms"]["franchise"]["steam"] = steam
+        self.dataset.export["platforms"]["franchise"]["relic"] = relic
+        self.dataset.export["platforms"]["franchise"]["n/a"] = nothing
