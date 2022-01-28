@@ -47,7 +47,10 @@ data_processor.countries_for_franchise()
 data_processor.platforms_per_games()
 data_processor.platforms_for_franchise()
 
-# Export
-data_processor.export_dataset()
+# DEBUG: Export new dataset
+# data_processor.export_dataset()
+
+# Append to old dataset
+data_processor.append_to_dataset()
 
 sys.exit(0)

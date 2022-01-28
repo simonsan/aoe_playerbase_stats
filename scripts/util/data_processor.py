@@ -68,6 +68,15 @@ class DataProcessor(object):
 
         return d
 
+    def append_to_dataset(self, file=DATASET_FILE):
+        with open(file, "r") as handle:
+            data = json.load(handle)
+
+        data.append(self.dataset.export)
+
+        with open(file, "w") as handle:
+            json.dump(data, handle, indent=4)
+
     def export_dataset(self, file=DATASET_FILE):
         with open(file, "w") as handle:
             json.dump(self.dataset.export, handle, indent=4)
