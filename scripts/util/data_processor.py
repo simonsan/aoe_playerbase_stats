@@ -5,6 +5,7 @@ import datetime
 import json
 import operator
 import pycountry
+from collections import Counter
 
 
 class DataProcessor(object):
@@ -288,6 +289,7 @@ class DataProcessor(object):
 
             countries = {}
             percentages = {}
+            no_country = 0
 
             for profile in self.unique_profiles.values():
                 if game in profile:
@@ -296,18 +298,46 @@ class DataProcessor(object):
                             countries[profile["country"].alpha_2] += 1
                         else:
                             countries.update({profile["country"].alpha_2: 1})
+                    else:
+                        no_country += 1
 
             for country in countries.keys():
-                percentages[country] = (
-                    countries[country] / self.profile_stats[game] * 100
+                percentages[country] = round(
+                    countries[country] / self.profile_stats[game] * 100, 2
                 )
 
-            top10 = dict(
-                sorted(
-                    percentages.iteritems(),
-                    key=operator.itemgetter(1),
-                    reverse=True,
-                )[:10]
+            no_country = round(no_country / self.profile_stats[game] * 100, 2)
+
+            top10 = dict(Counter(percentages).most_common(10))
+            top10.update({"no_country_set": no_country})
+
+            self.dataset.export["country"][game] = top10
+
+    def countries_for_franchise(self):
+
+        countries = {}
+        percentages = {}
+        no_country = 0
+
+        for profile in self.unique_profiles.values():
+            if profile["country"] is not None:
+                if profile["country"].alpha_2 in countries:
+                    countries[profile["country"].alpha_2] += 1
+                else:
+                    countries.update({profile["country"].alpha_2: 1})
+            else:
+                no_country += 1
+
+        for country in countries.keys():
+            percentages[country] = round(
+                countries[country] / self.profile_stats["franchise"] * 100, 2
             )
 
-            self.dataset.export["country"]["game"] = top10
+        no_country = round(
+            no_country / self.profile_stats["franchise"] * 100, 2
+        )
+
+        top10 = dict(Counter(percentages).most_common(10))
+        top10.update({"no_country_set": no_country})
+
+        self.dataset.export["country"]["franchise"] = top10
