@@ -43,9 +43,8 @@ source = ColumnDataSource(df_activity)
 colors = itertools.cycle(palette)
 
 activity_plot = figure(
-    # x_range=data["dates"],
     x_axis_type="datetime",
-    y_range=Range1d(0, 250000),
+    y_range=Range1d(0, 175000),
     title="Player amount on AoE2:DE, AoE3:DE and AoE4 leaderboards"
     " plotted over time",
     x_axis_label="Date",
@@ -61,10 +60,10 @@ activity_plot.add_tools(
         tooltips=[
             ("Leaderboard", "$name"),
             ("Accounts", "$y{0,0}"),
-            ("Date", "@dates{%d-%m-%Y}"),
+            ("Date", "@timestamp{%d-%m-%Y}"),
         ],
         formatters={
-            "@dates": "datetime",
+            "@timestamp": "datetime",
         },
         mode="mouse",
     )
@@ -74,6 +73,7 @@ activity_plot.add_tools(
 for game, leaderboard, legend, _ in leaderboard_settings:
     for activity in ACTIVITY_PERIODS:
         activity_plot.line(
+            x="timestamp",
             y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
             source=source,
             legend_label=f"{legend} {activity}",
@@ -84,6 +84,7 @@ for game, leaderboard, legend, _ in leaderboard_settings:
         )
         if game == "aoe2":
             activity_plot.circle(
+                x="timestamp",
                 y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
                 source=source,
                 fill_color="white",
@@ -95,6 +96,7 @@ for game, leaderboard, legend, _ in leaderboard_settings:
             )
         elif game == "aoe3":
             activity_plot.square(
+                x="timestamp",
                 y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
                 source=source,
                 fill_color="blue",
@@ -106,6 +108,7 @@ for game, leaderboard, legend, _ in leaderboard_settings:
             )
         elif game == "aoe4":
             activity_plot.hex_dot(
+                x="timestamp",
                 y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
                 source=source,
                 fill_color="yellow",
@@ -117,7 +120,7 @@ for game, leaderboard, legend, _ in leaderboard_settings:
             )
 
 # Set y-axis bounds
-activity_plot.yaxis.bounds = (0, 300000)
+activity_plot.yaxis.bounds = (0, 225000)
 
 # Set datetime formatter
 activity_plot.xaxis.formatter = DatetimeTickFormatter(
@@ -145,8 +148,8 @@ activity_plot.toolbar.autohide = True
 range_slider = RangeSlider(
     title="Adjust y-axis range",
     start=0,
-    end=250000,
-    step=25000,
+    end=200000,
+    step=15000,
     value=(activity_plot.y_range.start, activity_plot.y_range.end),
 )
 range_slider.js_link("value", activity_plot.y_range, "start", attr_selector=0)
@@ -163,7 +166,10 @@ multi_choice.js_on_change(
 )
 
 explanations = Div(
-    text="""This project is not endorsed by or affiliated with Microsoft in any way. With data from AoE2/3/IV.net. For more information check the <a href='https://github.com/simonsan/aoe_playerbase_stats'>Github Repository</a>.""",
+    text="""This project is not endorsed by or affiliated with Microsoft in
+     any way. With data from AoE2/3/IV.net. For more information check the
+     <a href='https://github.com/simonsan/aoe_playerbase_stats'>Github
+     Repository</a>.""",
     width=200,
     height=100,
 )

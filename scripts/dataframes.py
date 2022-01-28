@@ -2,7 +2,11 @@ import pandas as pd
 import json
 import datetime
 
-from scripts.common import DATASET_FILE, leaderboard_settings, ACTIVITY_PERIODS
+from .common import (
+    DATASET_FILE,
+    leaderboard_settings,
+    ACTIVITY_PERIODS,
+)
 
 
 def prepare_dataframes():
@@ -22,6 +26,11 @@ def prepare_dataframes():
         data_country = {}
 
         timestamp = datetime.datetime.fromisoformat(dataset["date"])
+
+        data_activity["timestamp"] = pd.Timestamp(timestamp)
+        data_playerbase["timestamp"] = pd.Timestamp(timestamp)
+        data_platforms["timestamp"] = pd.Timestamp(timestamp)
+        data_country["timestamp"] = pd.Timestamp(timestamp)
 
         for period in ACTIVITY_PERIODS:
             for game, leaderboard, _, _ in leaderboard_settings:
@@ -47,30 +56,10 @@ def prepare_dataframes():
                     game
                 ][lang]
 
-        new_activity = pd.DataFrame(
-            data_activity,
-            index=[
-                timestamp,
-            ],
-        )
-        new_playerbase = pd.DataFrame(
-            data_playerbase,
-            index=[
-                timestamp,
-            ],
-        )
-        new_platforms = pd.DataFrame(
-            data_platforms,
-            index=[
-                timestamp,
-            ],
-        )
-        new_country = pd.DataFrame(
-            data_country,
-            index=[
-                timestamp,
-            ],
-        )
+        new_activity = pd.DataFrame([data_activity])
+        new_playerbase = pd.DataFrame([data_playerbase])
+        new_platforms = pd.DataFrame([data_platforms])
+        new_country = pd.DataFrame([data_country])
 
         df_activity = pd.concat([df_activity, new_activity])
         df_playerbase = pd.concat([df_playerbase, new_playerbase])
@@ -84,3 +73,11 @@ def prepare_dataframes():
     # print(df_country)
 
     return (df_activity, df_playerbase, df_platforms, df_country)
+
+
+(
+    _,
+    _,
+    _,
+    _,
+) = prepare_dataframes()
