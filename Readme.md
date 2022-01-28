@@ -2,4 +2,4 @@
 
 ## Preview
 
-[![Plot](./static/plot.png)](https://simonsan.github.io/leaderboard_comparison/)
+[![Plot](./static/plot.png)](https://simonsan.github.io/aoe_playerbase_stats/)
