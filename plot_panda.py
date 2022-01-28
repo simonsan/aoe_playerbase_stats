@@ -69,10 +69,12 @@ activity_plot.add_tools(
     )
 )
 
+activity_group = {}
+
 # add multiple renderers
 for game, leaderboard, legend, _ in leaderboard_settings:
     for activity in ACTIVITY_PERIODS:
-        activity_plot.line(
+        activity_group[activity] = activity_plot.line(
             x="timestamp",
             y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
             source=source,
@@ -83,7 +85,7 @@ for game, leaderboard, legend, _ in leaderboard_settings:
             alpha=1.0,
         )
         if game == "aoe2":
-            activity_plot.circle(
+            activity_group[activity] = activity_plot.circle(
                 x="timestamp",
                 y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
                 source=source,
@@ -95,7 +97,7 @@ for game, leaderboard, legend, _ in leaderboard_settings:
                 alpha=1.0,
             )
         elif game == "aoe3":
-            activity_plot.square(
+            activity_group[activity] = activity_plot.square(
                 x="timestamp",
                 y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
                 source=source,
@@ -107,7 +109,7 @@ for game, leaderboard, legend, _ in leaderboard_settings:
                 alpha=1.0,
             )
         elif game == "aoe4":
-            activity_plot.hex_dot(
+            activity_group[activity] = activity_plot.hex_dot(
                 x="timestamp",
                 y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
                 source=source,
@@ -155,7 +157,10 @@ range_slider = RangeSlider(
 range_slider.js_link("value", activity_plot.y_range, "start", attr_selector=0)
 range_slider.js_link("value", activity_plot.y_range, "end", attr_selector=1)
 
-multi_choice = MultiChoice(value=["30d"], options=ACTIVITY_PERIODS)
+
+multi_choice = MultiChoice(
+    value=["30d"], options=ACTIVITY_PERIODS, title="Choose activity period:"
+)
 multi_choice.js_on_change(
     "value",
     CustomJS(
@@ -164,6 +169,45 @@ multi_choice.js_on_change(
 """
     ),
 )
+
+# TODO: Implement activity group filtering
+# https://stackoverflow.com/questions/70808303/filtering-data-source-for-bokeh-plot-using-multichoice-and-customjs
+
+initial_value = ACTIVITY_PERIODS[0]
+
+for i in range(len(ACTIVITY_PERIODS)):
+    if activity_group["activity"][i] in initial_value:
+        activity_group["activity"][i].visible = True
+    else:
+        activity_group["activity"][i].visible = False
+
+
+callback = CustomJS(
+    args=dict(name_dict=activity_group["activity"], multi_choice=multi_choice),
+    code="""
+var selected_vals = multi_choice.value;
+var index_check = [];
+
+for (var i = 0; i < activity_group["activity"].length; i++) {
+    index_check[i]=selected_vals.indexOf(activity_group["activity"][i]);
+        if ((index_check[i])>= 0) {
+            activity_group["activity"][i].visible = true;
+            }
+        else {
+            activity_group["activity"][i].visible = false;
+        }
+    }
+""",
+)
+
+multi_choice.js_on_change("value", callback)
+
+
+"""console log
+multi_choice: value=14d MultiChoice(5036)
+multi_choice: value=3d,14d,1d MultiChoice(5036)
+"""
+
 
 explanations = Div(
     text="""This project is not endorsed by or affiliated with Microsoft in
