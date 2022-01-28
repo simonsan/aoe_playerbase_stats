@@ -14,6 +14,7 @@ class DataProcessor(object):
     def new_with_data(data):
         d = DataProcessor()
         d.date = datetime.date.fromisoformat(data["date"])
+        d.dataset.set_date(d.date)
         d.data = {
             "aoe2": {},
             "aoe3": {},
@@ -61,8 +62,44 @@ class DataProcessor(object):
         with open(file, "w") as handle:
             json.dump(self.dataset.export, handle, indent=4)
 
+    def count_unique_profiles_in_franchise(self):
+        unique_players = {}
+
+        for (
+            game,
+            leaderboard,
+            _,
+            _,
+        ) in leaderboard_settings:
+
+            for entry in self.data[game][leaderboard]:
+                unique_players[entry.profile_id] = True
+
+            self.dataset.export["unique_players"]["franchise"] = len(
+                unique_players
+            )
+
+    def count_unique_profiles_per_game(self):
+        unique_players = {
+            "aoe2": {},
+            "aoe3": {},
+            "aoe4": {},
+        }
+        for (
+            game,
+            leaderboard,
+            _,
+            _,
+        ) in leaderboard_settings:
+
+            for entry in self.data[game][leaderboard]:
+                unique_players[game][entry.profile_id] = True
+
+            self.dataset.export["unique_players"][game] = len(
+                unique_players[game]
+            )
+
     def calculate_activity_profiles(self):
-        self.dataset.export["date"] = self.date.isoformat()
         for (
             game,
             leaderboard,
@@ -74,9 +111,6 @@ class DataProcessor(object):
             activity_7d = 0
             activity_3d = 0
             activity_1d = 0
-
-            if leaderboard == "unranked" and game == "aoe2":
-                pass
 
             for entry in self.data[game][leaderboard]:
                 if entry.last_activity(self.date, 30):

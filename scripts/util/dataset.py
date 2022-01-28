@@ -29,4 +29,13 @@ class DataSet(object):
                     "aoe4": {},
                 },
             },
+            "unique_players": {
+                "aoe2": None,
+                "aoe3": None,
+                "aoe4": None,
+                "franchise": None,
+            },
         }
+
+    def set_date(self, date):
+        self.export["date"] = date.isoformat()

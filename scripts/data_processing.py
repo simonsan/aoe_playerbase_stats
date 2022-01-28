@@ -29,20 +29,15 @@ if DEBUG:
 elif not DEBUG:
     logging.basicConfig(level=logging.INFO)
 
-
+# Parsing
 data_processor = DataProcessor.new_with_data(main_data)
-data_processor.calculate_activity_profiles()
 
+# Does that work.
+data_processor.calculate_activity_profiles()
+data_processor.count_unique_profiles_per_game()
+data_processor.count_unique_profiles_in_franchise()
+
+# Export
 data_processor.export_dataset()
 
 sys.exit(0)
-
-# What can be derived:
-# - we can make the players unique on each leaderboard
-#   and count them -> same as now, but unique
-# - we can count players within a certain amount of activity,
-#   e.g. within last day, last 3 days, last 7 days, last 14 days
-# - we can join all the unique players across the leaderboards
-#   and create overall game activity
-# - we can join all the unique players across the games and create
-#   overall franchise (AoE2DE, AoE3DE, AoE4) multiplayer activity
