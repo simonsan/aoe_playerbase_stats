@@ -61,6 +61,12 @@ class DataSet(object):
                     "franchise": {},
                 },
             },
+            "playerbase": {
+                "aoe2": None,
+                "aoe3": None,
+                "aoe4": None,
+                "franchise": None,
+            },
             "country": {
                 "aoe2": {},
                 "aoe3": {},

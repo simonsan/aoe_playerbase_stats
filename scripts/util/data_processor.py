@@ -107,13 +107,11 @@ class DataProcessor(object):
                 if "country" not in self.unique_profiles[entry.profile_id]:
                     self.unique_profiles[entry.profile_id].update(
                         {
-                            entry.profile_id: {
-                                "country": pycountry.countries.get(
-                                    alpha_2=entry.country_code
-                                )
-                                if entry.country_code is not None
-                                else None,
-                            }
+                            "country": pycountry.countries.get(
+                                alpha_2=entry.country_code
+                            )
+                            if entry.country_code is not None
+                            else None,
                         }
                     )
 
@@ -123,6 +121,9 @@ class DataProcessor(object):
 
     def count_unique_profiles_in_franchise(self):
         self.profile_stats["franchise"] = len(self.unique_profiles)
+        self.dataset.export["playerbase"]["franchise"] = len(
+            self.unique_profiles
+        )
 
     def count_unique_profiles_per_game(self):
         unique_players = {
@@ -138,6 +139,7 @@ class DataProcessor(object):
                         unique_players[game] += 1
 
             self.profile_stats[game] = unique_players[game]
+            self.dataset.export["playerbase"][game] = unique_players[game]
 
     def save_profile_stats(self):
         self.count_unique_profiles_per_game()
@@ -297,9 +299,7 @@ class DataProcessor(object):
 
             for country in countries.keys():
                 percentages[country] = (
-                    country.value() / self.profile_stats[game] * 100
+                    countries[country] / self.profile_stats[game] * 100
                 )
 
-            print(percentages)
-
-            # self.dataset.export["country"]["game"] = activity_30d
+            self.dataset.export["country"]["game"] = percentages
