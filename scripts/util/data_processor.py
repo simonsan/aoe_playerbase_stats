@@ -97,6 +97,7 @@ class DataProcessor(object):
         )
 
     def count_unique_profiles_per_game(self):
+        # TODO: DELETE?
         unique_players = {
             "aoe2": 0,
             "aoe3": 0,

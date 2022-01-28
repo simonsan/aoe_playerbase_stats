@@ -1,10 +1,10 @@
 {
     "date": "2022-01-27",
-    "activity": {
+    "leaderboard_activity": {
         "30d": {
             "aoe2": {
-                "rm": 39642,
-                "team_rm": 64582,
+                "rm": 39641,
+                "team_rm": 64581,
                 "ew": 1787,
                 "team_ew": 2447,
                 "unranked": 118977
@@ -22,12 +22,12 @@
                 "qm_3v3": 53335,
                 "qm_4v4": 45044
             },
-            "franchise": 567270
+            "franchise": {}
         },
         "14d": {
             "aoe2": {
-                "rm": 32020,
-                "team_rm": 53284,
+                "rm": 32019,
+                "team_rm": 53283,
                 "ew": 1343,
                 "team_ew": 1829,
                 "unranked": 0
@@ -45,12 +45,12 @@
                 "qm_3v3": 40627,
                 "qm_4v4": 34546
             },
-            "franchise": 339690
+            "franchise": {}
         },
         "7d": {
             "aoe2": {
-                "rm": 25549,
-                "team_rm": 43697,
+                "rm": 25548,
+                "team_rm": 43696,
                 "ew": 1012,
                 "team_ew": 1358,
                 "unranked": 0
@@ -68,12 +68,12 @@
                 "qm_3v3": 31840,
                 "qm_4v4": 27369
             },
-            "franchise": 263246
+            "franchise": {}
         },
         "3d": {
             "aoe2": {
-                "rm": 18381,
-                "team_rm": 31409,
+                "rm": 18380,
+                "team_rm": 31408,
                 "ew": 673,
                 "team_ew": 811,
                 "unranked": 0
@@ -91,12 +91,12 @@
                 "qm_3v3": 21705,
                 "qm_4v4": 19251
             },
-            "franchise": 179066
+            "franchise": {}
         },
         "1d": {
             "aoe2": {
-                "rm": 13106,
-                "team_rm": 22334,
+                "rm": 13105,
+                "team_rm": 22333,
                 "ew": 462,
                 "team_ew": 515,
                 "unranked": 0
@@ -114,14 +114,40 @@
                 "qm_3v3": 14205,
                 "qm_4v4": 13350
             },
-            "franchise": 121677
+            "franchise": {}
         }
     },
-    "unique_players": {
-        "aoe2": 223757,
-        "aoe3": 5096,
-        "aoe4": 213251,
-        "franchise": 438077
+    "game_activity": {
+        "30d": {
+            "aoe2": 177291,
+            "aoe3": 5096,
+            "aoe4": 213250,
+            "franchise": 395637
+        },
+        "14d": {
+            "aoe2": 67115,
+            "aoe3": 3970,
+            "aoe4": 161032,
+            "franchise": 232117
+        },
+        "7d": {
+            "aoe2": 56203,
+            "aoe3": 3147,
+            "aoe4": 126529,
+            "franchise": 185879
+        },
+        "3d": {
+            "aoe2": 42189,
+            "aoe3": 2299,
+            "aoe4": 88452,
+            "franchise": 132940
+        },
+        "1d": {
+            "aoe2": 31340,
+            "aoe3": 1695,
+            "aoe4": 63024,
+            "franchise": 96059
+        }
     },
     "language": {
         "aoe2": {},
