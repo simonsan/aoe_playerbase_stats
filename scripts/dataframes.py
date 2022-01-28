@@ -2,14 +2,12 @@ import pandas as pd
 import json
 import datetime
 
-from scripts.common import DATASET_FILE, leaderboard_settings
+from scripts.common import DATASET_FILE, leaderboard_settings, ACTIVITY_PERIODS
 
 
 def prepare_dataframes():
     with open(DATASET_FILE, "r") as handle:
         datasets = json.load(handle)
-
-    periods = ["30d", "14d", "7d", "3d", "1d"]
 
     df_activity = pd.DataFrame()
     df_playerbase = pd.DataFrame()
@@ -25,7 +23,7 @@ def prepare_dataframes():
 
         timestamp = datetime.datetime.fromisoformat(dataset["date"])
 
-        for period in periods:
+        for period in ACTIVITY_PERIODS:
             for game, leaderboard, _, _ in leaderboard_settings:
                 data_activity[
                     f"leaderboard_activity_{period}_{game}_{leaderboard}"

@@ -15,6 +15,7 @@ AOC_REF_DATA = (
 AOC_REF_DATA_FILE = "data_temp/aoc_ref_data.json"
 
 FRANCHISE_GAMES = ["aoe2", "aoe3", "aoe4"]
+ACTIVITY_PERIODS = ["30d", "14d", "7d", "3d", "1d"]
 
 # Settings and descriptions for plotting
 LeaderboardSetting = namedtuple(
