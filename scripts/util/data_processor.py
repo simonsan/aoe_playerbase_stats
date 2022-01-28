@@ -302,4 +302,12 @@ class DataProcessor(object):
                     countries[country] / self.profile_stats[game] * 100
                 )
 
-            self.dataset.export["country"]["game"] = percentages
+            top10 = dict(
+                sorted(
+                    percentages.iteritems(),
+                    key=operator.itemgetter(1),
+                    reverse=True,
+                )[:10]
+            )
+
+            self.dataset.export["country"]["game"] = top10
