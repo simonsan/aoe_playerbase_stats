@@ -79,56 +79,47 @@ class DataProcessor(object):
             _,
         ) in leaderboard_settings:
             for entry in self.data[game][leaderboard]:
-                try:
-                    self.unique_profiles[entry.profile_id][game][
-                        leaderboard
-                    ] = entry.last_match
-                    if entry.country_code:
-                        self.unique_profiles[entry.profile_id][
-                            "country"
-                        ] = pycountry.countries.get(alpha_2=entry.country_code)
-                    else:
-                        self.unique_profiles[entry.profile_id][
-                            "country"
-                        ] = None
-                except (KeyError):
-                    try:
-                        if isinstance(
-                            self.unique_profiles[entry.profile_id],
-                            dict,
-                        ):
-                            self.unique_profiles[entry.profile_id].update(
-                                {game: {leaderboard: entry.last_match}}
-                            )
-                            if entry.country_code:
-                                self.unique_profiles[entry.profile_id].update(
-                                    {
-                                        "country": pycountry.countries.get(
-                                            alpha_2=entry.country_code
-                                        )
-                                    }
-                                )
-                            else:
-                                self.unique_profiles[entry.profile_id][
-                                    "country"
-                                ] = None
-                    except (KeyError):
-                        self.unique_profiles[entry.profile_id] = {}
-                        self.unique_profiles[entry.profile_id][game] = {
-                            leaderboard: entry.last_match
+
+                # TODO: Debug
+                # if entry.profile_id == 199325:
+                #     pass
+
+                if entry.profile_id not in self.unique_profiles:
+                    self.unique_profiles.update(
+                        {
+                            entry.profile_id: {
+                                game: {leaderboard: entry.last_match},
+                            }
                         }
-                        if entry.country_code:
-                            self.unique_profiles[entry.profile_id][
-                                "country"
-                            ] = {
+                    )
+                elif game not in self.unique_profiles[entry.profile_id]:
+                    self.unique_profiles[entry.profile_id].update(
+                        {game: {leaderboard: entry.last_match}}
+                    )
+                elif (
+                    leaderboard
+                    not in self.unique_profiles[entry.profile_id][game]
+                ):
+                    self.unique_profiles[entry.profile_id][game].update(
+                        {leaderboard: entry.last_match}
+                    )
+
+                if "country" not in self.unique_profiles[entry.profile_id]:
+                    self.unique_profiles[entry.profile_id].update(
+                        {
+                            entry.profile_id: {
                                 "country": pycountry.countries.get(
                                     alpha_2=entry.country_code
                                 )
+                                if entry.country_code is not None
+                                else None,
                             }
-                        else:
-                            self.unique_profiles[entry.profile_id][
-                                "country"
-                            ] = None
+                        }
+                    )
+
+                # TODO: DEBUG
+                # if entry.profile_id == 199325:
+                #     print(self.unique_profiles[199325])
 
     def count_unique_profiles_in_franchise(self):
         self.profile_stats["franchise"] = len(self.unique_profiles)
@@ -303,6 +294,7 @@ class DataProcessor(object):
                             countries[profile["country"].alpha_2] += 1
                         else:
                             countries.update({profile["country"].alpha_2: 1})
+
             for country in countries.keys():
                 percentages[country] = (
                     country.value() / self.profile_stats[game] * 100
