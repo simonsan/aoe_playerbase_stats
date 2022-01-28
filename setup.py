@@ -5,7 +5,7 @@ setup(
     version="0.3.1",
     description="Player amount on AoE2:DE and AoE4 leaderboards plotted over"
     " time",
-    url="https://github.com/simonsan/leaderboard_comparison",
+    url="https://github.com/simonsan/aoe_playerbase_stats",
     packages=find_packages(),
     package_data={"compare_leaderboards": ["data/*"]},
     install_requires=[
