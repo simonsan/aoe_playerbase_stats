@@ -61,7 +61,7 @@ class DataSet(object):
                     "franchise": {},
                 },
             },
-            "language": {
+            "country": {
                 "aoe2": {},
                 "aoe3": {},
                 "aoe4": {},

@@ -4,6 +4,7 @@ from util.dataset import DataSet
 import datetime
 import json
 import operator
+import pycountry
 
 
 class DataProcessor(object):
@@ -82,6 +83,14 @@ class DataProcessor(object):
                     self.unique_profiles[entry.profile_id][game][
                         leaderboard
                     ] = entry.last_match
+                    if entry.country_code:
+                        self.unique_profiles[entry.profile_id][
+                            "country"
+                        ] = pycountry.countries.get(alpha_2=entry.country_code)
+                    else:
+                        self.unique_profiles[entry.profile_id][
+                            "country"
+                        ] = None
                 except (KeyError):
                     try:
                         if isinstance(
@@ -91,11 +100,35 @@ class DataProcessor(object):
                             self.unique_profiles[entry.profile_id].update(
                                 {game: {leaderboard: entry.last_match}}
                             )
+                            if entry.country_code:
+                                self.unique_profiles[entry.profile_id].update(
+                                    {
+                                        "country": pycountry.countries.get(
+                                            alpha_2=entry.country_code
+                                        )
+                                    }
+                                )
+                            else:
+                                self.unique_profiles[entry.profile_id][
+                                    "country"
+                                ] = None
                     except (KeyError):
                         self.unique_profiles[entry.profile_id] = {}
                         self.unique_profiles[entry.profile_id][game] = {
                             leaderboard: entry.last_match
                         }
+                        if entry.country_code:
+                            self.unique_profiles[entry.profile_id][
+                                "country"
+                            ] = {
+                                "country": pycountry.countries.get(
+                                    alpha_2=entry.country_code
+                                )
+                            }
+                        else:
+                            self.unique_profiles[entry.profile_id][
+                                "country"
+                            ] = None
 
     def count_unique_profiles_in_franchise(self):
         self.profile_stats["franchise"] = len(self.unique_profiles)
@@ -256,20 +289,25 @@ class DataProcessor(object):
         self.dataset.export["game_activity"]["3d"]["franchise"] = activity_3d
         self.dataset.export["game_activity"]["1d"]["franchise"] = activity_1d
 
-    def countries_per_leaderboard(self):
-        # languages = {}
+    def countries_per_game(self):
 
-        # for (
-        #     game,
-        #     leaderboard,
-        #     _,
-        #     _,
-        # ) in leaderboard_settings:
+        for game in FRANCHISE_GAMES:
 
-        #     for entry in self.data[game][leaderboard]:
-        #         unique_players[game][entry.profile_id] = True
+            countries = {}
+            percentages = {}
 
-        #     self.dataset.export["unique_players"][game] = len(
-        #         unique_players[game]
-        #     )
-        pass
+            for profile in self.unique_profiles.values():
+                if game in profile:
+                    if profile["country"] is not None:
+                        if profile["country"].alpha_2 in countries:
+                            countries[profile["country"].alpha_2] += 1
+                        else:
+                            countries.update({profile["country"].alpha_2: 1})
+            for country in countries.keys():
+                percentages[country] = (
+                    country.value() / self.profile_stats[game] * 100
+                )
+
+            print(percentages)
+
+            # self.dataset.export["country"]["game"] = activity_30d

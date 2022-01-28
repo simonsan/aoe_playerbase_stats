@@ -42,6 +42,7 @@ data_processor.save_profile_stats()
 data_processor.calculate_leaderboard_activity()
 data_processor.calculate_game_activity()
 data_processor.calculate_franchise_activity()
+data_processor.countries_per_game()
 
 # Export
 data_processor.export_dataset()
