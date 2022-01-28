@@ -23,6 +23,7 @@ LOGGER = logging.getLogger(__name__)
 DEBUG = False
 CACHE = True
 GRANULAR = False
+SAVE_INTERMEDIATE_CACHE = False
 
 # Check for cache hit
 if os.path.exists(CACHE_FILE):
