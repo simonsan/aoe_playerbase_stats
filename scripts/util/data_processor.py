@@ -372,7 +372,7 @@ class DataProcessor(object):
 
         self.dataset.export["country"]["franchise"] = top10
 
-    def platforms_per_games(self):
+    def platforms_per_game(self):
         for game in FRANCHISE_GAMES:
 
             steam = 0
