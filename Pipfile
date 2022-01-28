@@ -7,6 +7,7 @@ name = "pypi"
 bokeh = "*"
 black = "*"
 aiohttp = "*"
+pycountry = "*"
 
 [dev-packages]
 flake8 = "*"

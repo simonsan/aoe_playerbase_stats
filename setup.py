@@ -11,5 +11,6 @@ setup(
     install_requires=[
         "bokeh>=2.4.2",
         "aiohttp>=3.8.1",
+        "pycountry>=22.1.10",
     ],
 )
