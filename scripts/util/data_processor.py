@@ -11,6 +11,12 @@ class DataProcessor(object):
         self.date = None
         self.data = {}
         self.dataset = DataSet()
+        self.profile_stats = {
+            "aoe2": 0,
+            "aoe3": 0,
+            "aoe4": 0,
+            "franchise": 0,
+        }
         self.unique_profiles = {}
 
     def new_with_data(data):
@@ -92,12 +98,9 @@ class DataProcessor(object):
                         }
 
     def count_unique_profiles_in_franchise(self):
-        self.dataset.export["unique_players"]["franchise"] = len(
-            self.unique_profiles
-        )
+        self.profile_stats["franchise"] = len(self.unique_profiles)
 
     def count_unique_profiles_per_game(self):
-        # TODO: DELETE?
         unique_players = {
             "aoe2": 0,
             "aoe3": 0,
@@ -110,7 +113,7 @@ class DataProcessor(object):
                     if len(profile[game]) > 0:
                         unique_players[game] += 1
 
-            self.dataset.export["unique_players"][game] = unique_players[game]
+            self.profile_stats[game] = unique_players[game]
 
     def calculate_leaderboard_activity(self):
         for (

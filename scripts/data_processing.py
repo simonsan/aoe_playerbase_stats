@@ -32,13 +32,17 @@ elif not DEBUG:
 # Parsing
 data_processor = DataProcessor.new_with_data(main_data)
 
-# Does that work.
+# Does all that juicy work.
 data_processor.create_unique_player_profiles()
+
+# Utility
+data_processor.count_unique_profiles_per_game()
+data_processor.count_unique_profiles_in_franchise()
+
+# Statistics
 data_processor.calculate_leaderboard_activity()
 data_processor.calculate_game_activity()
 data_processor.calculate_franchise_activity()
-# data_processor.count_unique_profiles_per_game()
-# data_processor.count_unique_profiles_in_franchise()
 
 # Export
 data_processor.export_dataset()
