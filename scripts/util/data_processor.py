@@ -115,6 +115,10 @@ class DataProcessor(object):
 
             self.profile_stats[game] = unique_players[game]
 
+    def save_profile_stats(self):
+        self.count_unique_profiles_per_game()
+        self.count_unique_profiles_in_franchise()
+
     def calculate_leaderboard_activity(self):
         for (
             game,

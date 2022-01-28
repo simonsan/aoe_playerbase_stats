@@ -36,8 +36,7 @@ data_processor = DataProcessor.new_with_data(main_data)
 data_processor.create_unique_player_profiles()
 
 # Utility
-data_processor.count_unique_profiles_per_game()
-data_processor.count_unique_profiles_in_franchise()
+data_processor.save_profile_stats()
 
 # Statistics
 data_processor.calculate_leaderboard_activity()
