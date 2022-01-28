@@ -23,7 +23,7 @@ class DataProcessor(object):
 
     def new_with_data(data):
         d = DataProcessor()
-        d.date = datetime.date.fromisoformat(data["date"])
+        d.date = datetime.datetime.fromisoformat(data["date"])
         d.dataset.set_date(d.date)
         d.data = {
             "aoe2": {},

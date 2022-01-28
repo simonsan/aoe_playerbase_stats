@@ -27,11 +27,11 @@ async def main():
         leaderboard_data = json.load(handle)
     LOGGER.info("Data file loaded.")
 
-    today = datetime.date.today()
+    now = datetime.datetime.now()
 
     # Setup basic data layout for leaderboard file
     data_entry = {
-        "date": today.isoformat(),
+        "date": now.isoformat(),
         "aoe2": {},
         "aoe3": {},
         "aoe4": {},

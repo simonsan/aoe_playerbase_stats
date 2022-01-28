@@ -133,11 +133,11 @@ async def main():
     if not CACHE_HIT:
         LOGGER.info("Cache not hit, collecting data ...")
 
-        today = datetime.date.today()
+        now = datetime.datetime.now()
 
         # Setup basic data layout for leaderboard file
         main_data = {
-            "date": today.isoformat(),
+            "date": now.isoformat(),
             "aoc_ref": [],
             "aoe2": {},
             "aoe3": {},
