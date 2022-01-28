@@ -8,6 +8,7 @@ bokeh = "*"
 black = "*"
 aiohttp = "*"
 pycountry = "*"
+pandas = "*"
 
 [dev-packages]
 flake8 = "*"
