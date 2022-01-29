@@ -19,13 +19,15 @@ WRITE = False
 # or better(?) add an array of cache files
 # or add a folder containing the files and open them all (probably worse)
 
+# TODO: Check what needs to be done to make
+
 # Import data
 try:
     if os.path.exists(CACHE_FILE):
         with lzma.open(CACHE_FILE, mode="rb") as handle:
             # We are aware of Pickle security implications
             main_data = pickle.load(handle)  # nosec
-except FileNotFoundError:
+except (FileNotFoundError):
     LOGGER.error("DataFile not found.")
 
 # Set Debug logging if necessary

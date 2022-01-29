@@ -6,8 +6,8 @@ from collections import namedtuple
 CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
 
 DATA_FILE_NAME = "collected_data"
-TEMP_DATA_FOLDER = "data_temp/"
-
+TEMP_DATA_FOLDER = "./data_temp/"
+PROFILE_FILE = "./data/profiles.xz.pickle"
 
 ACTIVITY_DATA_FILE = "./data/activity_data.json"
 DATASET_FILE = "./data/dataset.json"
@@ -21,7 +21,7 @@ AOC_REF_DATA = (
     "https://raw.githubusercontent.com/SiegeEngineers/"
     "aoc-reference-data/master/data/auto_generated/players.json"
 )
-AOC_REF_DATA_FILE = "data_temp/aoc_ref_data.json"
+AOC_REF_DATA_FILE = "./data_temp/aoc_ref_data.json"
 
 FRANCHISE_GAMES = ["aoe2", "aoe3", "aoe4"]
 ACTIVITY_PERIODS = ["30d", "14d", "7d", "3d", "1d"]

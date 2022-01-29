@@ -3,10 +3,15 @@ import hashlib
 import json
 import operator
 import os
-from collections import Counter
+from collections import Counter, defaultdict
 
 import pycountry
-from common import DATASET_FILE, FRANCHISE_GAMES, leaderboard_settings
+from common import (
+    PROFILE_FILE,
+    DATASET_FILE,
+    FRANCHISE_GAMES,
+    leaderboard_settings,
+)
 
 from util.dataset import DataSet
 from util.leaderboard_entry import LeaderboardEntry
@@ -25,7 +30,7 @@ class DataProcessor(object):
             "aoe4": 0,
             "franchise": 0,
         }
-        self.unique_profiles = {}
+        self.unique_profiles = defaultdict(dict)
 
     def new_with_data(data):
         d = DataProcessor()
@@ -43,7 +48,7 @@ class DataProcessor(object):
             _,
             _,
         ) in leaderboard_settings:
-            collector = []
+            collector = defaultdict(list)
             for entry in data[game][leaderboard]:
                 collector.append(
                     LeaderboardEntry(
@@ -107,6 +112,21 @@ class DataProcessor(object):
         with open(file, "w") as handle:
             json.dump(self.dataset.export, handle, indent=4)
 
+    def export_profiles(self, file=PROFILE_FILE):
+        import pickle
+        import lzma
+
+        with lzma.open(file, mode="wb") as handle:
+            pickle.dump(self.unique_profiles, handle)
+
+    def import_profiles(self, file=PROFILE_FILE):
+        import pickle
+        import lzma
+
+        with lzma.open(file, mode="rb") as handle:
+            # We are aware of Pickle security implications
+            self.unique_profiles = pickle.load(handle)  # nosec
+
     def create_unique_player_profiles(self):
         for (
             game,
@@ -120,57 +140,90 @@ class DataProcessor(object):
                 # if entry.profile_id == 199325:
                 #     pass
 
-                if entry.profile_id not in self.unique_profiles:
-                    self.unique_profiles.update(
-                        {
-                            entry.profile_id: {
-                                game: {leaderboard: entry.last_match},
-                            }
-                        }
-                    )
-                elif game not in self.unique_profiles[entry.profile_id]:
-                    self.unique_profiles[entry.profile_id].update(
-                        {game: {leaderboard: entry.last_match}}
-                    )
-                elif (
+                self.unique_profiles[entry.profile_id][game][
                     leaderboard
-                    not in self.unique_profiles[entry.profile_id][game]
-                ):
-                    self.unique_profiles[entry.profile_id][game].update(
-                        {leaderboard: entry.last_match}
-                    )
+                ] = entry.last_match
 
-                if "country" not in self.unique_profiles[entry.profile_id]:
-                    self.unique_profiles[entry.profile_id].update(
-                        {
-                            "country": pycountry.countries.get(
-                                alpha_2=entry.country_code
-                            )
-                            if entry.country_code is not None
-                            else None,
-                        }
-                    )
+                self.unique_profiles[entry.profile_id]["country"] = (
+                    pycountry.countries.get(alpha_2=entry.country_code)
+                    if entry.country_code is not None
+                    else None
+                )
 
-                if "hasSteamID" not in self.unique_profiles[entry.profile_id]:
-                    self.unique_profiles[entry.profile_id].update(
-                        {
-                            "hasSteamID": True
-                            if entry.steam_id is not None
-                            else False,
-                        }
-                    )
+                self.unique_profiles[entry.profile_id]["hasSteamID"] = (
+                    True if entry.steam_id is not None else False
+                )
+
+                self.unique_profiles[entry.profile_id]["hasRelicLinkID"] = (
+                    True if entry.profile_id is not None else False
+                )
+
+                # TODO: what are the general ratios are of new players vs
+                # leaving players vs long term players
+                # We can derive new players from first_seen
+                # we can derive leaving players from last_seen
+                # long-term players need some kind of `activity_streak`
+                # something like
 
                 if (
-                    "hasRelicLinkID"
-                    not in self.unique_profiles[entry.profile_id]
+                    self.unique_profiles[entry.profile_id]["activity"][
+                        "first_seen"
+                    ]
+                    is None
                 ):
-                    self.unique_profiles[entry.profile_id].update(
-                        {
-                            "hasRelicLinkID": True
-                            if entry.profile_id is not None
-                            else False,
-                        }
-                    )
+                    self.unique_profiles[entry.profile_id]["activity"][
+                        "first_seen"
+                    ] = self.date
+
+                if (
+                    self.unique_profiles[entry.profile_id]["activity"][
+                        "last_seen"
+                    ]
+                    < entry.last_match
+                ):
+                    self.unique_profiles[entry.profile_id]["activity"][
+                        "last_seen"
+                    ] = entry.last_match
+
+                if (
+                    self.unique_profiles[entry.profile_id]["highest_rank"]
+                    < entry.rank
+                ):
+                    self.unique_profiles[entry.profile_id][
+                        "highest_rank"
+                    ] = entry.rank
+
+                if (
+                    self.unique_profiles[entry.profile_id]["highest_rating"]
+                    < entry.highest_rating
+                ):
+                    self.unique_profiles[entry.profile_id][
+                        "highest_rating"
+                    ] = entry.highest_rating
+
+                if (
+                    self.unique_profiles[entry.profile_id]["highest_streak"]
+                    < entry.streak
+                ):
+                    self.unique_profiles[entry.profile_id][
+                        "highest_streak"
+                    ] = entry.streak
+
+                if (
+                    self.unique_profiles[entry.profile_id]["num_games"]
+                    < entry.num_games
+                ):
+                    self.unique_profiles[entry.profile_id][
+                        "num_games"
+                    ] = entry.num_games
+
+                if (
+                    self.unique_profiles[entry.profile_id]["num_wins"]
+                    < entry.num_wins
+                ):
+                    self.unique_profiles[entry.profile_id][
+                        "num_wins"
+                    ] = entry.num_wins
 
                 # TODO: DEBUG
                 # if entry.profile_id == 199325:
