@@ -12,10 +12,10 @@ class LeaderboardEntry(object):
         previous_rating,
         country_code,
         name,
-        known_name,
-        avatar,
-        avatarfull,
-        avatarmedium,
+        # known_name,
+        # avatar,
+        # avatarfull,
+        # avatarmedium,
         num_games,
         streak,
         num_wins,
@@ -33,10 +33,10 @@ class LeaderboardEntry(object):
         self.previous_rating = previous_rating
         self.country_code = country_code
         self.name = name
-        self.known_name = known_name
-        self.avatar = avatar
-        self.avatarfull = avatarfull
-        self.avatarmedium = avatarmedium
+        # self.known_name = known_name
+        # self.avatar = avatar
+        # self.avatarfull = avatarfull
+        # self.avatarmedium = avatarmedium
         self.num_games = num_games
         self.streak = streak
         self.num_wins = num_wins

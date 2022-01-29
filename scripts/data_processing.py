@@ -3,22 +3,17 @@ from util.data_processor import DataProcessor
 from common import CACHE_FILE
 
 import logging
-
-# import datetime
 import os
 import sys
 import pickle
-
-# import sys
 
 LOGGER = logging.getLogger(__name__)
 
 DEBUG = True
 WRITE = True
-SALT = os.getenv("SALT_LEADERBOARD_DATA")
+
 
 # TODO: We might also want to be able to pass more than one file
-
 
 # Import data
 try:

@@ -1,11 +1,15 @@
 from common import leaderboard_settings, DATASET_FILE, FRANCHISE_GAMES
 from util.leaderboard_entry import LeaderboardEntry
 from util.dataset import DataSet
+from collections import Counter
 import datetime
 import json
 import operator
 import pycountry
-from collections import Counter
+import hashlib
+import os
+
+PEPPER = os.getenv("PEPPER_LEADERBOARD_DATA")
 
 
 class DataProcessor(object):
@@ -41,18 +45,22 @@ class DataProcessor(object):
             for entry in data[game][leaderboard]:
                 collector.append(
                     LeaderboardEntry(
-                        steam_id=entry["steam_id"],
-                        profile_id=entry["profile_id"],
+                        steam_id=DataProcessor.pseudonymise(entry["steam_id"])
+                        if entry["steam_id"] is not None
+                        else None,
+                        profile_id=DataProcessor.pseudonymise(
+                            entry["profile_id"]
+                        ),
                         rank=entry["rank"],
                         rating=entry["rating"],
                         highest_rating=entry["highest_rating"],
                         previous_rating=entry["previous_rating"],
                         country_code=entry["country_code"],
-                        name=entry["name"],
-                        known_name=entry["known_name"],
-                        avatar=entry["avatar"],
-                        avatarfull=entry["avatarfull"],
-                        avatarmedium=entry["avatarmedium"],
+                        name=DataProcessor.pseudonymise(entry["name"]),
+                        # known_name=entry["known_name"],
+                        # avatar=entry["avatar"],
+                        # avatarfull=entry["avatarfull"],
+                        # avatarmedium=entry["avatarmedium"],
                         num_games=entry["num_games"],
                         streak=entry["streak"],
                         num_wins=entry["num_wins"],
@@ -67,6 +75,11 @@ class DataProcessor(object):
             d.data[game][leaderboard] = collector
 
         return d
+
+    def pseudonymise(plaintext):
+        plaintext = plaintext.encode()
+        digest = hashlib.pbkdf2_hmac("sha224", plaintext, PEPPER, 2000)
+        return digest
 
     def append_to_dataset(self, file=DATASET_FILE):
         with open(file, "r") as handle:
