@@ -179,6 +179,8 @@ async def main():
                 main_data[game][leaderboard] = data
             elif leaderboard is None and game == "aoc_ref":
                 main_data[game] = data
+            elif data is None:
+                main_data[game] = None
 
         LOGGER.info(
             f"Data collection took: {time.time() - start_time} seconds"
