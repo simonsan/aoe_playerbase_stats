@@ -1,5 +1,4 @@
 # Intern
-from common import CACHE_FILE
 from util.data_processor import DataProcessor
 
 import logging
@@ -14,15 +13,17 @@ import json
 LOGGER = logging.getLogger(__name__)
 
 DEBUG = True
-WRITE = False
+WRITE = True
 
-# Check for cache hit
-if os.path.exists(CACHE_FILE):
-    CACHE_HIT = True
-    with open(CACHE_FILE, encoding="utf8", mode="r") as handle:
-        main_data = json.load(handle)
-else:
-    CACHE_HIT = False
+DATA_FILE = "data_temp/archive/cache.28-01.json"
+
+# Import data
+try:
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, encoding="utf8", mode="r") as handle:
+            main_data = json.load(handle)
+except:
+    LOGGER.error("DataFile not found.")
 
 # Set Debug logging if necessary
 if DEBUG:
