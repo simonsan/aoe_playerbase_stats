@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import logging
+import lzma
 import os
 import pickle
 import sys
@@ -190,7 +191,7 @@ async def main():
         # Write data back to data file
         LOGGER.info(f"Writing data to Cache: {CACHE_FILE}")
         if SAVE_CACHE:
-            with open(CACHE_FILE, mode="wb") as handle:
+            with lzma.open(CACHE_FILE, mode="wb") as handle:
                 pickle.dump(main_data, handle)
 
         LOGGER.info(

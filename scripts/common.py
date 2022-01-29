@@ -15,7 +15,7 @@ DATA_FILE = "./data/leaderboard_data.json"
 CACHE_PATH = "./data_temp/cache/"
 PLOT_OUTPUT = "./web/index.html"
 
-CACHE_FILE = f"{CACHE_PATH}cache_{CURRENT_DATE}.pickle"
+CACHE_FILE = f"{CACHE_PATH}cache_{CURRENT_DATE}.xz.pickle"
 
 AOC_REF_DATA = (
     "https://raw.githubusercontent.com/SiegeEngineers/"

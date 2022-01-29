@@ -1,5 +1,6 @@
 # Intern
 import logging
+import lzma
 import os
 import pickle
 import sys
@@ -10,15 +11,18 @@ from util.data_processor import DataProcessor
 LOGGER = logging.getLogger(__name__)
 
 DEBUG = True
-WRITE = True
+WRITE = False
 
 
 # TODO: We might also want to be able to pass more than one file
+# e.g. wrapping all the following into a function and call that within a loop
+# or better(?) add an array of cache files
+# or add a folder containing the files and open them all (probably worse)
 
 # Import data
 try:
     if os.path.exists(CACHE_FILE):
-        with open(CACHE_FILE, mode="rb") as handle:
+        with lzma.open(CACHE_FILE, mode="rb") as handle:
             # We are aware of Pickle security implications
             main_data = pickle.load(handle)  # nosec
 except FileNotFoundError:
