@@ -1,5 +1,6 @@
 # Intern
 from util.data_processor import DataProcessor
+from common import DATA_FILE_NAME, TEMP_DATA_FOLDER
 
 import logging
 
@@ -16,8 +17,7 @@ DEBUG = True
 WRITE = True
 
 # TODO: We might also want to be able to pass more than one file
-DATA_FILE_NAME = ""
-TEMP_DATA_FOLDER = "data_temp/"
+
 
 # Import data
 try:
