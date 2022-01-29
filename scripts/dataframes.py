@@ -1,12 +1,9 @@
-import pandas as pd
-import json
 import datetime
+import json
 
-from .common import (
-    DATASET_FILE,
-    leaderboard_settings,
-    ACTIVITY_PERIODS,
-)
+import pandas as pd
+
+from .common import ACTIVITY_PERIODS, DATASET_FILE, leaderboard_settings
 
 
 def prepare_dataframes():

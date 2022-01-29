@@ -1,22 +1,21 @@
-import logging
+import asyncio
 import datetime
+import logging
 import os
 import pickle
-import asyncio
-
-import time
 import sys
-
-# Intern
-from common import (
-    leaderboard_settings,
-    CACHE_FILE,
-    AOC_REF_DATA,
-    AOC_REF_DATA_FILE,
-)
+import time
 
 # Extern
 import aiohttp
+
+# Intern
+from common import (
+    AOC_REF_DATA,
+    AOC_REF_DATA_FILE,
+    CACHE_FILE,
+    leaderboard_settings,
+)
 
 LOGGER = logging.getLogger(__name__)
 

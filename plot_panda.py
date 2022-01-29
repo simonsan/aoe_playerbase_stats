@@ -1,31 +1,32 @@
-import logging
-
-# import datetime
-# import pandas as pd
-
 # itertools handles the cycling through palette colours
 import itertools
+import logging
 
-# Intern
-from scripts.common import PLOT_OUTPUT, leaderboard_settings, ACTIVITY_PERIODS
-from scripts.dataframes import prepare_dataframes
+from bokeh.io import curdoc
 
 # Extern
 # Bokeh
 from bokeh.layouts import layout
-from bokeh.plotting import figure, save, output_file
 from bokeh.models import (
     ColumnDataSource,
-    RangeSlider,
-    HoverTool,
-    Range1d,
-    DatetimeTickFormatter,
     CustomJS,
-    MultiChoice,
+    DatetimeTickFormatter,
     Div,
+    HoverTool,
+    MultiChoice,
+    Range1d,
+    RangeSlider,
 )
-from bokeh.io import curdoc
 from bokeh.palettes import Category20_20 as palette
+from bokeh.plotting import figure, output_file, save
+
+# Intern
+from scripts.common import ACTIVITY_PERIODS, PLOT_OUTPUT, leaderboard_settings
+from scripts.dataframes import prepare_dataframes
+
+# import datetime
+# import pandas as pd
+
 
 DEBUG_YAML = False
 DEBUG_PLOT = False

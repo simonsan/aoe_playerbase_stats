@@ -1,11 +1,11 @@
 # Intern
-from util.data_processor import DataProcessor
-from common import CACHE_FILE
-
 import logging
 import os
-import sys
 import pickle
+import sys
+
+from common import CACHE_FILE
+from util.data_processor import DataProcessor
 
 LOGGER = logging.getLogger(__name__)
 

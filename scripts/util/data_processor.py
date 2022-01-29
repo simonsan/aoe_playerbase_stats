@@ -1,15 +1,17 @@
-from common import leaderboard_settings, DATASET_FILE, FRANCHISE_GAMES
-from util.leaderboard_entry import LeaderboardEntry
-from util.dataset import DataSet
-from collections import Counter
 import datetime
+import hashlib
 import json
 import operator
-import pycountry
-import hashlib
 import os
+from collections import Counter
 
-PEPPER = os.getenv("PEPPER_LEADERBOARD_DATA")
+import pycountry
+from common import DATASET_FILE, FRANCHISE_GAMES, leaderboard_settings
+
+from util.dataset import DataSet
+from util.leaderboard_entry import LeaderboardEntry
+
+PEPPER = os.getenv("PEPPER_LEADERBOARD_DATA").encode()
 
 
 class DataProcessor(object):
@@ -56,10 +58,14 @@ class DataProcessor(object):
                         highest_rating=entry["highest_rating"],
                         previous_rating=entry["previous_rating"],
                         country_code=entry["country_code"],
-                        name=DataProcessor.pseudonymise(entry["name"]),
+                        name=DataProcessor.pseudonymise(entry["name"])
+                        if entry["name"] is not None
+                        else None,
                         known_name=DataProcessor.pseudonymise(
                             entry["known_name"]
-                        ),
+                        )
+                        if entry["known_name"] is not None
+                        else None,
                         # avatar=entry["avatar"],
                         # avatarfull=entry["avatarfull"],
                         # avatarmedium=entry["avatarmedium"],
@@ -79,8 +85,13 @@ class DataProcessor(object):
         return d
 
     def pseudonymise(plaintext):
-        plaintext = plaintext.encode()
-        digest = hashlib.pbkdf2_hmac("sha224", plaintext, PEPPER, 2000)
+        ###
+        # DON'T USE FOR PASSWORDS, NOT SECURE
+        ###
+        plaintext = f"{plaintext}".encode()
+        # Let's keep this simple, more privacy is already given with just
+        # '1' iteration. We just don't want to work with plaintext.
+        digest = hashlib.pbkdf2_hmac("sha224", plaintext, PEPPER, 1)
         return digest
 
     def append_to_dataset(self, file=DATASET_FILE):

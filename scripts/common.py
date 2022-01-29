@@ -1,7 +1,7 @@
 # flake8: noqa: E501
 
-from collections import namedtuple
 import datetime
+from collections import namedtuple
 
 CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
 
