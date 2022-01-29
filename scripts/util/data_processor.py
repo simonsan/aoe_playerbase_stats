@@ -57,7 +57,9 @@ class DataProcessor(object):
                         previous_rating=entry["previous_rating"],
                         country_code=entry["country_code"],
                         name=DataProcessor.pseudonymise(entry["name"]),
-                        # known_name=entry["known_name"],
+                        known_name=DataProcessor.pseudonymise(
+                            entry["known_name"]
+                        ),
                         # avatar=entry["avatar"],
                         # avatarfull=entry["avatarfull"],
                         # avatarmedium=entry["avatarmedium"],
