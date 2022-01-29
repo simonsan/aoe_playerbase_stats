@@ -105,7 +105,7 @@ async def get_all_player_data_from_leaderboard(
                 LOGGER.error(
                     f"Response status not 'SUCCESS != {resp.status}' for {game}_{leaderboard} request."
                 )
-                return ((),)
+                return ((game, leaderboard), None)
 
         if len(data["data"]) < length:
             # Write data back to file
