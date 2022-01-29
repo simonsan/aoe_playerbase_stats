@@ -16,13 +16,15 @@ DEBUG = True
 WRITE = True
 
 # TODO: We might also want to be able to pass more than one file
-DATA_FILE = ""
+DATA_FILE_NAME = ""
 TEMP_DATA_FOLDER = "data_temp/"
 
 # Import data
 try:
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, encoding="utf8", mode="r") as handle:
+    if os.path.exists(f"{TEMP_DATA_FOLDER}{DATA_FILE_NAME}"):
+        with open(
+            f"{TEMP_DATA_FOLDER}{DATA_FILE_NAME}", encoding="utf8", mode="r"
+        ) as handle:
             main_data = json.load(handle)
 except:
     LOGGER.error("DataFile not found.")
