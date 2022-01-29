@@ -338,10 +338,10 @@ class DataProcessor(object):
 
             no_country = round(no_country / self.profile_stats[game] * 100, 2)
 
-            top10 = dict(Counter(percentages).most_common(10))
-            top10.update({"no_country_set": no_country})
+            top15 = dict(Counter(percentages).most_common(15))
+            top15.update({"no_country_set": no_country})
 
-            self.dataset.export["country"][game] = top10
+            self.dataset.export["country"][game] = top15
 
     def countries_for_franchise(self):
 
@@ -367,10 +367,10 @@ class DataProcessor(object):
             no_country / self.profile_stats["franchise"] * 100, 2
         )
 
-        top10 = dict(Counter(percentages).most_common(10))
-        top10.update({"no_country_set": no_country})
+        top15 = dict(Counter(percentages).most_common(15))
+        top15.update({"no_country_set": no_country})
 
-        self.dataset.export["country"]["franchise"] = top10
+        self.dataset.export["country"]["franchise"] = top15
 
     def platforms_per_game(self):
         for game in FRANCHISE_GAMES:

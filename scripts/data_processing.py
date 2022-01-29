@@ -14,6 +14,7 @@ import json
 LOGGER = logging.getLogger(__name__)
 
 DEBUG = True
+WRITE = False
 
 # Check for cache hit
 if os.path.exists(CACHE_FILE):
@@ -48,9 +49,11 @@ data_processor.platforms_per_game()
 data_processor.platforms_for_franchise()
 
 # DEBUG: Export new dataset
+# if WRITE:
 # data_processor.export_dataset()
 
 # Append to old dataset
-data_processor.append_to_dataset()
+if WRITE:
+    data_processor.append_to_dataset()
 
 sys.exit(0)
