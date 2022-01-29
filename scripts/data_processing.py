@@ -15,7 +15,9 @@ LOGGER = logging.getLogger(__name__)
 DEBUG = True
 WRITE = True
 
-DATA_FILE = "data_temp/archive/cache.28-01.json"
+# TODO: We might also want to be able to pass more than one file
+DATA_FILE = ""
+TEMP_DATA_FOLDER = "data_temp/"
 
 # Import data
 try:
