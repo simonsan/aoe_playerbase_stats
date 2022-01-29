@@ -1,13 +1,13 @@
 # Intern
 from util.data_processor import DataProcessor
-from common import DATA_FILE_NAME, TEMP_DATA_FOLDER
+from common import CACHE_FILE
 
 import logging
 
 # import datetime
 import os
 import sys
-import json
+import pickle
 
 # import sys
 
@@ -15,18 +15,18 @@ LOGGER = logging.getLogger(__name__)
 
 DEBUG = True
 WRITE = True
+SALT = os.getenv("SALT_LEADERBOARD_DATA")
 
 # TODO: We might also want to be able to pass more than one file
 
 
 # Import data
 try:
-    if os.path.exists(f"{TEMP_DATA_FOLDER}{DATA_FILE_NAME}"):
-        with open(
-            f"{TEMP_DATA_FOLDER}{DATA_FILE_NAME}", encoding="utf8", mode="r"
-        ) as handle:
-            main_data = json.load(handle)
-except:
+    if os.path.exists(CACHE_FILE):
+        with open(CACHE_FILE, mode="rb") as handle:
+            # We are aware of Pickle security implications
+            main_data = pickle.load(handle)  # nosec
+except FileNotFoundError:
     LOGGER.error("DataFile not found.")
 
 # Set Debug logging if necessary

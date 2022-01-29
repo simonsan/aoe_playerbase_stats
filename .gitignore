@@ -6,3 +6,4 @@ scripts/__pycache__
 /data_temp/**/*.json
 *.pyc
 scripts/util/__pycache__
+data_temp/cache/*.pickle

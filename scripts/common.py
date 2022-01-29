@@ -1,9 +1,13 @@
 # flake8: noqa: E501
 
 from collections import namedtuple
+import datetime
 
-DATA_FILE_NAME = ""
+CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
+
+DATA_FILE_NAME = "collected_data"
 TEMP_DATA_FOLDER = "data_temp/"
+
 
 ACTIVITY_DATA_FILE = "./data/activity_data.json"
 DATASET_FILE = "./data/dataset.json"
@@ -11,6 +15,7 @@ DATA_FILE = "./data/leaderboard_data.json"
 CACHE_PATH = "./data_temp/cache/"
 PLOT_OUTPUT = "./web/index.html"
 
+CACHE_FILE = f"{CACHE_PATH}cache_{CURRENT_DATE}.pickle"
 
 AOC_REF_DATA = (
     "https://raw.githubusercontent.com/SiegeEngineers/"

@@ -1,7 +1,7 @@
 import logging
 import datetime
 import os
-import json
+import pickle
 import asyncio
 
 import time
@@ -10,7 +10,7 @@ import sys
 # Intern
 from common import (
     leaderboard_settings,
-    CACHE_PATH,
+    CACHE_FILE,
     AOC_REF_DATA,
     AOC_REF_DATA_FILE,
 )
@@ -22,13 +22,11 @@ LOGGER = logging.getLogger(__name__)
 
 DEBUG = False
 CACHE = True
-GRANULAR = True
+GRANULAR = False
 SAVE_INTERMEDIATE_CACHE = False
-CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
-
 
 # Check for cache hit
-if os.path.exists(f"{CACHE_PATH}_{CURRENT_DATE}.json"):
+if os.path.exists(CACHE_FILE):
     CACHE_HIT = True
 else:
     CACHE_HIT = False
@@ -52,8 +50,8 @@ async def get_aoc_ref_data(session, url=AOC_REF_DATA):
         if resp.status == 200:
             data = await resp.json(content_type=None, encoding="utf8")
             LOGGER.debug(f"Data length: {len(data)} of aoc_ref_data")
-            with open(AOC_REF_DATA_FILE, "w") as handle:
-                json.dump(data, handle, indent=4)
+            with open(AOC_REF_DATA_FILE, "wb") as handle:
+                pickle.dump(data, handle)
         else:
             LOGGER.error(
                 f"Response status not 'SUCCESS != {resp.status}'"
@@ -103,7 +101,8 @@ async def get_all_player_data_from_leaderboard(
                     collector.append(item)
             else:
                 LOGGER.error(
-                    f"Response status not 'SUCCESS != {resp.status}' for {game}_{leaderboard} request."
+                    f"Response status not 'SUCCESS != {resp.status}' for"
+                    f" {game}_{leaderboard} request."
                 )
                 return ((game, leaderboard), None)
 
@@ -111,9 +110,10 @@ async def get_all_player_data_from_leaderboard(
             # Write data back to file
             if SAVE_INTERMEDIATE_CACHE:
                 with open(
-                    f"./data_temp/{game}_{leaderboard}.json", "w"
+                    f"./data_temp/{game}_{leaderboard}.pickle", "wb"
                 ) as handle:
-                    json.dump(collector, handle, indent=4)
+                    pickle.dump(collector, handle)
+
             break
         else:
             offset += length
@@ -189,10 +189,10 @@ async def main():
         start_time = time.time()
 
         # Write data back to data file
-        LOGGER.info(f"Writing data to Cache: {CACHE_PATH}_{CURRENT_DATE}.json")
+        LOGGER.info(f"Writing data to Cache: {CACHE_FILE}")
         if SAVE_CACHE:
-            with open(f"{CACHE_PATH}_{CURRENT_DATE}.json", "w") as handle:
-                json.dump(main_data, handle, indent=4)
+            with open(CACHE_FILE, mode="wb") as handle:
+                pickle.dump(main_data, handle)
 
         LOGGER.info(
             f"Writing to cache took: {time.time() - start_time} seconds"
