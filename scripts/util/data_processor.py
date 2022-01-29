@@ -160,10 +160,16 @@ class DataProcessor(object):
 
                 # TODO: what are the general ratios are of new players vs
                 # leaving players vs long term players
-                # We can derive new players from first_seen
-                # we can derive leaving players from last_seen
-                # long-term players need some kind of `activity_streak`
-                # something like
+                # [X] We can derive new players from first_seen
+                # for example:
+                # `(datetime.datetime.now() - first_seen).days < 30`
+
+                # [X] we can derive leaving players from last_seen
+                # for example:
+                # `(datetime.datetime.now() - last_seen).days > 90`
+
+                # [ ] long-term players need some kind of `activity_streak`
+                #
 
                 if (
                     self.unique_profiles[entry.profile_id]["activity"][
@@ -173,7 +179,7 @@ class DataProcessor(object):
                 ):
                     self.unique_profiles[entry.profile_id]["activity"][
                         "first_seen"
-                    ] = self.date
+                    ] = entry.last_match
 
                 if (
                     self.unique_profiles[entry.profile_id]["activity"][
