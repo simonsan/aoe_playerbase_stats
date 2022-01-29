@@ -10,7 +10,7 @@ import sys
 # Intern
 from common import (
     leaderboard_settings,
-    CACHE_FILE,
+    CACHE_PATH,
     AOC_REF_DATA,
     AOC_REF_DATA_FILE,
 )
@@ -22,11 +22,13 @@ LOGGER = logging.getLogger(__name__)
 
 DEBUG = False
 CACHE = True
-GRANULAR = False
+GRANULAR = True
 SAVE_INTERMEDIATE_CACHE = False
+CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
+
 
 # Check for cache hit
-if os.path.exists(CACHE_FILE):
+if os.path.exists(f"{CACHE_PATH}_{CURRENT_DATE}.json"):
     CACHE_HIT = True
 else:
     CACHE_HIT = False
@@ -100,7 +102,9 @@ async def get_all_player_data_from_leaderboard(
                 for item in data["data"]:
                     collector.append(item)
             else:
-                LOGGER.error(f"Response status not 'SUCCESS != {resp.status}'")
+                LOGGER.error(
+                    f"Response status not 'SUCCESS != {resp.status}' for {game}_{leaderboard} request."
+                )
                 return
 
         if len(data["data"]) < length:
@@ -183,9 +187,9 @@ async def main():
         start_time = time.time()
 
         # Write data back to data file
-        LOGGER.info(f"Writing data to Cache: {CACHE_FILE}")
+        LOGGER.info(f"Writing data to Cache: {CACHE_PATH}_{CURRENT_DATE}.json")
         if SAVE_CACHE:
-            with open(CACHE_FILE, "w") as handle:
+            with open(f"{CACHE_PATH}_{CURRENT_DATE}.json", "w") as handle:
                 json.dump(main_data, handle, indent=4)
 
         LOGGER.info(

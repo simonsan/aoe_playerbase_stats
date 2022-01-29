@@ -8,7 +8,7 @@ TEMP_DATA_FOLDER = "data_temp/"
 ACTIVITY_DATA_FILE = "./data/activity_data.json"
 DATASET_FILE = "./data/dataset.json"
 DATA_FILE = "./data/leaderboard_data.json"
-CACHE_FILE = "./data_temp/cache.json"
+CACHE_PATH = "./data_temp/cache/"
 PLOT_OUTPUT = "./web/index.html"
 
 
