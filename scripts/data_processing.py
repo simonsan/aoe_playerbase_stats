@@ -40,7 +40,7 @@ elif not DEBUG:
 data_processor = DataProcessor.new_with_data(main_data)
 
 # Does all that juicy work.
-data_processor.create_unique_player_profiles()
+data_processor.create_player_profiles()
 
 # Utility
 data_processor.save_profile_stats()

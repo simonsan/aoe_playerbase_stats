@@ -3,6 +3,7 @@ import hashlib
 import json
 import operator
 import os
+import types
 from collections import Counter, defaultdict
 
 import pycountry
@@ -135,7 +136,7 @@ class DataProcessor(object):
             # We are aware of Pickle security implications
             self.unique_profiles = pickle.load(handle)  # nosec
 
-    def create_unique_player_profiles(self):
+    def create_player_profiles(self):
         for (
             game,
             leaderboard,
@@ -147,10 +148,6 @@ class DataProcessor(object):
                 # TODO: Debug
                 # if entry.profile_id == 199325:
                 #     pass
-
-                self.unique_profiles[entry.profile_id][game][
-                    leaderboard
-                ] = entry.last_match
 
                 self.unique_profiles[entry.profile_id]["country"] = (
                     pycountry.countries.get(alpha_2=entry.country_code)
@@ -178,31 +175,42 @@ class DataProcessor(object):
                 # [ ] long-term players need some kind of `activity_streak`
 
                 # First seen for each leaderboard
-                if (
-                    len(
-                        self.unique_profiles[entry.profile_id]["activity"][
+                if not isinstance(
+                    self.unique_profiles[entry.profile_id]["activities"][game][
+                        leaderboard
+                    ]["first_seen"],
+                    datetime.datetime,
+                ):
+                    if (
+                        len(
+                            self.unique_profiles[entry.profile_id][
+                                "activities"
+                            ][game][leaderboard]["first_seen"]
+                        )
+                        == 0
+                    ):
+                        self.unique_profiles[entry.profile_id]["activities"][
                             game
-                        ][leaderboard]["first_seen"]
-                    )
-                    == 0
-                ) or (
-                    self.unique_profiles[entry.profile_id]["activity"][game][
+                        ][leaderboard]["first_seen"] = entry.last_match
+
+                elif (
+                    self.unique_profiles[entry.profile_id]["activities"][game][
                         leaderboard
                     ]["first_seen"]
                     > entry.last_match
                 ):
-                    self.unique_profiles[entry.profile_id]["activity"][game][
+                    self.unique_profiles[entry.profile_id]["activities"][game][
                         leaderboard
                     ]["first_seen"] = entry.last_match
 
                 # Determine new leaderboard player
-                self.unique_profiles[entry.profile_id]["activity"][game][
+                self.unique_profiles[entry.profile_id]["activities"][game][
                     leaderboard
                 ]["isNew"] = (
                     True
                     if (
                         datetime.datetime.now()
-                        - self.unique_profiles[entry.profile_id]["activity"][
+                        - self.unique_profiles[entry.profile_id]["activities"][
                             game
                         ][leaderboard]["first_seen"]
                     ).days
@@ -211,31 +219,43 @@ class DataProcessor(object):
                 )
 
                 # Last seen
-                if (
-                    len(
-                        self.unique_profiles[entry.profile_id]["activity"][
+                if not isinstance(
+                    self.unique_profiles[entry.profile_id]["activities"][game][
+                        leaderboard
+                    ]["last_seen"],
+                    datetime.datetime,
+                ):
+
+                    if (
+                        len(
+                            self.unique_profiles[entry.profile_id][
+                                "activities"
+                            ][game][leaderboard]["last_seen"]
+                        )
+                        == 0
+                    ):
+                        self.unique_profiles[entry.profile_id]["activities"][
                             game
-                        ][leaderboard]["last_seen"]
-                    )
-                    == 0
-                ) or (
-                    self.unique_profiles[entry.profile_id]["activity"][game][
+                        ][leaderboard]["last_seen"] = entry.last_match
+
+                elif (
+                    self.unique_profiles[entry.profile_id]["activities"][game][
                         leaderboard
                     ]["last_seen"]
                     < entry.last_match
                 ):
-                    self.unique_profiles[entry.profile_id]["activity"][game][
+                    self.unique_profiles[entry.profile_id]["activities"][game][
                         leaderboard
                     ]["last_seen"] = entry.last_match
 
-                # Determine inactive leaderboard player
-                self.unique_profiles[entry.profile_id]["activity"][game][
+                # Determine (in-)active leaderboard player
+                self.unique_profiles[entry.profile_id]["activities"][game][
                     leaderboard
                 ]["isActive"] = (
                     True
                     if (
                         datetime.datetime.now()
-                        - self.unique_profiles[entry.profile_id]["activity"][
+                        - self.unique_profiles[entry.profile_id]["activities"][
                             game
                         ][leaderboard]["last_seen"]
                     ).days
@@ -246,88 +266,100 @@ class DataProcessor(object):
                 # Other properties
                 if (
                     len(
-                        self.unique_profiles[entry.profile_id][game][
-                            "highest_rank"
-                        ]
+                        self.unique_profiles[entry.profile_id]["leaderboards"][
+                            game
+                        ][leaderboard]["highest_rank"]
                     )
                     == 0
                 ) or (
-                    self.unique_profiles[entry.profile_id][game][
-                        "highest_rank"
-                    ]
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_rank"]
                     < entry.rank
                 ):
-                    self.unique_profiles[entry.profile_id][game][
-                        "highest_rank"
-                    ] = entry.rank
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_rank"] = entry.rank
 
                 if (
                     len(
-                        self.unique_profiles[entry.profile_id][game][
-                            "highest_rating"
-                        ]
+                        self.unique_profiles[entry.profile_id]["leaderboards"][
+                            game
+                        ][leaderboard]["highest_rating"]
                     )
                     == 0
                 ) or (
-                    self.unique_profiles[entry.profile_id][game][
-                        "highest_rating"
-                    ]
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_rating"]
                     < entry.highest_rating
                 ):
-                    self.unique_profiles[entry.profile_id][game][
-                        "highest_rating"
-                    ] = entry.highest_rating
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_rating"] = entry.highest_rating
 
                 if (
                     len(
-                        self.unique_profiles[entry.profile_id][game][
-                            "highest_streak"
-                        ]
+                        self.unique_profiles[entry.profile_id]["leaderboards"][
+                            game
+                        ][leaderboard]["highest_streak"]
                     )
                     == 0
                 ) or (
-                    self.unique_profiles[entry.profile_id][game][
-                        "highest_streak"
-                    ]
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_streak"]
                     < entry.streak
                 ):
-                    self.unique_profiles[entry.profile_id][game][
-                        "highest_streak"
-                    ] = entry.streak
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_streak"] = entry.streak
 
                 if (
-                    len(self.unique_profiles[entry.profile_id]["num_games"])
+                    len(
+                        self.unique_profiles[entry.profile_id]["leaderboards"][
+                            game
+                        ][leaderboard]["num_games"]
+                    )
                     == 0
                 ) or (
-                    self.unique_profiles[entry.profile_id]["num_games"]
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["num_games"]
                     < entry.num_games
                 ):
-                    self.unique_profiles[entry.profile_id][
-                        "num_games"
-                    ] = entry.num_games
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["num_games"] = entry.num_games
 
                 if (
-                    len(self.unique_profiles[entry.profile_id]["num_wins"])
+                    len(
+                        self.unique_profiles[entry.profile_id]["leaderboards"][
+                            game
+                        ][leaderboard]["num_wins"]
+                    )
                     == 0
                 ) or (
-                    self.unique_profiles[entry.profile_id]["num_wins"]
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["num_wins"]
                     < entry.num_wins
                 ):
-                    self.unique_profiles[entry.profile_id][
-                        "num_wins"
-                    ] = entry.num_wins
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["num_wins"] = entry.num_wins
 
                 # TODO: DEBUG
                 # if entry.profile_id == 199325:
                 #     print(self.unique_profiles[199325])
 
-    def count_unique_profiles_in_franchise(self):
+    def count_profiles_in_franchise(self):
         self.profile_stats["franchise"] = len(self.unique_profiles)
         self.dataset.export["playerbase"]["franchise"] = len(
             self.unique_profiles
         )
 
-    def count_unique_profiles_per_game(self):
+    def count_profiles_per_game(self):
         unique_players = {
             "aoe2": 0,
             "aoe3": 0,
@@ -344,8 +376,8 @@ class DataProcessor(object):
             self.dataset.export["playerbase"][game] = unique_players[game]
 
     def save_profile_stats(self):
-        self.count_unique_profiles_per_game()
-        self.count_unique_profiles_in_franchise()
+        self.count_profiles_per_game()
+        self.count_profiles_in_franchise()
 
     def calculate_leaderboard_activity(self):
         for (
