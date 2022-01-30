@@ -57,6 +57,3 @@ class LeaderboardEntry(object):
             return True
         else:
             return False
-
-    def parse_leaderboard_entry(entry):
-        pass

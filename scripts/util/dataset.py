@@ -1,4 +1,4 @@
-class DataSet(object):
+class DataSet:
     def __init__(self):
         self.export = {
             "date": None,
@@ -61,7 +61,7 @@ class DataSet(object):
                     "franchise": {},
                 },
             },
-            "playerbase": {
+            "analysed_profiles": {
                 "aoe2": None,
                 "aoe3": None,
                 "aoe4": None,

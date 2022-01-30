@@ -18,6 +18,7 @@ from common import (
 
 from util.dataset import DataSet
 from util.leaderboard_entry import LeaderboardEntry
+from util.decorators import debug, timer
 
 PEPPER = os.getenv("PEPPER_LEADERBOARD_DATA").encode()
 
@@ -39,6 +40,7 @@ class DataProcessor(object):
 
         self.unique_profiles = unique_profiles_defaultdict()
 
+    @timer
     def new_with_data(data):
         d = DataProcessor()
         d.date = datetime.datetime.fromisoformat(data["date"])
@@ -135,6 +137,8 @@ class DataProcessor(object):
             # We are aware of Pickle security implications
             self.unique_profiles = pickle.load(handle)  # nosec
 
+    @timer
+    @debug
     def create_player_profiles(self):
         for (
             game,
@@ -145,12 +149,12 @@ class DataProcessor(object):
             for entry in self.data[game][leaderboard]:
 
                 def _helper_set_value_if(
-                    mut_val, set_val, cmp_type, cmp_act="<"
+                    self, mut_val, set_val, cmp_type, cmp_act="<"
                 ):
                     """Helper function to replace a mutable value with a new value
 
                     Args:
-                        mut_val: Mutable value
+                        mut_val: Tuple of data path within self
                         set_val: Value that will replace mutable value
                         cmp_type: Type to compare with if initial mutable
                                   value is empty
@@ -158,20 +162,64 @@ class DataProcessor(object):
                                  possible values: ["<", ">", "<=", ">="]
 
                     """
+
                     if not isinstance(
-                        mut_val,
+                        self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]],
                         cmp_type,
                     ):
-                        if len(mut_val) == 0:
-                            mut_val = set_val
-                    elif cmp_act == "<" and mut_val < set_val:
-                        mut_val = set_val
-                    elif cmp_act == ">" and mut_val > set_val:
-                        mut_val = set_val
-                    elif cmp_act == "<=" and mut_val <= set_val:
-                        mut_val = set_val
-                    elif cmp_act == ">=" and mut_val >= set_val:
-                        mut_val = set_val
+                        if (
+                            len(
+                                self.unique_profiles[mut_val[0]][mut_val[1]][
+                                    mut_val[2]
+                                ][mut_val[3]][mut_val[4]]
+                            )
+                            == 0
+                        ):
+                            self.unique_profiles[mut_val[0]][mut_val[1]][
+                                mut_val[2]
+                            ][mut_val[3]][mut_val[4]] = set_val
+                    elif (
+                        cmp_act == "<"
+                        and self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]]
+                        < set_val
+                    ):
+                        self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]] = set_val
+                    elif (
+                        cmp_act == ">"
+                        and self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]]
+                        > set_val
+                    ):
+                        self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]] = set_val
+                    elif (
+                        cmp_act == "<="
+                        and self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]]
+                        <= set_val
+                    ):
+                        self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]] = set_val
+                    elif (
+                        cmp_act == ">="
+                        and self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]]
+                        >= set_val
+                    ):
+                        self.unique_profiles[mut_val[0]][mut_val[1]][
+                            mut_val[2]
+                        ][mut_val[3]][mut_val[4]] = set_val
 
                 # TODO: Debug
                 # if entry.profile_id == 199325:
@@ -204,9 +252,14 @@ class DataProcessor(object):
 
                 # First seen for each leaderboard
                 _helper_set_value_if(
-                    self.unique_profiles[entry.profile_id]["activities"][game][
-                        leaderboard
-                    ]["first_seen"],
+                    self,
+                    (
+                        entry.profile_id,
+                        "activities",
+                        game,
+                        leaderboard,
+                        "first_seen",
+                    ),
                     entry.last_match,
                     datetime.datetime,
                     ">",
@@ -229,9 +282,14 @@ class DataProcessor(object):
 
                 # Last seen
                 _helper_set_value_if(
-                    self.unique_profiles[entry.profile_id]["activities"][game][
-                        leaderboard
-                    ]["last_seen"],
+                    self,
+                    (
+                        entry.profile_id,
+                        "activities",
+                        game,
+                        leaderboard,
+                        "last_seen",
+                    ),
                     entry.last_match,
                     datetime.datetime,
                     "<",
@@ -256,45 +314,70 @@ class DataProcessor(object):
                 # TODO: Refactor for DRY
                 # Highest Rank
                 _helper_set_value_if(
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_rank"],
+                    self,
+                    (
+                        entry.profile_id,
+                        "leaderboards",
+                        game,
+                        leaderboard,
+                        "highest_rank",
+                    ),
                     entry.rank,
                     int,
                 )
 
                 # Highest Rating
                 _helper_set_value_if(
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_rating"],
+                    self,
+                    (
+                        entry.profile_id,
+                        "leaderboards",
+                        game,
+                        leaderboard,
+                        "highest_rating",
+                    ),
                     entry.highest_rating,
                     int,
                 )
 
                 # Highest streak
                 _helper_set_value_if(
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_streak"],
+                    self,
+                    (
+                        entry.profile_id,
+                        "leaderboards",
+                        game,
+                        leaderboard,
+                        "highest_streak",
+                    ),
                     entry.streak,
                     int,
                 )
 
                 # Num games
                 _helper_set_value_if(
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["num_games"],
+                    self,
+                    (
+                        entry.profile_id,
+                        "leaderboards",
+                        game,
+                        leaderboard,
+                        "num_games",
+                    ),
                     entry.num_games,
                     int,
                 )
 
                 # Num wins
                 _helper_set_value_if(
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["num_wins"],
+                    self,
+                    (
+                        entry.profile_id,
+                        "leaderboards",
+                        game,
+                        leaderboard,
+                        "num_wins",
+                    ),
                     entry.num_wins,
                     int,
                 )
@@ -305,7 +388,7 @@ class DataProcessor(object):
 
     def count_profiles_in_franchise(self):
         self.profile_stats["franchise"] = len(self.unique_profiles)
-        self.dataset.export["playerbase"]["franchise"] = len(
+        self.dataset.export["analysed_profiles"]["franchise"] = len(
             self.unique_profiles
         )
 
@@ -323,7 +406,9 @@ class DataProcessor(object):
                         unique_players[game] += 1
 
             self.profile_stats[game] = unique_players[game]
-            self.dataset.export["playerbase"][game] = unique_players[game]
+            self.dataset.export["analysed_profiles"][game] = unique_players[
+                game
+            ]
 
     def save_profile_stats(self):
         self.count_profiles_per_game()
