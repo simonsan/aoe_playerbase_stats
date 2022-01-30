@@ -7,9 +7,12 @@ from collections import Counter, defaultdict
 
 import pycountry
 from common import (
-    PROFILE_FILE,
+    ACTIVITY_PERIODS,
     DATASET_FILE,
     FRANCHISE_GAMES,
+    LEAVING_PLAYER_ACTIVITY_THRESHOLD,
+    NEW_PLAYER_ACTIVITY_THRESHOLD,
+    PROFILE_FILE,
     leaderboard_settings,
 )
 
@@ -30,7 +33,11 @@ class DataProcessor(object):
             "aoe4": 0,
             "franchise": 0,
         }
-        self.unique_profiles = defaultdict(dict)
+
+        def unique_profiles_defaultdict():
+            return defaultdict(unique_profiles_defaultdict)
+
+        self.unique_profiles = unique_profiles_defaultdict()
 
     def new_with_data(data):
         d = DataProcessor()
@@ -48,7 +55,8 @@ class DataProcessor(object):
             _,
             _,
         ) in leaderboard_settings:
-            collector = defaultdict(list)
+            collector = []
+
             for entry in data[game][leaderboard]:
                 collector.append(
                     LeaderboardEntry(
@@ -113,15 +121,15 @@ class DataProcessor(object):
             json.dump(self.dataset.export, handle, indent=4)
 
     def export_profiles(self, file=PROFILE_FILE):
-        import pickle
         import lzma
+        import pickle
 
         with lzma.open(file, mode="wb") as handle:
             pickle.dump(self.unique_profiles, handle)
 
     def import_profiles(self, file=PROFILE_FILE):
-        import pickle
         import lzma
+        import pickle
 
         with lzma.open(file, mode="rb") as handle:
             # We are aware of Pickle security implications
@@ -160,62 +168,137 @@ class DataProcessor(object):
 
                 # TODO: what are the general ratios are of new players vs
                 # leaving players vs long term players
-                # [X] We can derive new players from first_seen
-                # for example:
-                # `(datetime.datetime.now() - first_seen).days < 30`
 
-                # [X] we can derive leaving players from last_seen
-                # for example:
-                # `(datetime.datetime.now() - last_seen).days > 90`
+                # Note: if someone is active on a leaderboard that person is
+                # active in a game, if someone is inactive on a leaderboard
+                # that person is not necessarily inactive for a game (as there
+                # are other leaderboards) only being inactive on all
+                # leaderboards, means inactive in a game
 
                 # [ ] long-term players need some kind of `activity_streak`
-                #
 
+                # First seen for each leaderboard
                 if (
-                    self.unique_profiles[entry.profile_id]["activity"][
-                        "first_seen"
-                    ]
-                    is None
+                    len(
+                        self.unique_profiles[entry.profile_id]["activity"][
+                            game
+                        ][leaderboard]["first_seen"]
+                    )
+                    == 0
+                ) or (
+                    self.unique_profiles[entry.profile_id]["activity"][game][
+                        leaderboard
+                    ]["first_seen"]
+                    > entry.last_match
                 ):
-                    self.unique_profiles[entry.profile_id]["activity"][
-                        "first_seen"
-                    ] = entry.last_match
+                    self.unique_profiles[entry.profile_id]["activity"][game][
+                        leaderboard
+                    ]["first_seen"] = entry.last_match
 
+                # Determine new leaderboard player
+                self.unique_profiles[entry.profile_id]["activity"][game][
+                    leaderboard
+                ]["isNew"] = (
+                    True
+                    if (
+                        datetime.datetime.now()
+                        - self.unique_profiles[entry.profile_id]["activity"][
+                            game
+                        ][leaderboard]["first_seen"]
+                    ).days
+                    <= NEW_PLAYER_ACTIVITY_THRESHOLD
+                    else False
+                )
+
+                # Last seen
                 if (
-                    self.unique_profiles[entry.profile_id]["activity"][
-                        "last_seen"
-                    ]
+                    len(
+                        self.unique_profiles[entry.profile_id]["activity"][
+                            game
+                        ][leaderboard]["last_seen"]
+                    )
+                    == 0
+                ) or (
+                    self.unique_profiles[entry.profile_id]["activity"][game][
+                        leaderboard
+                    ]["last_seen"]
                     < entry.last_match
                 ):
-                    self.unique_profiles[entry.profile_id]["activity"][
-                        "last_seen"
-                    ] = entry.last_match
+                    self.unique_profiles[entry.profile_id]["activity"][game][
+                        leaderboard
+                    ]["last_seen"] = entry.last_match
 
+                # Determine inactive leaderboard player
+                self.unique_profiles[entry.profile_id]["activity"][game][
+                    leaderboard
+                ]["isActive"] = (
+                    True
+                    if (
+                        datetime.datetime.now()
+                        - self.unique_profiles[entry.profile_id]["activity"][
+                            game
+                        ][leaderboard]["last_seen"]
+                    ).days
+                    <= LEAVING_PLAYER_ACTIVITY_THRESHOLD
+                    else False
+                )
+
+                # Other properties
                 if (
-                    self.unique_profiles[entry.profile_id]["highest_rank"]
+                    len(
+                        self.unique_profiles[entry.profile_id][game][
+                            "highest_rank"
+                        ]
+                    )
+                    == 0
+                ) or (
+                    self.unique_profiles[entry.profile_id][game][
+                        "highest_rank"
+                    ]
                     < entry.rank
                 ):
-                    self.unique_profiles[entry.profile_id][
+                    self.unique_profiles[entry.profile_id][game][
                         "highest_rank"
                     ] = entry.rank
 
                 if (
-                    self.unique_profiles[entry.profile_id]["highest_rating"]
+                    len(
+                        self.unique_profiles[entry.profile_id][game][
+                            "highest_rating"
+                        ]
+                    )
+                    == 0
+                ) or (
+                    self.unique_profiles[entry.profile_id][game][
+                        "highest_rating"
+                    ]
                     < entry.highest_rating
                 ):
-                    self.unique_profiles[entry.profile_id][
+                    self.unique_profiles[entry.profile_id][game][
                         "highest_rating"
                     ] = entry.highest_rating
 
                 if (
-                    self.unique_profiles[entry.profile_id]["highest_streak"]
+                    len(
+                        self.unique_profiles[entry.profile_id][game][
+                            "highest_streak"
+                        ]
+                    )
+                    == 0
+                ) or (
+                    self.unique_profiles[entry.profile_id][game][
+                        "highest_streak"
+                    ]
                     < entry.streak
                 ):
-                    self.unique_profiles[entry.profile_id][
+                    self.unique_profiles[entry.profile_id][game][
                         "highest_streak"
                     ] = entry.streak
 
                 if (
+                    len(self.unique_profiles[entry.profile_id]["num_games"])
+                    == 0
+                ) or (
                     self.unique_profiles[entry.profile_id]["num_games"]
                     < entry.num_games
                 ):
@@ -224,6 +307,9 @@ class DataProcessor(object):
                     ] = entry.num_games
 
                 if (
+                    len(self.unique_profiles[entry.profile_id]["num_wins"])
+                    == 0
+                ) or (
                     self.unique_profiles[entry.profile_id]["num_wins"]
                     < entry.num_wins
                 ):
@@ -268,51 +354,23 @@ class DataProcessor(object):
             _,
             _,
         ) in leaderboard_settings:
-            activity_30d = 0
-            activity_14d = 0
-            activity_7d = 0
-            activity_3d = 0
-            activity_1d = 0
+            activity = defaultdict(dict)
 
             for profile in self.unique_profiles.values():
                 if game in profile:
                     if leaderboard in profile[game]:
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 30
-                        ):
-                            activity_30d += 1
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 14
-                        ):
-                            activity_14d += 1
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 7
-                        ):
-                            activity_7d += 1
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 3
-                        ):
-                            activity_3d += 1
-                        if LeaderboardEntry.last_activity_from_date(
-                            self.date, profile[game][leaderboard], 1
-                        ):
-                            activity_1d += 1
+                        for activity_period in ACTIVITY_PERIODS:
+                            if LeaderboardEntry.last_activity_from_date(
+                                self.date,
+                                profile[game][leaderboard],
+                                activity_period,
+                            ):
+                                activity[activity_period] += 1
 
-            self.dataset.export["leaderboard_activity"]["30d"][game][
-                leaderboard
-            ] = activity_30d
-            self.dataset.export["leaderboard_activity"]["14d"][game][
-                leaderboard
-            ] = activity_14d
-            self.dataset.export["leaderboard_activity"]["7d"][game][
-                leaderboard
-            ] = activity_7d
-            self.dataset.export["leaderboard_activity"]["3d"][game][
-                leaderboard
-            ] = activity_3d
-            self.dataset.export["leaderboard_activity"]["1d"][game][
-                leaderboard
-            ] = activity_1d
+            for activity_period in ACTIVITY_PERIODS:
+                self.dataset.export["leaderboard_activity"][
+                    f"{activity_period}d"
+                ][game][leaderboard] = activity[activity_period]
 
     def calculate_game_activity(self):
 
