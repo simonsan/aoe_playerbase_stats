@@ -158,7 +158,13 @@ async def main():
             tasks = []
 
             # Get data from the server
-            for game, leaderboard, _, url in leaderboard_settings:
+            for (
+                game,
+                leaderboard,
+                _,
+                url,
+                _,
+            ) in leaderboard_settings:
                 tasks.append(
                     asyncio.ensure_future(
                         get_all_player_data_from_leaderboard(

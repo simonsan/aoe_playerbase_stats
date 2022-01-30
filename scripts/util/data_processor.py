@@ -56,6 +56,7 @@ class DataProcessor(object):
             leaderboard,
             _,
             _,
+            _,
         ) in leaderboard_settings:
             collector = []
 
@@ -145,6 +146,7 @@ class DataProcessor(object):
             leaderboard,
             _,
             _,
+            bit_mask,
         ) in leaderboard_settings:
             for entry in self.data[game][leaderboard]:
 
@@ -310,6 +312,58 @@ class DataProcessor(object):
                     else False
                 )
 
+                if isinstance(
+                    self.unique_profiles[entry.profile_id]["activities"][
+                        "bits"
+                    ],
+                    defaultdict,
+                ):
+                    self.unique_profiles[entry.profile_id]["activities"][
+                        "bits"
+                    ] = 0b0
+
+                base = self.unique_profiles[entry.profile_id]["activities"][
+                    "bits"
+                ]
+
+                if (
+                    self.unique_profiles[entry.profile_id]["activities"][game][
+                        leaderboard
+                    ]["isActive"]
+                    is True
+                ):
+                    base = base | bit_mask
+                else:
+                    base = base & bit_mask
+
+                self.unique_profiles[entry.profile_id]["activities"][
+                    "bits"
+                ] = base
+
+                #     self.unique_profiles[entry.profile_id]["activities"][
+                #         game
+                #     ]["isActive"] = 0b0000
+
+                # if self.unique_profiles[entry.profile_id]["activities"][
+                #         game
+                #     ]["isActive"]
+
+                #     if len(
+                #         self.unique_profiles[entry.profile_id][
+                #             "activities"
+                #         ][game]["isActive"]
+                #     )
+                #     > 0
+                #     else 0b0000
+                # )
+                # base = base << 0b0001
+                # base = base | 0b0001
+                # self.unique_profiles[entry.profile_id]["activities"][game][
+                #     "isActive"
+                # ] = base
+
+                # self.unique_profiles[entry.profile_id]["activities"] = True
+
                 # Other properties
                 # TODO: Refactor for DRY
                 # Highest Rank
@@ -414,10 +468,20 @@ class DataProcessor(object):
         self.count_profiles_per_game()
         self.count_profiles_in_franchise()
 
+    # def set_new_profile(self):
+    #     profile["activities"][game][leaderboard]["isNew"]
+    #     profile["activities"][game][leaderboard]["isActive"]
+
+    # def set_activity_profile(self):
+
+    #     profile["activities"][game][leaderboard]["isNew"]
+    #     profile["activities"][game][leaderboard]["isActive"]
+
     def calculate_leaderboard_activity(self):
         for (
             game,
             leaderboard,
+            _,
             _,
             _,
         ) in leaderboard_settings:
