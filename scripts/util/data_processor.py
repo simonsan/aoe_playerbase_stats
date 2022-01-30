@@ -225,7 +225,6 @@ class DataProcessor(object):
                     ]["last_seen"],
                     datetime.datetime,
                 ):
-
                     if (
                         len(
                             self.unique_profiles[entry.profile_id][
@@ -264,14 +263,27 @@ class DataProcessor(object):
                 )
 
                 # Other properties
-                if (
-                    len(
+                # TODO: Refactor for DRY
+                # Highest Rank
+                if not isinstance(
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_rank"],
+                    int,
+                ):
+
+                    if (
+                        len(
+                            self.unique_profiles[entry.profile_id][
+                                "leaderboards"
+                            ][game][leaderboard]["highest_rank"]
+                        )
+                        == 0
+                    ):
                         self.unique_profiles[entry.profile_id]["leaderboards"][
                             game
-                        ][leaderboard]["highest_rank"]
-                    )
-                    == 0
-                ) or (
+                        ][leaderboard]["highest_rank"] = entry.rank
+                elif (
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["highest_rank"]
@@ -281,14 +293,25 @@ class DataProcessor(object):
                         game
                     ][leaderboard]["highest_rank"] = entry.rank
 
-                if (
-                    len(
+                # Highest Rating
+                if not isinstance(
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_rating"],
+                    int,
+                ):
+                    if (
+                        len(
+                            self.unique_profiles[entry.profile_id][
+                                "leaderboards"
+                            ][game][leaderboard]["highest_rating"]
+                        )
+                        == 0
+                    ):
                         self.unique_profiles[entry.profile_id]["leaderboards"][
                             game
-                        ][leaderboard]["highest_rating"]
-                    )
-                    == 0
-                ) or (
+                        ][leaderboard]["highest_rating"] = entry.highest_rating
+                elif (
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["highest_rating"]
@@ -298,14 +321,25 @@ class DataProcessor(object):
                         game
                     ][leaderboard]["highest_rating"] = entry.highest_rating
 
-                if (
-                    len(
+                # Highest streak
+                if not isinstance(
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["highest_streak"],
+                    int,
+                ):
+                    if (
+                        len(
+                            self.unique_profiles[entry.profile_id][
+                                "leaderboards"
+                            ][game][leaderboard]["highest_streak"]
+                        )
+                        == 0
+                    ):
                         self.unique_profiles[entry.profile_id]["leaderboards"][
                             game
-                        ][leaderboard]["highest_streak"]
-                    )
-                    == 0
-                ) or (
+                        ][leaderboard]["highest_streak"] = entry.streak
+                elif (
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["highest_streak"]
@@ -315,14 +349,25 @@ class DataProcessor(object):
                         game
                     ][leaderboard]["highest_streak"] = entry.streak
 
-                if (
-                    len(
+                # Num games
+                if not isinstance(
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["num_games"],
+                    int,
+                ):
+                    if (
+                        len(
+                            self.unique_profiles[entry.profile_id][
+                                "leaderboards"
+                            ][game][leaderboard]["num_games"]
+                        )
+                        == 0
+                    ):
                         self.unique_profiles[entry.profile_id]["leaderboards"][
                             game
-                        ][leaderboard]["num_games"]
-                    )
-                    == 0
-                ) or (
+                        ][leaderboard]["num_games"] = entry.num_games
+                elif (
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["num_games"]
@@ -332,14 +377,25 @@ class DataProcessor(object):
                         game
                     ][leaderboard]["num_games"] = entry.num_games
 
-                if (
-                    len(
+                # Num wins
+                if not isinstance(
+                    self.unique_profiles[entry.profile_id]["leaderboards"][
+                        game
+                    ][leaderboard]["num_wins"],
+                    int,
+                ):
+                    if (
+                        len(
+                            self.unique_profiles[entry.profile_id][
+                                "leaderboards"
+                            ][game][leaderboard]["num_wins"]
+                        )
+                        == 0
+                    ):
                         self.unique_profiles[entry.profile_id]["leaderboards"][
                             game
-                        ][leaderboard]["num_wins"]
-                    )
-                    == 0
-                ) or (
+                        ][leaderboard]["num_wins"] = entry.num_wins
+                elif (
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["num_wins"]
