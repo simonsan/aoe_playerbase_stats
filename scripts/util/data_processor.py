@@ -312,6 +312,7 @@ class DataProcessor(object):
                     else False
                 )
 
+                # Create activity bits
                 if isinstance(
                     self.unique_profiles[entry.profile_id]["activities"][
                         "bits"
@@ -340,32 +341,7 @@ class DataProcessor(object):
                     "bits"
                 ] = base
 
-                #     self.unique_profiles[entry.profile_id]["activities"][
-                #         game
-                #     ]["isActive"] = 0b0000
-
-                # if self.unique_profiles[entry.profile_id]["activities"][
-                #         game
-                #     ]["isActive"]
-
-                #     if len(
-                #         self.unique_profiles[entry.profile_id][
-                #             "activities"
-                #         ][game]["isActive"]
-                #     )
-                #     > 0
-                #     else 0b0000
-                # )
-                # base = base << 0b0001
-                # base = base | 0b0001
-                # self.unique_profiles[entry.profile_id]["activities"][game][
-                #     "isActive"
-                # ] = base
-
-                # self.unique_profiles[entry.profile_id]["activities"] = True
-
                 # Other properties
-                # TODO: Refactor for DRY
                 # Highest Rank
                 _helper_set_value_if(
                     self,
