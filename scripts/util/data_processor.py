@@ -3,7 +3,6 @@ import hashlib
 import json
 import operator
 import os
-import types
 from collections import Counter, defaultdict
 
 import pycountry
@@ -145,6 +144,35 @@ class DataProcessor(object):
         ) in leaderboard_settings:
             for entry in self.data[game][leaderboard]:
 
+                def _helper_set_value_if(
+                    mut_val, set_val, cmp_type, cmp_act="<"
+                ):
+                    """Helper function to replace a mutable value with a new value
+
+                    Args:
+                        mut_val: Mutable value
+                        set_val: Value that will replace mutable value
+                        cmp_type: Type to compare with if initial mutable
+                                  value is empty
+                        cmp_act: Type of comparison, Default: "<",
+                                 possible values: ["<", ">", "<=", ">="]
+
+                    """
+                    if not isinstance(
+                        mut_val,
+                        cmp_type,
+                    ):
+                        if len(mut_val) == 0:
+                            mut_val = set_val
+                    elif cmp_act == "<" and mut_val < set_val:
+                        mut_val = set_val
+                    elif cmp_act == ">" and mut_val > set_val:
+                        mut_val = set_val
+                    elif cmp_act == "<=" and mut_val <= set_val:
+                        mut_val = set_val
+                    elif cmp_act == ">=" and mut_val >= set_val:
+                        mut_val = set_val
+
                 # TODO: Debug
                 # if entry.profile_id == 199325:
                 #     pass
@@ -175,33 +203,14 @@ class DataProcessor(object):
                 # [ ] long-term players need some kind of `activity_streak`
 
                 # First seen for each leaderboard
-                if not isinstance(
+                _helper_set_value_if(
                     self.unique_profiles[entry.profile_id]["activities"][game][
                         leaderboard
                     ]["first_seen"],
+                    entry.last_match,
                     datetime.datetime,
-                ):
-                    if (
-                        len(
-                            self.unique_profiles[entry.profile_id][
-                                "activities"
-                            ][game][leaderboard]["first_seen"]
-                        )
-                        == 0
-                    ):
-                        self.unique_profiles[entry.profile_id]["activities"][
-                            game
-                        ][leaderboard]["first_seen"] = entry.last_match
-
-                elif (
-                    self.unique_profiles[entry.profile_id]["activities"][game][
-                        leaderboard
-                    ]["first_seen"]
-                    > entry.last_match
-                ):
-                    self.unique_profiles[entry.profile_id]["activities"][game][
-                        leaderboard
-                    ]["first_seen"] = entry.last_match
+                    ">",
+                )
 
                 # Determine new leaderboard player
                 self.unique_profiles[entry.profile_id]["activities"][game][
@@ -219,33 +228,14 @@ class DataProcessor(object):
                 )
 
                 # Last seen
-                if not isinstance(
+                _helper_set_value_if(
                     self.unique_profiles[entry.profile_id]["activities"][game][
                         leaderboard
                     ]["last_seen"],
+                    entry.last_match,
                     datetime.datetime,
-                ):
-                    if (
-                        len(
-                            self.unique_profiles[entry.profile_id][
-                                "activities"
-                            ][game][leaderboard]["last_seen"]
-                        )
-                        == 0
-                    ):
-                        self.unique_profiles[entry.profile_id]["activities"][
-                            game
-                        ][leaderboard]["last_seen"] = entry.last_match
-
-                elif (
-                    self.unique_profiles[entry.profile_id]["activities"][game][
-                        leaderboard
-                    ]["last_seen"]
-                    < entry.last_match
-                ):
-                    self.unique_profiles[entry.profile_id]["activities"][game][
-                        leaderboard
-                    ]["last_seen"] = entry.last_match
+                    "<",
+                )
 
                 # Determine (in-)active leaderboard player
                 self.unique_profiles[entry.profile_id]["activities"][game][
@@ -265,145 +255,49 @@ class DataProcessor(object):
                 # Other properties
                 # TODO: Refactor for DRY
                 # Highest Rank
-                if not isinstance(
+                _helper_set_value_if(
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["highest_rank"],
+                    entry.rank,
                     int,
-                ):
-
-                    if (
-                        len(
-                            self.unique_profiles[entry.profile_id][
-                                "leaderboards"
-                            ][game][leaderboard]["highest_rank"]
-                        )
-                        == 0
-                    ):
-                        self.unique_profiles[entry.profile_id]["leaderboards"][
-                            game
-                        ][leaderboard]["highest_rank"] = entry.rank
-                elif (
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_rank"]
-                    < entry.rank
-                ):
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_rank"] = entry.rank
+                )
 
                 # Highest Rating
-                if not isinstance(
+                _helper_set_value_if(
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["highest_rating"],
+                    entry.highest_rating,
                     int,
-                ):
-                    if (
-                        len(
-                            self.unique_profiles[entry.profile_id][
-                                "leaderboards"
-                            ][game][leaderboard]["highest_rating"]
-                        )
-                        == 0
-                    ):
-                        self.unique_profiles[entry.profile_id]["leaderboards"][
-                            game
-                        ][leaderboard]["highest_rating"] = entry.highest_rating
-                elif (
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_rating"]
-                    < entry.highest_rating
-                ):
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_rating"] = entry.highest_rating
+                )
 
                 # Highest streak
-                if not isinstance(
+                _helper_set_value_if(
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["highest_streak"],
+                    entry.streak,
                     int,
-                ):
-                    if (
-                        len(
-                            self.unique_profiles[entry.profile_id][
-                                "leaderboards"
-                            ][game][leaderboard]["highest_streak"]
-                        )
-                        == 0
-                    ):
-                        self.unique_profiles[entry.profile_id]["leaderboards"][
-                            game
-                        ][leaderboard]["highest_streak"] = entry.streak
-                elif (
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_streak"]
-                    < entry.streak
-                ):
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["highest_streak"] = entry.streak
+                )
 
                 # Num games
-                if not isinstance(
+                _helper_set_value_if(
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["num_games"],
+                    entry.num_games,
                     int,
-                ):
-                    if (
-                        len(
-                            self.unique_profiles[entry.profile_id][
-                                "leaderboards"
-                            ][game][leaderboard]["num_games"]
-                        )
-                        == 0
-                    ):
-                        self.unique_profiles[entry.profile_id]["leaderboards"][
-                            game
-                        ][leaderboard]["num_games"] = entry.num_games
-                elif (
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["num_games"]
-                    < entry.num_games
-                ):
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["num_games"] = entry.num_games
+                )
 
                 # Num wins
-                if not isinstance(
+                _helper_set_value_if(
                     self.unique_profiles[entry.profile_id]["leaderboards"][
                         game
                     ][leaderboard]["num_wins"],
+                    entry.num_wins,
                     int,
-                ):
-                    if (
-                        len(
-                            self.unique_profiles[entry.profile_id][
-                                "leaderboards"
-                            ][game][leaderboard]["num_wins"]
-                        )
-                        == 0
-                    ):
-                        self.unique_profiles[entry.profile_id]["leaderboards"][
-                            game
-                        ][leaderboard]["num_wins"] = entry.num_wins
-                elif (
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["num_wins"]
-                    < entry.num_wins
-                ):
-                    self.unique_profiles[entry.profile_id]["leaderboards"][
-                        game
-                    ][leaderboard]["num_wins"] = entry.num_wins
+                )
 
                 # TODO: DEBUG
                 # if entry.profile_id == 199325:
