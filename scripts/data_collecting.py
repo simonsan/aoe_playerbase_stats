@@ -191,12 +191,12 @@ async def main():
             api_data = await asyncio.gather(*tasks)
 
         for ((game, leaderboard), data, status) in api_data:
-            if status is not None and data is not None:
+            if status is None and data is not None:
                 if leaderboard is not None and game != "aoc_ref":
                     main_data[game][leaderboard] = data
                 elif leaderboard is None and game == "aoc_ref":
                     main_data[game] = data
-            else:
+            elif status is not None:
                 STATUS_INCOMPLETE = True
                 if leaderboard is not None:
                     main_data[game][leaderboard] = data
