@@ -21,8 +21,8 @@ from bokeh.palettes import Category20_20 as palette
 from bokeh.plotting import figure, output_file, save
 
 # Intern
-from scripts.common import ACTIVITY_PERIODS, PLOT_OUTPUT, leaderboard_settings
-from scripts.dataframes import prepare_dataframes
+from util.common import ACTIVITY_PERIODS, PLOT_OUTPUT, leaderboard_settings
+from util.dataframes import prepare_dataframes
 
 # import datetime
 # import pandas as pd
