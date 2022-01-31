@@ -9,6 +9,7 @@ black = "*"
 aiohttp = "*"
 pycountry = "*"
 pandas = "*"
+pyarrow = "*"
 
 [dev-packages]
 flake8 = "*"

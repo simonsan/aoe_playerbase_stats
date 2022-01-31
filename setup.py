@@ -13,5 +13,6 @@ setup(
         "aiohttp>=3.8.1",
         "pycountry>=22.1.10",
         "pandas>=1.4.0",
+        "pyarrow>=6.0.1",
     ],
 )
