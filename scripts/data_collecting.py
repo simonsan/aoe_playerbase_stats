@@ -25,7 +25,6 @@ DEBUG = False
 CACHE = True
 GRANULAR = False
 SAVE_INTERMEDIATE_CACHE = False
-STATUS_INCOMPLETE = False
 
 NOW = datetime.datetime.now()
 
@@ -144,6 +143,7 @@ async def get_all_player_data_from_leaderboard(
 async def main():
 
     LOGGER.info("Data collection started.")
+    STATUS_INCOMPLETE = False
 
     start_time = time.time()
 
