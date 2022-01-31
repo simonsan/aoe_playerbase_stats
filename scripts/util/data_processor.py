@@ -6,7 +6,7 @@ from collections import Counter, defaultdict
 
 import pandas as pd
 import pycountry
-from common import (
+from .common import (
     ACTIVITY_PERIODS,
     FRANCHISE_GAMES,
     LEAVING_PLAYER_ACTIVITY_THRESHOLD,
@@ -15,9 +15,9 @@ from common import (
     leaderboard_settings,
 )
 
-from util.dataset import DataSet
-from util.decorators import timing
-from util.leaderboard_entry import LeaderboardEntry
+from .dataset import DataSet
+from .decorators import timing
+from .leaderboard_entry import LeaderboardEntry
 
 # TODO: Set default value, meaning this will only be
 # able to be used for ones own datasets
@@ -133,7 +133,10 @@ class DataProcessor(object):
         self.dataframe = pd.read_parquet(file, engine="pyarrow")
 
     def append_to_dataframe_in_parquet(self):
-        pd.concat([self.dataframe, self.dataframe_update], ignore_index=True)
+        concat_df = pd.concat(
+            [self.dataframe, self.dataframe_update], ignore_index=True
+        )
+        self.dataframe = concat_df
 
     @timing
     def export_dataframe_to_parquet(

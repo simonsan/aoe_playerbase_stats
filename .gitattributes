@@ -1,4 +1,1 @@
-*.7z filter=lfs diff=lfs merge=lfs -text
-*.pickle filter=lfs diff=lfs merge=lfs -text
-*.xz.pickle filter=lfs diff=lfs merge=lfs -text
-.xz.pickle.incomplete filter=lfs diff=lfs merge=lfs -text
+*.br.parq filter=lfs diff=lfs merge=lfs -text

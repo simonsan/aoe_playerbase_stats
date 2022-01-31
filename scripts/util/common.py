@@ -1,6 +1,7 @@
 # flake8: noqa: E501
 
 import datetime
+import glob
 from collections import namedtuple
 
 CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
@@ -9,25 +10,16 @@ DATA_FILE_NAME = "collected_data"
 TEMP_DATA_FOLDER = "./data_temp/"
 CACHE_FOLDER = f"{TEMP_DATA_FOLDER}cache/"
 PROFILE_FILE = "./data/profiles.xz.pickle"
-PARQUET_FILE = "./data/dataframe.brotli.pq"
+PARQUET_FILE = "./data/dataframe.br.parq"
 
 ACTIVITY_DATA_FILE = "./data/activity_data.json"
 DATASET_FILE = "./data/dataset.json"
 DATA_FILE = "./data/leaderboard_data.json"
 CACHE_PATH = "./data_temp/cache/"
+ARCHIVED_CACHE_PATH = "./data_temp/cache/archive/"
 PLOT_OUTPUT = "./web/index.html"
 
-# TODO: Make finding of cache file more easy
-# CACHE_FILE = f"{CACHE_PATH}cache_{CURRENT_DATE}.xz.pickle.incomplete"
-# CACHE_FILE = f"{CACHE_PATH}cache_{CURRENT_DATE}.xz.pickle"
-CACHE_FILE = "data_temp/cache/cache_2022-01-28.xz.pickle"
-CACHE_FILES = [
-    "data_temp/cache/cache_2022-01-27.xz.pickle",
-    "data_temp/cache/cache_2022-01-28.xz.pickle",
-    "data_temp/cache/cache_2022-01-29.xz.pickle",
-    "data_temp/cache/cache_2022-01-30.xz.pickle",
-    "data_temp/cache/cache_2022-01-31.xz.pickle",
-]
+CACHE_FILES = glob.glob(f"{CACHE_FOLDER}cache_*")
 
 AOC_REF_DATA = (
     "https://raw.githubusercontent.com/SiegeEngineers/"
