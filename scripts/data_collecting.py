@@ -11,12 +11,13 @@ import time
 import aiohttp
 
 # Intern
-from common import (
+from util.common import (
     AOC_REF_DATA,
     AOC_REF_DATA_FILE,
-    CACHE_FILE,
+    TEMP_DATA_FOLDER,
     leaderboard_settings,
 )
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -26,8 +27,12 @@ GRANULAR = False
 SAVE_INTERMEDIATE_CACHE = False
 STATUS_INCOMPLETE = False
 
+NOW = datetime.datetime.now()
+
+CACHE_FILE_NAME = f"{TEMP_DATA_FOLDER}cache_{NOW.isoformat()}.xz.pickle"
+
 # Check for cache hit
-if os.path.exists(CACHE_FILE):
+if os.path.exists(CACHE_FILE_NAME):
     CACHE_HIT = True
 else:
     CACHE_HIT = False
@@ -35,6 +40,7 @@ else:
         SAVE_CACHE = True
         if GRANULAR:
             SAVE_INTERMEDIATE_CACHE = True
+
 
 # Set Debug logging if necessary
 if DEBUG:
@@ -139,11 +145,9 @@ async def main():
     if not CACHE_HIT:
         LOGGER.info("Cache not hit, collecting data ...")
 
-        now = datetime.datetime.now()
-
         # Setup basic data layout for leaderboard file
         main_data = {
-            "date": now.isoformat(),
+            "date": NOW.isoformat(),
             "aoc_ref": [],
             "aoe2": {},
             "aoe3": {},
@@ -203,14 +207,20 @@ async def main():
 
         if SAVE_CACHE:
             if STATUS_INCOMPLETE:
-                LOGGER.info(f"Writing data to Cache: {CACHE_FILE}.incomplete")
+                LOGGER.info(
+                    f"Writing data to Cache: {CACHE_FILE_NAME}.incomplete"
+                )
                 with lzma.open(
-                    f"{CACHE_FILE}.incomplete", mode="wb"
+                    f"{CACHE_FILE_NAME}.incomplete",
+                    mode="wb",
                 ) as handle:
                     pickle.dump(main_data, handle)
             else:
-                LOGGER.info(f"Writing data to Cache: {CACHE_FILE}")
-                with lzma.open(CACHE_FILE, mode="wb") as handle:
+                LOGGER.info(f"Writing data to Cache: {CACHE_FILE_NAME}")
+                with lzma.open(
+                    f"{CACHE_FILE_NAME}",
+                    mode="wb",
+                ) as handle:
                     pickle.dump(main_data, handle)
 
         LOGGER.info(

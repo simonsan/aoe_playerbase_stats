@@ -19,7 +19,14 @@ PLOT_OUTPUT = "./web/index.html"
 # TODO: Make finding of cache file more easy
 # CACHE_FILE = f"{CACHE_PATH}cache_{CURRENT_DATE}.xz.pickle.incomplete"
 # CACHE_FILE = f"{CACHE_PATH}cache_{CURRENT_DATE}.xz.pickle"
-CACHE_FILE = "data_temp/cache/cache_2022-01-27.xz.pickle"
+CACHE_FILE = "data_temp/cache/cache_2022-01-28.xz.pickle"
+CACHE_FILES = [
+    "data_temp/cache/cache_2022-01-27.xz.pickle",
+    "data_temp/cache/cache_2022-01-28.xz.pickle",
+    "data_temp/cache/cache_2022-01-29.xz.pickle",
+    "data_temp/cache/cache_2022-01-30.xz.pickle",
+    "data_temp/cache/cache_2022-01-31.xz.pickle",
+]
 
 AOC_REF_DATA = (
     "https://raw.githubusercontent.com/SiegeEngineers/"
