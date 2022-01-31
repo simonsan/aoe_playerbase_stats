@@ -14,7 +14,7 @@ import aiohttp
 from util.common import (
     AOC_REF_DATA,
     AOC_REF_DATA_FILE,
-    TEMP_DATA_FOLDER,
+    CACHE_FOLDER,
     leaderboard_settings,
 )
 
@@ -29,7 +29,10 @@ STATUS_INCOMPLETE = False
 
 NOW = datetime.datetime.now()
 
-CACHE_FILE_NAME = f"{TEMP_DATA_FOLDER}cache_{NOW.isoformat()}.xz.pickle"
+
+CACHE_FILE_NAME = (
+    f"{CACHE_FOLDER}cache_{NOW.strftime('%Y_%m_%d-%H_%M_%S')}.xz.pickle"
+)
 
 # Check for cache hit
 if os.path.exists(CACHE_FILE_NAME):
@@ -116,8 +119,10 @@ async def get_all_player_data_from_leaderboard(
         if len(data["data"]) < length:
             # Write data back to file
             if SAVE_INTERMEDIATE_CACHE:
-                with open(
-                    f"./data_temp/{game}_{leaderboard}.pickle", "wb"
+                with lzma.open(
+                    f"{CACHE_FOLDER}intermediate/{game}_{leaderboard}_"
+                    f"{NOW.strftime('%Y_%m_%d-%H_%M_%S')}.xz.pickle",
+                    "wb",
                 ) as handle:
                     pickle.dump(collector, handle)
 

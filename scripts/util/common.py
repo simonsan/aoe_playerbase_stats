@@ -7,6 +7,7 @@ CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
 
 DATA_FILE_NAME = "collected_data"
 TEMP_DATA_FOLDER = "./data_temp/"
+CACHE_FOLDER = f"{TEMP_DATA_FOLDER}cache/"
 PROFILE_FILE = "./data/profiles.xz.pickle"
 PARQUET_FILE = "./data/dataframe.brotli.pq"
 
