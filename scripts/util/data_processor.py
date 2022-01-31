@@ -1,29 +1,38 @@
 import datetime
 import hashlib
-import json
 import operator
 import os
 from collections import Counter, defaultdict
 
+import pandas as pd
 import pycountry
 from common import (
     ACTIVITY_PERIODS,
-    DATASET_FILE,
     FRANCHISE_GAMES,
     LEAVING_PLAYER_ACTIVITY_THRESHOLD,
     NEW_PLAYER_ACTIVITY_THRESHOLD,
-    PROFILE_FILE,
+    PARQUET_FILE,
     leaderboard_settings,
 )
 
 from util.dataset import DataSet
+from util.decorators import timing
 from util.leaderboard_entry import LeaderboardEntry
-from util.decorators import debug, timer
 
+# TODO: Set default value, meaning this will only be
+# able to be used for ones own datasets
 PEPPER = os.getenv("PEPPER_LEADERBOARD_DATA").encode()
 
 
 class DataProcessor(object):
+
+    date: datetime.datetime
+    data: dict
+    dataset: DataSet
+    profile_stats: dict
+    dataframe: pd.DataFrame
+    dataframe_update: pd.DataFrame
+
     def __init__(self):
         self.date = None
         self.data = {}
@@ -40,8 +49,8 @@ class DataProcessor(object):
 
         self.unique_profiles = unique_profiles_defaultdict()
 
-    @timer
-    def new_with_data(data):
+    @timing
+    def new_with_collected_data(data):
         d = DataProcessor()
         d.date = datetime.datetime.fromisoformat(data["date"])
         d.dataset.set_date(d.date)
@@ -63,6 +72,9 @@ class DataProcessor(object):
             for entry in data[game][leaderboard]:
                 collector.append(
                     LeaderboardEntry(
+                        timestamp=d.date,
+                        game=game,
+                        leaderboard=leaderboard,
                         steam_id=DataProcessor.pseudonymise(entry["steam_id"])
                         if entry["steam_id"] is not None
                         else None,
@@ -110,36 +122,48 @@ class DataProcessor(object):
         digest = hashlib.pbkdf2_hmac("sha224", plaintext, PEPPER, 1)
         return digest
 
-    def append_to_dataset(self, file=DATASET_FILE):
-        with open(file, "r") as handle:
-            data = json.load(handle)
+    @timing
+    def update_parquet_file(self, file=PARQUET_FILE):
+        self.import_dataframe_from_parquet(file)
+        self.create_dataframe_from_newly_collected_data()
+        self.append_to_dataframe_in_parquet()
+        self.export_dataframe_to_parquet(file)
 
-        data.append(self.dataset.export)
+    def import_dataframe_from_parquet(self, file=PARQUET_FILE):
+        self.dataframe = pd.read_parquet(file, engine="pyarrow")
 
-        with open(file, "w") as handle:
-            json.dump(data, handle, indent=4)
+    def append_to_dataframe_in_parquet(self):
+        pd.concat([self.dataframe, self.dataframe_update], ignore_index=True)
 
-    def export_dataset(self, file=DATASET_FILE):
-        with open(file, "w") as handle:
-            json.dump(self.dataset.export, handle, indent=4)
+    @timing
+    def export_dataframe_to_parquet(
+        self,
+        file=PARQUET_FILE,
+        engine="pyarrow",
+        compression="brotli",
+        index=True,
+    ):
+        self.dataframe.to_parquet(
+            file,
+            engine=engine,
+            compression=compression,
+            index=index,
+        )
 
-    def export_profiles(self, file=PROFILE_FILE):
-        import lzma
-        import pickle
+    @timing
+    def create_dataframe_from_newly_collected_data(
+        self, mode="update_existing"
+    ):
+        collection = []
+        for game in FRANCHISE_GAMES:
+            for leaderboard in self.data[game].keys():
+                for row in self.data[game][leaderboard]:
+                    collection.append(row.__dict__)
+        if mode == "update_existing":
+            self.dataframe_update = pd.DataFrame(collection)
+        elif mode == "create_new":
+            self.dataframe = pd.DataFrame(collection)
 
-        with lzma.open(file, mode="wb") as handle:
-            pickle.dump(self.unique_profiles, handle)
-
-    def import_profiles(self, file=PROFILE_FILE):
-        import lzma
-        import pickle
-
-        with lzma.open(file, mode="rb") as handle:
-            # We are aware of Pickle security implications
-            self.unique_profiles = pickle.load(handle)  # nosec
-
-    @timer
-    @debug
     def create_player_profiles(self):
         for (
             game,

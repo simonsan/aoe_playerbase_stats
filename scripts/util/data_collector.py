@@ -24,6 +24,7 @@ DEBUG = False
 CACHE = True
 GRANULAR = False
 SAVE_INTERMEDIATE_CACHE = False
+STATUS_INCOMPLETE = False
 
 # Check for cache hit
 if os.path.exists(CACHE_FILE):
@@ -57,8 +58,8 @@ async def get_aoc_ref_data(session, url=AOC_REF_DATA):
                 f"Response status not 'SUCCESS != {resp.status}'"
                 " for aoc_ref_data"
             )
-            return
-    return (("aoc_ref", None), data)
+            return (("aoc_ref", None), None, resp.status)
+    return (("aoc_ref", None), data, None)
 
 
 # Get *all* account entries from *all* leaderboards
@@ -104,7 +105,7 @@ async def get_all_player_data_from_leaderboard(
                     f"Response status not 'SUCCESS != {resp.status}' for"
                     f" {game}_{leaderboard} request."
                 )
-                return ((game, leaderboard), None)
+                return ((game, leaderboard), collector, resp.status)
 
         if len(data["data"]) < length:
             # Write data back to file
@@ -125,7 +126,7 @@ async def get_all_player_data_from_leaderboard(
         f"Overall collected {items} item(s) from {game}_{leaderboard} in "
         f"{time.time() - start_time} seconds."
     )
-    return ((game, leaderboard), collector)
+    return ((game, leaderboard), collector, None)
 
 
 # Main
@@ -180,13 +181,16 @@ async def main():
 
             api_data = await asyncio.gather(*tasks)
 
-        for ((game, leaderboard), data) in api_data:
-            if leaderboard is not None and game != "aoc_ref":
-                main_data[game][leaderboard] = data
-            elif leaderboard is None and game == "aoc_ref":
-                main_data[game] = data
-            elif data is None:
-                main_data[game] = None
+        for ((game, leaderboard), data, status) in api_data:
+            if status is not None and data is not None:
+                if leaderboard is not None and game != "aoc_ref":
+                    main_data[game][leaderboard] = data
+                elif leaderboard is None and game == "aoc_ref":
+                    main_data[game] = data
+            else:
+                STATUS_INCOMPLETE = True
+                if leaderboard is not None:
+                    main_data[game][leaderboard] = data
 
         LOGGER.info(
             f"Data collection took: {time.time() - start_time} seconds"
@@ -194,11 +198,20 @@ async def main():
 
         start_time = time.time()
 
+        # TODO: Take out of async block
         # Write data back to data file
-        LOGGER.info(f"Writing data to Cache: {CACHE_FILE}")
+
         if SAVE_CACHE:
-            with lzma.open(CACHE_FILE, mode="wb") as handle:
-                pickle.dump(main_data, handle)
+            if STATUS_INCOMPLETE:
+                LOGGER.info(f"Writing data to Cache: {CACHE_FILE}.incomplete")
+                with lzma.open(
+                    f"{CACHE_FILE}.incomplete", mode="wb"
+                ) as handle:
+                    pickle.dump(main_data, handle)
+            else:
+                LOGGER.info(f"Writing data to Cache: {CACHE_FILE}")
+                with lzma.open(CACHE_FILE, mode="wb") as handle:
+                    pickle.dump(main_data, handle)
 
         LOGGER.info(
             f"Writing to cache took: {time.time() - start_time} seconds"

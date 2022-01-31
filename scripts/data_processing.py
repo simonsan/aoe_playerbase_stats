@@ -5,7 +5,7 @@ import os
 import pickle
 import sys
 
-from common import CACHE_FILE
+from common import CACHE_FILE, PARQUET_FILE
 from util.data_processor import DataProcessor
 
 LOGGER = logging.getLogger(__name__)
@@ -26,9 +26,10 @@ try:
     if os.path.exists(CACHE_FILE):
         with lzma.open(CACHE_FILE, mode="rb") as handle:
             # We are aware of Pickle security implications
-            main_data = pickle.load(handle)  # nosec
+            cache_data = pickle.load(handle)  # nosec
 except (FileNotFoundError):
-    LOGGER.error("DataFile not found.")
+    LOGGER.error("Cache file not found.")
+    sys.exit(f"Error opening cache at: {CACHE_FILE}")
 
 # Set Debug logging if necessary
 if DEBUG:
@@ -36,30 +37,21 @@ if DEBUG:
 elif not DEBUG:
     logging.basicConfig(level=logging.INFO)
 
+
 # Parsing
-data_processor = DataProcessor.new_with_data(main_data)
+data_processor = DataProcessor.new_with_collected_data(cache_data)
 
-# Does all that juicy work.
-data_processor.create_player_profiles()
-
-# Utility
-data_processor.save_profile_stats()
-
-# Statistics
-data_processor.calculate_leaderboard_activity()
-data_processor.calculate_game_activity()
-data_processor.calculate_franchise_activity()
-data_processor.countries_per_game()
-data_processor.countries_for_franchise()
-data_processor.platforms_per_game()
-data_processor.platforms_for_franchise()
-
-# DEBUG: Export new dataset
-# if WRITE:
-# data_processor.export_dataset()
-
-# Append to old dataset
-if WRITE:
-    data_processor.append_to_dataset()
+# Update our data file
+try:
+    if os.path.exists(PARQUET_FILE):
+        data_processor.update_parquet_file()
+    else:
+        data_processor.create_dataframe_from_newly_collected_data(
+            mode="create_new"
+        )
+        data_processor.export_dataframe_to_parquet()
+except (FileNotFoundError):
+    LOGGER.error("Data file not found.")
+    sys.exit(f"Error opening data file at: {PARQUET_FILE}")
 
 sys.exit(0)

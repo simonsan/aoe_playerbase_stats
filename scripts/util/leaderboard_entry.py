@@ -4,6 +4,9 @@ import datetime
 class LeaderboardEntry(object):
     def __init__(
         self,
+        timestamp,
+        game,
+        leaderboard,
         steam_id,
         profile_id,
         rank,
@@ -25,6 +28,9 @@ class LeaderboardEntry(object):
         wins24h,
         last_match,
     ):
+        self.timestamp = timestamp
+        self.game = game
+        self.leaderboard = leaderboard
         self.steam_id = steam_id
         self.profile_id = profile_id
         self.rank = rank
