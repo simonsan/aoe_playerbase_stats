@@ -154,7 +154,7 @@ class DataProcessor(object):
         self, mode="update_existing"
     ):
         collection = []
-        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
+        for game in GLOBAL_SETTINGS["GAMES"]:
             for leaderboard in self.data[game].keys():
                 for row in self.data[game][leaderboard]:
                     collection.append(row.__dict__)
@@ -452,7 +452,7 @@ class DataProcessor(object):
             "aoe4": 0,
         }
 
-        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
+        for game in GLOBAL_SETTINGS["GAMES"]:
             for profile in self.unique_profiles.values():
                 if game in profile:
                     if len(profile[game]) > 0:
@@ -506,7 +506,7 @@ class DataProcessor(object):
 
     def calculate_game_activity(self):
 
-        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
+        for game in GLOBAL_SETTINGS["GAMES"]:
 
             activity_30d = 0
             activity_14d = 0
@@ -554,7 +554,7 @@ class DataProcessor(object):
         activity_3d = 0
         activity_1d = 0
 
-        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
+        for game in GLOBAL_SETTINGS["GAMES"]:
             for profile in self.unique_profiles.values():
                 if game in profile:
                     max_date = max(
@@ -590,7 +590,7 @@ class DataProcessor(object):
 
     def countries_per_game(self):
 
-        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
+        for game in GLOBAL_SETTINGS["GAMES"]:
 
             countries = {}
             percentages = {}
@@ -648,7 +648,7 @@ class DataProcessor(object):
         self.dataset.export["country"]["franchise"] = top25
 
     def platforms_per_game(self):
-        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
+        for game in GLOBAL_SETTINGS["GAMES"]:
 
             steam = 0
             relic = 0
