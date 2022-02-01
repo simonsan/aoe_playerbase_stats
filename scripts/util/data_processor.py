@@ -7,12 +7,8 @@ from collections import Counter, defaultdict
 import pandas as pd
 import pycountry
 from .common import (
-    ACTIVITY_PERIODS,
-    FRANCHISE_GAMES,
-    LEAVING_PLAYER_ACTIVITY_THRESHOLD,
-    NEW_PLAYER_ACTIVITY_THRESHOLD,
+    GLOBAL_SETTINGS,
     PARQUET_FILE,
-    leaderboard_settings,
 )
 
 from .dataset import DataSet
@@ -66,7 +62,7 @@ class DataProcessor(object):
             _,
             _,
             _,
-        ) in leaderboard_settings:
+        ) in GLOBAL_SETTINGS["LEADERBOARD_SETTINGS"]:
             collector = []
 
             for entry in data[game][leaderboard]:
@@ -158,7 +154,7 @@ class DataProcessor(object):
         self, mode="update_existing"
     ):
         collection = []
-        for game in FRANCHISE_GAMES:
+        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
             for leaderboard in self.data[game].keys():
                 for row in self.data[game][leaderboard]:
                     collection.append(row.__dict__)
@@ -174,7 +170,7 @@ class DataProcessor(object):
             _,
             _,
             bit_mask,
-        ) in leaderboard_settings:
+        ) in GLOBAL_SETTINGS["LEADERBOARD_SETTINGS"]:
             for entry in self.data[game][leaderboard]:
 
                 def _helper_set_value_if(
@@ -305,7 +301,7 @@ class DataProcessor(object):
                             game
                         ][leaderboard]["first_seen"]
                     ).days
-                    <= NEW_PLAYER_ACTIVITY_THRESHOLD
+                    <= GLOBAL_SETTINGS["NEW_PLAYER_ACTIVITY_THRESHOLD"]
                     else False
                 )
 
@@ -335,7 +331,7 @@ class DataProcessor(object):
                             game
                         ][leaderboard]["last_seen"]
                     ).days
-                    <= LEAVING_PLAYER_ACTIVITY_THRESHOLD
+                    <= GLOBAL_SETTINGS["LEAVING_PLAYER_ACTIVITY_THRESHOLD"]
                     else False
                 )
 
@@ -456,7 +452,7 @@ class DataProcessor(object):
             "aoe4": 0,
         }
 
-        for game in FRANCHISE_GAMES:
+        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
             for profile in self.unique_profiles.values():
                 if game in profile:
                     if len(profile[game]) > 0:
@@ -487,13 +483,15 @@ class DataProcessor(object):
             _,
             _,
             _,
-        ) in leaderboard_settings:
+        ) in GLOBAL_SETTINGS["LEADERBOARD_SETTINGS"]:
             activity = defaultdict(dict)
 
             for profile in self.unique_profiles.values():
                 if game in profile:
                     if leaderboard in profile[game]:
-                        for activity_period in ACTIVITY_PERIODS:
+                        for activity_period in GLOBAL_SETTINGS[
+                            "ACTIVITY_PERIODS"
+                        ]:
                             if LeaderboardEntry.last_activity_from_date(
                                 self.date,
                                 profile[game][leaderboard],
@@ -501,14 +499,14 @@ class DataProcessor(object):
                             ):
                                 activity[activity_period] += 1
 
-            for activity_period in ACTIVITY_PERIODS:
+            for activity_period in GLOBAL_SETTINGS["ACTIVITY_PERIODS"]:
                 self.dataset.export["leaderboard_activity"][
                     f"{activity_period}d"
                 ][game][leaderboard] = activity[activity_period]
 
     def calculate_game_activity(self):
 
-        for game in FRANCHISE_GAMES:
+        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
 
             activity_30d = 0
             activity_14d = 0
@@ -556,7 +554,7 @@ class DataProcessor(object):
         activity_3d = 0
         activity_1d = 0
 
-        for game in FRANCHISE_GAMES:
+        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
             for profile in self.unique_profiles.values():
                 if game in profile:
                     max_date = max(
@@ -592,7 +590,7 @@ class DataProcessor(object):
 
     def countries_per_game(self):
 
-        for game in FRANCHISE_GAMES:
+        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
 
             countries = {}
             percentages = {}
@@ -650,7 +648,7 @@ class DataProcessor(object):
         self.dataset.export["country"]["franchise"] = top25
 
     def platforms_per_game(self):
-        for game in FRANCHISE_GAMES:
+        for game in GLOBAL_SETTINGS["FRANCHISE_GAMES"]:
 
             steam = 0
             relic = 0

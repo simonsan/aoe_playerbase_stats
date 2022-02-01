@@ -6,13 +6,8 @@ import pandas as pd
 
 # import pycountry
 from util.common import (
-    # ACTIVITY_PERIODS,
     DATASET_FILE,
-    # FRANCHISE_GAMES,
-    # LEAVING_PLAYER_ACTIVITY_THRESHOLD,
-    # NEW_PLAYER_ACTIVITY_THRESHOLD,
     PARQUET_FILE,
-    # leaderboard_settings,
 )
 
 from util.dataset import DataSet
