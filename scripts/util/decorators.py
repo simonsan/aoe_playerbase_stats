@@ -1,5 +1,20 @@
 import functools
 import time
+import pandas as pd
+
+def with_temporary_dataframe(func):
+    """Use a temporary dataframe to enhance performance"""
+
+    @functools.wraps(func)
+    def wrapper_timing(*args, **kwargs):
+        start_time = time.perf_counter()  # 1
+        value = func(*args, **kwargs)
+        end_time = time.perf_counter()  # 2
+        run_time = end_time - start_time  # 3
+        print(f"Finished {func.__name__!r} in {run_time:.4f} secs")
+        return value
+
+    return wrapper_timing
 
 
 def timing(func):
