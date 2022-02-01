@@ -238,5 +238,5 @@ async def main():
     LOGGER.info("Finished.")
     sys.exit(0)
 
-
-asyncio.get_event_loop().run_until_complete(main())
+if __name__ == "__main__":
+    asyncio.get_event_loop().run_until_complete(main())
