@@ -11,20 +11,6 @@
 - what are the general ratios are of new players vs leaving players vs long term players
 - What is the percentage of people that play unranked that also play on the ranked 1v1/team leaderboard. As the unranked leaderboard will be gone in the near future this data is probably from the same dataset as now, so not really up-to-date (2022-01-27, or when i have the last one before the leaderboard is gone).
 
-## data_analyser.calculate_leaderboard_activity()
-
-## data_analyser.calculate_game_activity()
-
-## data_analyser.calculate_franchise_activity()
-
-## data_analyser.countries_per_game()
-
-## data_analyser.countries_for_franchise()
-
-## data_analyser.platforms_per_game()
-
-## data_analyser.platforms_for_franchise()
-
 ## Kaggle
 
 Publish data to kaggle for others to work with as well
