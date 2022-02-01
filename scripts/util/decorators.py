@@ -1,12 +1,13 @@
 import functools
 import time
 import pandas as pd
-from common import get_temp_df, DF_OUT
+from util import get_temp_df
+from util.common import DF_OUT
 
 
 def with_temporary_dataframe(func):
     """Use a temporary dataframe to enhance performance"""
-    
+
     @functools.wraps(func)
     def wrapper_with_temporary_dataframe(*args, **kwargs):
         global DF_OUT
@@ -16,6 +17,7 @@ def with_temporary_dataframe(func):
         # De-fragment frame
         DF_OUT = new.copy()
         return
+
     return wrapper_with_temporary_dataframe
 
 

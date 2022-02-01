@@ -6,6 +6,7 @@ from collections import namedtuple
 
 CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
 DATA_SET_TIMESTAMP = None
+DF_OUT = None
 DATA_FILE_NAME = "collected_data"
 TEMP_DATA_FOLDER = "./data_temp/"
 CACHE_FOLDER = f"{TEMP_DATA_FOLDER}cache/"
