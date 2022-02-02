@@ -4,22 +4,13 @@ import logging
 import lzma
 import os
 import pickle
-import sys
 import time
 
 # Extern
 import aiohttp
 
 # Intern
-from util.common import (
-    AOC_REF_DATA,
-    AOC_REF_DATA_FILE,
-    CACHE_FOLDER,
-    leaderboard_settings,
-)
-
-
-LOGGER = logging.getLogger(__name__)
+from util.common import GLOBAL_SETTINGS, LOGGER
 
 DEBUG = False
 CACHE = True
@@ -28,10 +19,11 @@ SAVE_INTERMEDIATE_CACHE = False
 
 NOW = datetime.datetime.now()
 
-
 CACHE_FILE_NAME = (
-    f"{CACHE_FOLDER}cache_{NOW.strftime('%Y_%m_%d-%H_%M_%S')}.xz.pickle"
+    f"{GLOBAL_SETTINGS['FILESYSTEM']['TEMPORARY_CACHE_FOLDER']}cache_"
+    f"{NOW.strftime('%Y_%m_%d-%H_%M_%S')}.xz.pickle"
 )
+
 
 # Check for cache hit
 if os.path.exists(CACHE_FILE_NAME):
@@ -44,23 +36,22 @@ else:
             SAVE_INTERMEDIATE_CACHE = True
 
 
-# Set Debug logging if necessary
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
-elif not DEBUG:
-    logging.basicConfig(level=logging.INFO)
-
-
 # Get aoc-ref-data
-async def get_aoc_ref_data(session, url=AOC_REF_DATA):
+async def fetch_aoc_ref_data(
+    session, url=GLOBAL_SETTINGS["VARIABLES"]["AOC_REF_DATA_URL"]
+):
     LOGGER.debug("querying aoc_ref_data")
 
     async with session.get(url) as resp:
         if resp.status == 200:
             data = await resp.json(content_type=None, encoding="utf8")
             LOGGER.debug(f"Data length: {len(data)} of aoc_ref_data")
-            with open(AOC_REF_DATA_FILE, "wb") as handle:
-                pickle.dump(data, handle)
+            if SAVE_INTERMEDIATE_CACHE:
+                with open(
+                    GLOBAL_SETTINGS["FILESYSTEM"]["AOC_REF_DATA_FILE_PATH"],
+                    "wb",
+                ) as handle:
+                    pickle.dump(data, handle)
         else:
             LOGGER.error(
                 f"Response status not 'SUCCESS != {resp.status}'"
@@ -71,9 +62,7 @@ async def get_aoc_ref_data(session, url=AOC_REF_DATA):
 
 
 # Get *all* account entries from *all* leaderboards
-async def get_all_player_data_from_leaderboard(
-    session, url, game, leaderboard
-):
+async def fetch_player_data(session, url, game, leaderboard):
 
     start_time = time.time()
 
@@ -119,7 +108,9 @@ async def get_all_player_data_from_leaderboard(
             # Write data back to file
             if SAVE_INTERMEDIATE_CACHE:
                 with lzma.open(
-                    f"{CACHE_FOLDER}intermediate/{game}_{leaderboard}_"
+                    # flake8: noqa: "no line too long"
+                    f"{GLOBAL_SETTINGS['FILESYSTEM']['TEMPORARY_CACHE_FOLDER']}"
+                    f"intermediate/{game}_{leaderboard}_"
                     f"{NOW.strftime('%Y_%m_%d-%H_%M_%S')}.xz.pickle",
                     "wb",
                 ) as handle:
@@ -140,10 +131,13 @@ async def get_all_player_data_from_leaderboard(
 
 
 # Main
-async def main():
+async def data_collecting():
 
     LOGGER.info("Data collection started.")
-    STATUS_INCOMPLETE = False
+
+    print(GLOBAL_SETTINGS["FILESYSTEM"]["DATA_FOLDER"])
+
+    completion_status = False
 
     start_time = time.time()
 
@@ -168,16 +162,12 @@ async def main():
             tasks = []
 
             # Get data from the server
-            for (
-                game,
-                leaderboard,
-                _,
-                url,
-                _,
-            ) in leaderboard_settings:
+            for (game, leaderboard, _, url, _,) in GLOBAL_SETTINGS[
+                "VARIABLES"
+            ]["LEADERBOARD_SETTINGS"]:
                 tasks.append(
                     asyncio.ensure_future(
-                        get_all_player_data_from_leaderboard(
+                        fetch_player_data(
                             session,
                             url,
                             game,
@@ -186,7 +176,7 @@ async def main():
                     )
                 )
 
-            tasks.append(get_aoc_ref_data(session=session))
+            tasks.append(fetch_aoc_ref_data(session=session))
 
             api_data = await asyncio.gather(*tasks)
 
@@ -197,7 +187,7 @@ async def main():
                 elif leaderboard is None and game == "aoc_ref":
                     main_data[game] = data
             elif status is not None:
-                STATUS_INCOMPLETE = True
+                completion_status = True
                 if leaderboard is not None:
                     main_data[game][leaderboard] = data
 
@@ -205,38 +195,46 @@ async def main():
             f"Data collection took: {time.time() - start_time} seconds"
         )
 
-        start_time = time.time()
-
-        # TODO: Take out of async block
-        # Write data back to data file
-
-        if SAVE_CACHE:
-            if STATUS_INCOMPLETE:
-                LOGGER.info(
-                    f"Writing data to Cache: {CACHE_FILE_NAME}.incomplete"
-                )
-                with lzma.open(
-                    f"{CACHE_FILE_NAME}.incomplete",
-                    mode="wb",
-                ) as handle:
-                    pickle.dump(main_data, handle)
-            else:
-                LOGGER.info(f"Writing data to Cache: {CACHE_FILE_NAME}")
-                with lzma.open(
-                    f"{CACHE_FILE_NAME}",
-                    mode="wb",
-                ) as handle:
-                    pickle.dump(main_data, handle)
-
-        LOGGER.info(
-            f"Writing to cache took: {time.time() - start_time} seconds"
-        )
-
     else:
         print("We're done, it's cached. ;)")
 
+    return (main_data, completion_status)
+
+
+def main():
+
+    # Set Debug logging if necessary
+    if DEBUG:
+        logging.basicConfig(level=logging.DEBUG)
+    elif not DEBUG:
+        logging.basicConfig(level=logging.INFO)
+
+    main_data, status = asyncio.get_event_loop().run_until_complete(
+        data_collecting()
+    )
+
+    start_time = time.time()
+
+    if SAVE_CACHE:
+        if status:
+            LOGGER.info(f"Writing data to Cache: {CACHE_FILE_NAME}.incomplete")
+            with lzma.open(
+                f"{CACHE_FILE_NAME}.incomplete",
+                mode="wb",
+            ) as handle:
+                pickle.dump(main_data, handle)
+        else:
+            LOGGER.info(f"Writing data to Cache: {CACHE_FILE_NAME}")
+            with lzma.open(
+                f"{CACHE_FILE_NAME}",
+                mode="wb",
+            ) as handle:
+                pickle.dump(main_data, handle)
+
+    LOGGER.info(f"Writing to cache took: {time.time() - start_time} seconds")
+
     LOGGER.info("Finished.")
-    sys.exit(0)
+
 
 if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(main())
+    main()

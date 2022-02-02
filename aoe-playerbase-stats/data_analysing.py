@@ -41,8 +41,6 @@ def data_analysing():
     # if WRITE:
     #     data_analyser.append_to_dataset()
 
-    # sys.exit(0)
-
 
 if __name__ == "__main__":
     data_analysing()

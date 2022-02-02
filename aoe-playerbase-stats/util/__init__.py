@@ -1,8 +1,16 @@
 from collections import defaultdict
-
+from collections.abc import Iterable
 import pandas as pd
 
 from .common import DATA_SET_TIMESTAMP
+
+
+def flatten(items, ignore_types=(str, bytes)):
+    for x in items:
+        if isinstance(x, Iterable) and not isinstance(x, ignore_types):
+            yield from flatten(x, ignore_types)
+        else:
+            yield x
 
 
 def unpack_list(_list):

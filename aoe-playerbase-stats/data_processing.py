@@ -3,15 +3,13 @@ import logging
 import lzma
 import os
 import pickle
+import pkgutil
 import shutil
 import sys
-import pkgutil
 
-
-from util.common import CACHE_FILES, PARQUET_FILE, ARCHIVED_CACHE_PATH
+from util.common import GLOBAL_SETTINGS, LOGGER, CACHE_FILES
 from util.data_processor import DataProcessor
-
-LOGGER = logging.getLogger(__name__)
+from util.error import raise_error
 
 DEBUG = True
 WRITE = False
@@ -29,7 +27,9 @@ def data_processing():
     overall_number_of_cache_files = len(CACHE_FILES)
 
     # TODO: Pass data file
-    data_file = pkgutil.get_data(__package__, PARQUET_FILE)
+    data_file = pkgutil.get_data(
+        __package__, GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
+    )
 
     for cache_file in CACHE_FILES:
 
@@ -69,7 +69,9 @@ def data_processing():
         # Update our data file
 
         try:
-            if os.path.exists(PARQUET_FILE):
+            if os.path.exists(
+                GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
+            ):
                 LOGGER.info("Updating parquet file ...")
                 # TODO: When there are more than one cache file
                 # keep the parquet file open until we imported
@@ -84,18 +86,19 @@ def data_processing():
                 data_processor.export_dataframe_to_parquet()
         except (FileNotFoundError):
             LOGGER.error("Data file not found.")
-            sys.exit(f"Error opening data file at: {PARQUET_FILE}")
+            # flake8: noqa: E501
+            raise_error(
+                f"Error opening data file at: {GLOBAL_SETTINGS['FILESYSTEM']['PARQUET_FILE_PATH']}"
+            )
 
         LOGGER.info(f"Processing of cache file: {cache_file} finished.")
 
         filename = os.path.basename(cache_file)
-        full_path = f"{ARCHIVED_CACHE_PATH}{filename}"
+        full_path = f"{GLOBAL_SETTINGS['FILESYSTEM']['ARCHIVED_CACHE_FOLDER']}{filename}"
 
         LOGGER.info(f"Moving cache file to {full_path} ...")
         shutil.move(cache_file, full_path)
         LOGGER.info("Cache file moved.")
-
-    sys.exit(0)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 import functools
 import time
 import pandas as pd
-from util import get_temp_df
-from util.common import DF_OUT
+from . import get_temp_df
+from common import DF_OUT
 
 
 def with_temporary_dataframe(func):
