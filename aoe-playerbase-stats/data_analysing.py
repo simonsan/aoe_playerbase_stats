@@ -3,7 +3,7 @@ import logging
 
 from util.data_analyser import DataAnalyser
 
-LOGGER = logging.getLogger(__name__)
+from . import GLOBAL_SETTINGS
 
 DEBUG = True
 WRITE = False

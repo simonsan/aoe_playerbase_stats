@@ -20,7 +20,7 @@ from bokeh.palettes import Category20_20 as palette
 from bokeh.plotting import figure, output_file, save
 
 # Intern
-from util.common import ACTIVITY_PERIODS, PLOT_OUTPUT, leaderboard_settings
+from . import GLOBAL_SETTINGS
 from util.dataframes import prepare_dataframes
 
 # import datetime
@@ -34,7 +34,10 @@ LOGGER = logging.getLogger(__name__)
 
 def plotting():
 
-    output_file(PLOT_OUTPUT, title="AoE Playerbase Stats")
+    output_file(
+        GLOBAL_SETTINGS["FILESYSTEM"]["PLOT_OUTPUT_FILE_PATH"],
+        title="AoE Playerbase Stats",
+    )
 
     curdoc().theme = "dark_minimal"
 
@@ -75,8 +78,10 @@ def plotting():
     activity_group = {}
 
     # add multiple renderers
-    for game, leaderboard, legend, _ in leaderboard_settings:
-        for activity in ACTIVITY_PERIODS:
+    for game, leaderboard, legend, _ in GLOBAL_SETTINGS["VARIABLES"][
+        "LEADERBOARD_SETTINGS"
+    ]:
+        for activity in GLOBAL_SETTINGS["VARIABLES"]["ACTIVITY_PERIODS"]:
             activity_group[activity] = activity_plot.line(
                 x="timestamp",
                 y=f"leaderboard_activity_{activity}_{game}_{leaderboard}",
@@ -166,7 +171,7 @@ def plotting():
 
     multi_choice = MultiChoice(
         value=["30d"],
-        options=ACTIVITY_PERIODS,
+        options=GLOBAL_SETTINGS["VARIABLES"]["ACTIVITY_PERIODS"],
         title="Choose activity period:",
     )
     multi_choice.js_on_change(
@@ -181,9 +186,9 @@ def plotting():
     # TODO: Implement activity group filtering
     # https://stackoverflow.com/questions/70808303/filtering-data-source-for-bokeh-plot-using-multichoice-and-customjs
 
-    initial_value = ACTIVITY_PERIODS[0]
+    initial_value = GLOBAL_SETTINGS["VARIABLES"]["ACTIVITY_PERIODS"][0]
 
-    for i in range(len(ACTIVITY_PERIODS)):
+    for i in range(len(GLOBAL_SETTINGS["VARIABLES"]["ACTIVITY_PERIODS"])):
         if activity_group["activity"][i] in initial_value:
             activity_group["activity"][i].visible = True
         else:

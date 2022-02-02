@@ -6,10 +6,8 @@ from collections import Counter, defaultdict
 
 import pandas as pd
 import pycountry
-from .common import (
-    GLOBAL_SETTINGS,
-)
 
+from .. import GLOBAL_SETTINGS
 from .dataset import DataSet
 from .decorators import timing
 from .leaderboard_entry import LeaderboardEntry

@@ -3,6 +3,7 @@
 import datetime
 import glob
 import logging
+import os
 from collections import namedtuple
 
 LOGGER = logging.getLogger(__name__)
@@ -12,26 +13,26 @@ DATA_SET_TIMESTAMP = None
 DF_OUT = None
 
 __DATA_FOLDER = f"{__package__}/data/"
-__WEB_FOLDER = "./web/"
+__WEB_FOLDER = f"{__package__}/../web/"
 __TEMPORARY_DATA_FOLDER = f"{__package__}/data_temp/"
 
 LeaderboardSetting = namedtuple(
     "LeaderboardSetting", "game leaderboard legend url bit_mask"
 )
 
-# Template: GLOBAL_SETTINGS['FILESYSTEM']['TEMPORARY_CACHE_FOLDER']
+# Template: GLOBAL_SETTINGS['VARIABLES']['PARQUET_FILE_PATH']
 GLOBAL_SETTINGS = {
     "ARGUMENTS": {None},
     "FILESYSTEM": {
-        "DATA_FOLDER": __DATA_FOLDER,
-        "WEB_FOLDER": __WEB_FOLDER,
-        "TEMPORARY_DATA_FOLDER": __TEMPORARY_DATA_FOLDER,
-        "TEMPORARY_CACHE_FOLDER": f"{__TEMPORARY_DATA_FOLDER}cache/",  # previously: CACHE_PATH, CACHE_FOLDER
-        "ARCHIVED_CACHE_FOLDER": f"{__TEMPORARY_DATA_FOLDER}cache/archive/",
-        "DATASET_FILE_PATH": f"{__DATA_FOLDER}dataset.json",
         "AOC_REF_DATA_FILE_PATH": f"{__TEMPORARY_DATA_FOLDER}aoc_ref_data.json",
+        "ARCHIVED_CACHE_FOLDER": f"{__TEMPORARY_DATA_FOLDER}cache/archive/",
+        "DATA_FOLDER": __DATA_FOLDER,
+        "DATASET_FILE_PATH": f"{__DATA_FOLDER}dataset.json",
+        "TEMPORARY_CACHE_FOLDER": f"{__TEMPORARY_DATA_FOLDER}cache/",  # previously: CACHE_PATH, CACHE_FOLDER
+        "TEMPORARY_DATA_FOLDER": __TEMPORARY_DATA_FOLDER,
         "PARQUET_FILE_PATH": f"{__DATA_FOLDER}dataframe.br.parq",
         "PLOT_OUTPUT_FILE_PATH": f"{__WEB_FOLDER}index.html",  # previously: PLOT_OUTPUT
+        "WEB_FOLDER": __WEB_FOLDER,
     },
     "VARIABLES": {
         "KNOWN_STAGES": ["collect", "process", "analyse", "plot"],

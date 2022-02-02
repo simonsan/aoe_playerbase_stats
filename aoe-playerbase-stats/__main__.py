@@ -12,7 +12,7 @@ from data_collecting import data_collecting as collect
 # from data_analysing import data_analysing as analyse
 # from plotting import plotting as plot
 
-from util.common import GLOBAL_SETTINGS
+from . import GLOBAL_SETTINGS
 from util.error import raise_error
 
 
@@ -126,7 +126,7 @@ def main():
     for stage in filtered_stages:
         print(stage)
         # run(stage)
-
+        collect()
     sys.exit(0)
 
 

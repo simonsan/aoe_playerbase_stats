@@ -7,7 +7,7 @@ import pkgutil
 import shutil
 import sys
 
-from util.common import GLOBAL_SETTINGS, LOGGER, CACHE_FILES
+from . import GLOBAL_SETTINGS, LOGGER, CACHE_FILES
 from util.data_processor import DataProcessor
 from util.error import raise_error
 

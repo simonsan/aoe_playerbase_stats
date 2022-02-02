@@ -4,13 +4,10 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-# import pycountry
-from util.common import (
-    DATASET_FILE,
-    PARQUET_FILE,
-)
-
 from util.dataset import DataSet
+
+# import pycountry
+from .. import GLOBAL_SETTINGS
 
 # from util.decorators import debug, timer
 # from util.leaderboard_entry import LeaderboardEntry
@@ -23,7 +20,9 @@ class DataAnalyser(object):
     date: datetime.datetime
     dataframe: pd.DataFrame
 
-    def append_to_dataset(self, file=DATASET_FILE):
+    def append_to_dataset(
+        self, file=GLOBAL_SETTINGS["VARIABLES"]["DATASET_FILE_PATH"]
+    ):
         with open(file, "r") as handle:
             data = json.load(handle)
 
@@ -38,7 +37,9 @@ class DataAnalyser(object):
         d.dataset = DataSet()
         return d
 
-    def import_dataframe_from_parquet(self, file=PARQUET_FILE):
+    def import_dataframe_from_parquet(
+        self, file=GLOBAL_SETTINGS["VARIABLES"]["PARQUET_FILE_PATH"]
+    ):
         self.dataframe = pd.read_parquet(file, engine="pyarrow")
 
     def create_leaderboard_player_count(self):
