@@ -1,9 +1,7 @@
 /.vscode
-compare_leaderboards.egg-info
 /build
 /web/*.html
-scripts/__pycache__
-/data_temp/**/*.json
+aoe_playerbase_stat/data_temp/**/*
 *.pyc
 scripts/util/__pycache__
 playground.py
