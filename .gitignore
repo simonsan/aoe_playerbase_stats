@@ -7,3 +7,4 @@ scripts/__pycache__
 *.pyc
 scripts/util/__pycache__
 playground.py
+aoe_playerbase_stat.egg-info/
