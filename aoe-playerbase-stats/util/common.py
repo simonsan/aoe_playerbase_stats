@@ -11,15 +11,15 @@ CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
 DATA_SET_TIMESTAMP = None
 DF_OUT = None
 
-__DATA_FOLDER = "./data/"
-__WEB_FOLDER = "../web/"
-__TEMPORARY_DATA_FOLDER = "./data_temp/"
+__DATA_FOLDER = f"{__package__}/data/"
+__WEB_FOLDER = "./web/"
+__TEMPORARY_DATA_FOLDER = f"{__package__}/data_temp/"
 
 LeaderboardSetting = namedtuple(
     "LeaderboardSetting", "game leaderboard legend url bit_mask"
 )
 
-# Template: GLOBAL_SETTINGS["FILESYSTEM"]["TEMPORARY_CACHE_FOLDER"]
+# Template: GLOBAL_SETTINGS['FILESYSTEM']['TEMPORARY_CACHE_FOLDER']
 GLOBAL_SETTINGS = {
     "ARGUMENTS": {None},
     "FILESYSTEM": {
@@ -34,6 +34,7 @@ GLOBAL_SETTINGS = {
         "PLOT_OUTPUT_FILE_PATH": f"{__WEB_FOLDER}index.html",  # previously: PLOT_OUTPUT
     },
     "VARIABLES": {
+        "KNOWN_STAGES": ["collect", "process", "analyse", "plot"],
         "ACTIVITY_PERIODS": [30, 14, 7, 3, 1],
         "GAMES": ["aoe2", "aoe3", "aoe4"],
         # 26 because we don't drop None in values_count(), so it's Top25 + Amount of not set

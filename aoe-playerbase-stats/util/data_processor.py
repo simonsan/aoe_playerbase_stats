@@ -8,7 +8,6 @@ import pandas as pd
 import pycountry
 from .common import (
     GLOBAL_SETTINGS,
-    PARQUET_FILE,
 )
 
 from .dataset import DataSet
@@ -119,13 +118,17 @@ class DataProcessor(object):
         return digest
 
     @timing
-    def update_parquet_file(self, file=PARQUET_FILE):
+    def update_parquet_file(
+        self, file=GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
+    ):
         self.import_dataframe_from_parquet(file)
         self.create_dataframe_from_newly_collected_data()
         self.append_to_dataframe_in_parquet()
         self.export_dataframe_to_parquet(file)
 
-    def import_dataframe_from_parquet(self, file=PARQUET_FILE):
+    def import_dataframe_from_parquet(
+        self, file=GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
+    ):
         self.dataframe = pd.read_parquet(file, engine="pyarrow")
 
     def append_to_dataframe_in_parquet(self):
@@ -137,7 +140,7 @@ class DataProcessor(object):
     @timing
     def export_dataframe_to_parquet(
         self,
-        file=PARQUET_FILE,
+        file=GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"],
         engine="pyarrow",
         compression="brotli",
         index=True,

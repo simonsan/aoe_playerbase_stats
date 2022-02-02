@@ -2,7 +2,7 @@ import functools
 import time
 import pandas as pd
 from . import get_temp_df
-from common import DF_OUT
+from .common import DF_OUT
 
 
 def with_temporary_dataframe(func):

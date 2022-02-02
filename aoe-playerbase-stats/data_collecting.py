@@ -131,7 +131,7 @@ async def fetch_player_data(session, url, game, leaderboard):
 
 
 # Main
-async def data_collecting():
+async def fetch():
 
     LOGGER.info("Data collection started.")
 
@@ -201,7 +201,7 @@ async def data_collecting():
     return (main_data, completion_status)
 
 
-def main():
+def data_collecting():
 
     # Set Debug logging if necessary
     if DEBUG:
@@ -209,9 +209,7 @@ def main():
     elif not DEBUG:
         logging.basicConfig(level=logging.INFO)
 
-    main_data, status = asyncio.get_event_loop().run_until_complete(
-        data_collecting()
-    )
+    main_data, status = asyncio.get_event_loop().run_until_complete(fetch())
 
     start_time = time.time()
 
@@ -237,4 +235,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    data_collecting()
