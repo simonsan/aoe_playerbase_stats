@@ -6,14 +6,14 @@ Age of Empires 3: DE, and Age of Empires 4 leaderboard data
 import argparse
 import sys
 
-from data_collecting import data_collecting as collect
+from aoe_playerbase_stat.data_collecting import data_collecting as collect
+from aoe_playerbase_stat.settings import GLOBAL_SETTINGS
+from aoe_playerbase_stat.utils.error import raise_error
 
-# from data_processing import data_processing as process
-# from data_analysing import data_analysing as analyse
-# from plotting import plotting as plot
+# from aoe_playerbase_stat.data_processing import data_processing as process
+# from aoe_playerbase_stat.data_analysing import data_analysing as analyse
+# from aoe_playerbase_stat.plotting import plotting as plot
 
-from .settings import GLOBAL_SETTINGS
-from utils.error import raise_error
 
 
 def run(func, args=None):

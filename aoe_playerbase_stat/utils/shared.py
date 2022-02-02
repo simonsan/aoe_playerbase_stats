@@ -1,8 +1,8 @@
 from collections import defaultdict
 from collections.abc import Iterable
-import pandas as pd
 
-from ..settings import DATA_SET_TIMESTAMP
+import pandas as pd
+from aoe_playerbase_stat.settings import DATA_SET_TIMESTAMP
 
 
 def flatten(items, ignore_types=(str, bytes)):

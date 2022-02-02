@@ -20,8 +20,8 @@ from bokeh.palettes import Category20_20 as palette
 from bokeh.plotting import figure, output_file, save
 
 # Intern
-from  import GLOBAL_SETTINGS
-from utils.dataframes import prepare_dataframes
+from aoe_playerbase_stat.settings import GLOBAL_SETTINGS
+from aoe_playerbase_stat.utils.dataframes import prepare_dataframes
 
 # import datetime
 # import pandas as pd

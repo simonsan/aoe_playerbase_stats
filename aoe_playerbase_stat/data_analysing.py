@@ -1,9 +1,8 @@
 # Intern
 import logging
 
+from aoe_playerbase_stat.settings import GLOBAL_SETTINGS
 from utils.data_analyser import DataAnalyser
-
-from .settings import GLOBAL_SETTINGS
 
 DEBUG = True
 WRITE = False

@@ -7,9 +7,9 @@ import pkgutil
 import shutil
 import sys
 
-from .settings import GLOBAL_SETTINGS, LOGGER, CACHE_FILES
-from utils.data_processor import DataProcessor
-from utils.error import raise_error
+from aoe_playerbase_stat.settings import CACHE_FILES, GLOBAL_SETTINGS, LOGGER
+from aoe_playerbase_stat.utils.data_processor import DataProcessor
+from aoe_playerbase_stat.utils.error import raise_error
 
 DEBUG = True
 WRITE = False

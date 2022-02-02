@@ -3,7 +3,7 @@
 
 # import pandas as pd
 
-# from ..settings import GLOBAL_SETTINGS
+# from aoe_playerbase_stat.settings import GLOBAL_SETTINGS
 
 
 # def prepare_dataframes():

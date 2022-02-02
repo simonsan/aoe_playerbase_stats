@@ -3,11 +3,9 @@ import json
 from dataclasses import dataclass
 
 import pandas as pd
-
-from utils.dataset import DataSet
-
 # import pycountry
-from ..settings import GLOBAL_SETTINGS
+from aoe_playerbase_stat.settings import GLOBAL_SETTINGS
+from aoe_playerbase_stat.utils.dataset import DataSet
 
 # from util.decorators import debug, timer
 # from util.leaderboard_entry import LeaderboardEntry

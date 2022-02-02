@@ -1,8 +1,9 @@
 import functools
 import time
+
 import pandas as pd
-from utils.shared import get_temp_df
-from ..settings import DF_OUT
+from aoe_playerbase_stat.settings import DF_OUT
+from aoe_playerbase_stat.utils.shared import get_temp_df
 
 
 def with_temporary_dataframe(func):

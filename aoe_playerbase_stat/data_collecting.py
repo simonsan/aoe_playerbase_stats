@@ -10,7 +10,7 @@ import time
 import aiohttp
 
 # Intern
-from .settings import GLOBAL_SETTINGS, LOGGER
+from aoe_playerbase_stat.settings import GLOBAL_SETTINGS, LOGGER
 
 DEBUG = False
 CACHE = True

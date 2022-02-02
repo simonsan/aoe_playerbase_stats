@@ -6,11 +6,10 @@ from collections import Counter, defaultdict
 
 import pandas as pd
 import pycountry
-
-from ..settings import GLOBAL_SETTINGS
-from .utils.dataset import DataSet
-from .utils.decorators import timing
-from .utils.leaderboard_entry import LeaderboardEntry
+from aoe_playerbase_stat.settings import GLOBAL_SETTINGS
+from aoe_playerbase_stat.utils.dataset import DataSet
+from aoe_playerbase_stat.utils.decorators import timing
+from aoe_playerbase_stat.utils.leaderboard_entry import LeaderboardEntry
 
 # TODO: Set default value, meaning this will only be
 # able to be used for ones own datasets
