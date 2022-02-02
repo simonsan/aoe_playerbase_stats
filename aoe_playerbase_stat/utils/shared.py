@@ -2,7 +2,7 @@ from collections import defaultdict
 from collections.abc import Iterable
 import pandas as pd
 
-from .. import DATA_SET_TIMESTAMP
+from ..settings import DATA_SET_TIMESTAMP
 
 
 def flatten(items, ignore_types=(str, bytes)):

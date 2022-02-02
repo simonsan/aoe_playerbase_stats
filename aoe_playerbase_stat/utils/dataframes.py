@@ -3,7 +3,7 @@
 
 # import pandas as pd
 
-# from .. import GLOBAL_SETTINGS
+# from ..settings import GLOBAL_SETTINGS
 
 
 # def prepare_dataframes():

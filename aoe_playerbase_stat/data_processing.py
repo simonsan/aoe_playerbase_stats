@@ -7,9 +7,9 @@ import pkgutil
 import shutil
 import sys
 
-from . import GLOBAL_SETTINGS, LOGGER, CACHE_FILES
-from util.data_processor import DataProcessor
-from util.error import raise_error
+from .settings import GLOBAL_SETTINGS, LOGGER, CACHE_FILES
+from utils.data_processor import DataProcessor
+from utils.error import raise_error
 
 DEBUG = True
 WRITE = False

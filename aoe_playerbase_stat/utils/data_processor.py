@@ -7,10 +7,10 @@ from collections import Counter, defaultdict
 import pandas as pd
 import pycountry
 
-from .. import GLOBAL_SETTINGS
-from .dataset import DataSet
-from .decorators import timing
-from .leaderboard_entry import LeaderboardEntry
+from ..settings import GLOBAL_SETTINGS
+from .utils.dataset import DataSet
+from .utils.decorators import timing
+from .utils.leaderboard_entry import LeaderboardEntry
 
 # TODO: Set default value, meaning this will only be
 # able to be used for ones own datasets

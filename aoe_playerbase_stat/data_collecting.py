@@ -10,7 +10,7 @@ import time
 import aiohttp
 
 # Intern
-from . import GLOBAL_SETTINGS, LOGGER
+from .settings import GLOBAL_SETTINGS, LOGGER
 
 DEBUG = False
 CACHE = True

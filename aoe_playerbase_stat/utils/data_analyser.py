@@ -4,10 +4,10 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from util.dataset import DataSet
+from utils.dataset import DataSet
 
 # import pycountry
-from .. import GLOBAL_SETTINGS
+from ..settings import GLOBAL_SETTINGS
 
 # from util.decorators import debug, timer
 # from util.leaderboard_entry import LeaderboardEntry

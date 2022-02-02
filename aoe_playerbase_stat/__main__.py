@@ -12,8 +12,8 @@ from data_collecting import data_collecting as collect
 # from data_analysing import data_analysing as analyse
 # from plotting import plotting as plot
 
-from . import GLOBAL_SETTINGS
-from util.error import raise_error
+from .settings import GLOBAL_SETTINGS
+from utils.error import raise_error
 
 
 def run(func, args=None):

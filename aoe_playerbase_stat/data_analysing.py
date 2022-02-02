@@ -1,9 +1,9 @@
 # Intern
 import logging
 
-from util.data_analyser import DataAnalyser
+from utils.data_analyser import DataAnalyser
 
-from . import GLOBAL_SETTINGS
+from .settings import GLOBAL_SETTINGS
 
 DEBUG = True
 WRITE = False
