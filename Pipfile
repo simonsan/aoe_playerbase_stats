@@ -10,6 +10,7 @@ aiohttp = "*"
 pycountry = "*"
 pandas = "*"
 pyarrow = "*"
+tqdm = "*"
 
 [dev-packages]
 flake8 = "*"

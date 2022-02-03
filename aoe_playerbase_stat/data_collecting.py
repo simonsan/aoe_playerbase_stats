@@ -9,6 +9,9 @@ import time
 # Extern
 import aiohttp
 
+# Progress bar
+from tqdm import tqdm
+
 # Intern
 from aoe_playerbase_stat.settings import GLOBAL_SETTINGS, LOGGER
 
@@ -57,8 +60,8 @@ async def fetch_aoc_ref_data(
                 f"Response status not 'SUCCESS != {resp.status}'"
                 " for aoc_ref_data"
             )
-            return (("aoc_ref", None), None, resp.status)
-    return (("aoc_ref", None), data, None)
+            return (("aoc_ref", None), None, resp.status, None)
+    return (("aoc_ref", None), data, None, None)
 
 
 # Get *all* account entries from *all* leaderboards
@@ -78,12 +81,15 @@ async def fetch_player_data(session, url, game, leaderboard):
 
     collector = []
     items = 0
+    max_api_items = 0
+    chunks = 0
+    pbar = None
 
     while True:
 
         req_url = f"{url}&start={offset}&length={length}"
 
-        LOGGER.debug(f"querying at {game}_{leaderboard} with offset {offset}")
+        # LOGGER.debug(f"querying at {game}_{leaderboard} with offset {offset}")
         # LOGGER.debug(f"DEBUG REQUEST: {req_url}")
 
         async with session.get(req_url) as resp:
@@ -95,6 +101,17 @@ async def fetch_player_data(session, url, game, leaderboard):
                     f"Data length: {data_length} of {game}_{leaderboard}"
                 )
                 items += data_length
+                if chunks == 0:
+                    max_api_items = data["recordsFiltered"]
+                    pbar = tqdm(
+                        total=max_api_items,
+                        desc=f"Fetching {game}::{leaderboard}",
+                        unit=" entries",
+                        initial=data_length,
+                    )
+                else:
+                    pbar.update(data_length)
+
                 for item in data["data"]:
                     collector.append(item)
             else:
@@ -102,7 +119,7 @@ async def fetch_player_data(session, url, game, leaderboard):
                     f"Response status not 'SUCCESS != {resp.status}' for"
                     f" {game}_{leaderboard} request."
                 )
-                return ((game, leaderboard), collector, resp.status)
+                return ((game, leaderboard), collector, resp.status, None)
 
         if len(data["data"]) < length:
             # Write data back to file
@@ -120,14 +137,18 @@ async def fetch_player_data(session, url, game, leaderboard):
         else:
             offset += length
 
+        chunks += 1
+
         # TODO: Production
         # time.sleep(secs)
 
-    LOGGER.info(
-        f"Overall collected {items} item(s) from {game}_{leaderboard} in "
+    summary = (
+        f"Overall collected {items}/{max_api_items} item(s) from {game}::{leaderboard} in "
         f"{time.time() - start_time} seconds."
     )
-    return ((game, leaderboard), collector, None)
+
+    pbar.close()
+    return ((game, leaderboard), collector, None, summary)
 
 
 # Main
@@ -180,8 +201,10 @@ async def fetch():
 
             api_data = await asyncio.gather(*tasks)
 
-        for ((game, leaderboard), data, status) in api_data:
+        for ((game, leaderboard), data, status, summary) in api_data:
             if status is None and data is not None:
+                if summary is not None:
+                    print(summary)
                 if leaderboard is not None and game != "aoc_ref":
                     main_data[game][leaderboard] = data
                 elif leaderboard is None and game == "aoc_ref":
