@@ -3,12 +3,12 @@ import hashlib
 import operator
 import os
 from collections import Counter, defaultdict
+from typing import List
 
 import pandas as pd
 import pycountry
 
 from ..commons.settings import GLOBAL_SETTINGS
-from .dataset import DataSet
 from .decorators import timing
 from .leaderboard_entry import LeaderboardEntry
 
@@ -20,52 +20,45 @@ PEPPER = os.getenv("PEPPER_LEADERBOARD_DATA").encode()
 class DataProcessor(object):
 
     date: datetime.datetime
-    data: dict
-    dataset: DataSet
-    profile_stats: dict
     dataframe: pd.DataFrame
     dataframe_update: pd.DataFrame
+    with_parquet: bool
+    collector: List
 
     def __init__(self):
         self.date = None
-        self.data = {}
-        self.dataset = DataSet()
-        self.profile_stats = {
-            "aoe2": 0,
-            "aoe3": 0,
-            "aoe4": 0,
-            "franchise": 0,
-        }
-
-        def unique_profiles_defaultdict():
-            return defaultdict(unique_profiles_defaultdict)
-
-        self.unique_profiles = unique_profiles_defaultdict()
+        self.with_parquet = False
+        self.collector = []
 
     @timing
-    def new_with_collected_data(data):
+    def new_with_parquet_file(
+        path: os.path = GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"],
+    ):
         d = DataProcessor()
-        d.date = datetime.datetime.fromisoformat(data["date"])
-        d.dataset.set_date(d.date)
-        d.data = {
-            "aoe2": {},
-            "aoe3": {},
-            "aoe4": {},
-        }
+        d.import_dataframe_from_parquet(path)
+        return d
 
-        for (
-            game,
-            leaderboard,
-            _,
-            _,
-            _,
-        ) in GLOBAL_SETTINGS["LEADERBOARD_SETTINGS"]:
-            collector = []
+    @timing
+    def new_without_parquet_file():
+        d = DataProcessor()
+        d.with_parquet = False
+        return d
+
+    def contains_parquet(self):
+        return self.with_parquet
+
+    @timing
+    def process_new_data_from(self, data):
+        self.date = datetime.datetime.fromisoformat(data["date"])
+
+        for (game, leaderboard, _, _, _,) in GLOBAL_SETTINGS[
+            "VARIABLES"
+        ]["LEADERBOARD_SETTINGS"]:
 
             for entry in data[game][leaderboard]:
-                collector.append(
+                self.collector.append(
                     LeaderboardEntry(
-                        timestamp=d.date,
+                        timestamp=self.date,
                         game=game,
                         leaderboard=leaderboard,
                         steam_id=DataProcessor.pseudonymise(entry["steam_id"])
@@ -98,12 +91,8 @@ class DataProcessor(object):
                         games24h=entry["games24h"],
                         wins24h=entry["wins24h"],
                         last_match=entry["last_match"],
-                    )
+                    ).__dict__
                 )
-
-            d.data[game][leaderboard] = collector
-
-        return d
 
     def pseudonymise(plaintext):
         ###
@@ -116,53 +105,48 @@ class DataProcessor(object):
         return digest
 
     @timing
-    def update_parquet_file(
-        self, file=GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
-    ):
-        self.import_dataframe_from_parquet(file)
-        self.create_dataframe_from_newly_collected_data()
-        self.append_to_dataframe_in_parquet()
-        self.export_dataframe_to_parquet(file)
+    def produce_dataframe(self):
+        self.create_dataframe_from_collector()
+        if self.contains_parquet():
+            self.append_to_dataframe_in_parquet()
 
+    @timing
     def import_dataframe_from_parquet(
-        self, file=GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
+        self, path=GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
     ):
-        self.dataframe = pd.read_parquet(file, engine="pyarrow")
+        self.dataframe = pd.read_parquet(path, engine="pyarrow")
+        self.with_parquet = True
 
     def append_to_dataframe_in_parquet(self):
-        concat_df = pd.concat(
-            [self.dataframe, self.dataframe_update], ignore_index=True
-        )
-        self.dataframe = concat_df
+        if self.contains_parquet():
+            concat_df = pd.concat(
+                [self.dataframe, self.dataframe_update], ignore_index=True
+            )
+            self.dataframe = concat_df
 
     @timing
     def export_dataframe_to_parquet(
         self,
-        file=GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"],
+        path=GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"],
         engine="pyarrow",
         compression="brotli",
         index=True,
     ):
-        self.dataframe.to_parquet(
-            file,
-            engine=engine,
-            compression=compression,
-            index=index,
-        )
+        if self.contains_parquet():
+            self.dataframe.to_parquet(
+                path,
+                engine=engine,
+                compression=compression,
+                index=index,
+            )
 
     @timing
-    def create_dataframe_from_newly_collected_data(
-        self, mode="update_existing"
-    ):
-        collection = []
-        for game in GLOBAL_SETTINGS["GAMES"]:
-            for leaderboard in self.data[game].keys():
-                for row in self.data[game][leaderboard]:
-                    collection.append(row.__dict__)
-        if mode == "update_existing":
-            self.dataframe_update = pd.DataFrame(collection)
-        elif mode == "create_new":
-            self.dataframe = pd.DataFrame(collection)
+    def create_dataframe_from_collector(self):
+        if self.contains_parquet():
+            self.dataframe_update = pd.DataFrame(self.collector)
+        else:
+            self.dataframe = pd.DataFrame(self.collector)
+            self.with_parquet = True
 
     def create_player_profiles(self):
         for (

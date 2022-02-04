@@ -23,9 +23,7 @@ Options:
 
 
 import sys
-import os
-from typing import Dict, List
-
+from collections.abc import Callable
 from docopt import docopt  # type: ignore
 
 # from schema import Schema, And, Or, Use, SchemaError
@@ -37,9 +35,10 @@ from aoe_playerbase_stats.stages.data_collecting import (
     data_collecting as collect,
 )
 
-# from aoe_playerbase_stats.stages.data_processing import (
-#     data_processing as process,
-# )
+from aoe_playerbase_stats.stages.data_processing import (
+    data_processing as process,
+)
+
 # from aoe_playerbase_stats.stages.data_analysing import (
 #     data_analysing as analyse,
 # )
@@ -47,7 +46,7 @@ from aoe_playerbase_stats.stages.data_collecting import (
 from aoe_playerbase_stats.utils.error import raise_error
 
 
-def run(func, args=None):
+def run(func: Callable, args=None) -> bool:
     try:
         if args is None:
             return locals()[func]()
@@ -125,7 +124,11 @@ def main(argv=None):
         )
 
     for stage in filtered_stages:
-        run(globals()[stage]())
+        # TODO: DEBUG
+        if stage in ["collect"]:
+            print(f"Ignored stage {stage}!")
+        else:
+            run(globals()[stage]())
 
     # TODO: DEBUG
     print(args)

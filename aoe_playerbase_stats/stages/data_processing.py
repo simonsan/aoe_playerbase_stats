@@ -3,10 +3,10 @@ import logging
 import lzma
 import os
 import pickle
-import pkgutil
 import shutil
-import sys
-from typing import Dict, List, Tuple
+
+# Progress bar
+from tqdm import tqdm
 
 from ..commons.settings import CACHE_FILES, GLOBAL_SETTINGS, LOGGER
 from ..utils.data_processor import DataProcessor
@@ -14,6 +14,37 @@ from ..utils.error import raise_error
 
 DEBUG = True
 WRITE = False
+
+
+def archive_cache_file(cache_file: str | os.path) -> bool:
+
+    # Stripped filename
+    filename = os.path.basename(cache_file)
+
+    try:
+        os.makedirs(
+            GLOBAL_SETTINGS["FILESYSTEM"]["ARCHIVED_CACHE_FOLDER"],
+            exist_ok=True,
+        )
+    except OSError:
+        raise_error(
+            "Invalid path name for archive path: "
+            f"{GLOBAL_SETTINGS['FILESYSTEM']['ARCHIVED_CACHE_FOLDER']}"
+            f"{filename}"
+        )
+
+    full_path = (
+        f"{GLOBAL_SETTINGS['FILESYSTEM']['ARCHIVED_CACHE_FOLDER']}{filename}"
+    )
+
+    LOGGER.debug(f"Moving cache file to {full_path} ...")
+    if not os.path.exists(full_path):
+        shutil.move(cache_file, full_path)
+    else:
+        raise_error(f"Cache file already exists in location: {full_path}")
+    LOGGER.debug("Cache file archived.")
+
+    return True
 
 
 def data_processing() -> bool:
@@ -24,22 +55,41 @@ def data_processing() -> bool:
     elif not DEBUG:
         logging.basicConfig(level=logging.INFO)
 
-    cache_file_count = 0
-    overall_number_of_cache_files = len(CACHE_FILES)
+    if os.path.exists(GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]):
+        data_processor = DataProcessor.new_with_parquet_file(
+            GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
+        )
+    else:
+        try:
+            os.makedirs(
+                os.path.dirname(
+                    GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
+                ),
+                exist_ok=True,
+            )
+        except OSError:
+            raise_error(
+                "Invalid path name for parquet file: "
+                f"""{os.path.basename(
+                    GLOBAL_SETTINGS['FILESYSTEM']['PARQUET_FILE_PATH']
+                    )}
+                """
+            )
+        data_processor = DataProcessor.new_without_parquet_file()
 
-    # TODO: Pass data file
-    data_file = pkgutil.get_data(
-        __package__, GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
+    pbar = tqdm(
+        total=len(CACHE_FILES),
+        desc="Processing cache file",
+        unit=" file",
+        initial=0,
     )
 
     for cache_file in CACHE_FILES:
 
-        cache_file_count += 1
-
-        LOGGER.info(
-            f"Processing cache file ({cache_file_count}/"
-            f"{overall_number_of_cache_files}): {cache_file}. Please wait ..."
-        )
+        # LOGGER.info(
+        #     f"Processing cache file ({cache_file_count}/"
+        #     f"{len(CACHE_FILES)}): {cache_file}. Please wait ..."
+        # )
 
         # Import data
         try:
@@ -49,57 +99,26 @@ def data_processing() -> bool:
                     cache_data = pickle.load(handle)  # nosec
         except (FileNotFoundError):
             LOGGER.error("Cache file not found.")
-            sys.exit(f"Error opening cache at: {cache_file}")
+            raise_error(f"Error opening cache at: {cache_file}")
 
-        # Set Debug logging if necessary
-        if DEBUG:
-            logging.basicConfig(level=logging.DEBUG)
-        elif not DEBUG:
-            logging.basicConfig(level=logging.INFO)
+        # Appends new data from cache
+        data_processor.process_new_data_from(cache_data)
 
-        # Parsing
-        # TODO: We need to initialize the data_processor outside
-        # of the loop to keep our data file open and only write
-        # once as soon as we have processed all cache files
-        # NOTE: This is only needed for bulk import of many cache
-        # files at once (e.g. in case of reimporting all older
-        # cache files) so not really needed for now, but nice to
-        # have anyway
-        data_processor = DataProcessor.new_with_collected_data(cache_data)
+        LOGGER.debug(f"Processing of cache file: {cache_file} finished.")
 
-        # Update our data file
+        pbar.update(1)
 
-        try:
-            if os.path.exists(
-                GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]
-            ):
-                LOGGER.info("Updating parquet file ...")
-                # TODO: When there are more than one cache file
-                # keep the parquet file open until we imported
-                # the last dataset and then write to disk
-                # saves time
-                data_processor.update_parquet_file()
-            else:
-                LOGGER.info("Creating new parquet file ...")
-                data_processor.create_dataframe_from_newly_collected_data(
-                    mode="create_new"
-                )
-                data_processor.export_dataframe_to_parquet()
-        except (FileNotFoundError):
-            LOGGER.error("Data file not found.")
-            # flake8: noqa: E501
-            raise_error(
-                f"Error opening data file at: {GLOBAL_SETTINGS['FILESYSTEM']['PARQUET_FILE_PATH']}"
-            )
+    # Creates the dataframes from collected data
+    data_processor.produce_dataframe()
 
-        LOGGER.info(f"Processing of cache file: {cache_file} finished.")
+    LOGGER.info("Updating/exporting parquet file ...")
+    data_processor.export_dataframe_to_parquet()
 
-        filename = os.path.basename(cache_file)
-        full_path = f"{GLOBAL_SETTINGS['FILESYSTEM']['ARCHIVED_CACHE_FOLDER']}{filename}"
+    # Archive cache files
+    for file in CACHE_FILES:
+        archive_cache_file(file)
 
-        LOGGER.info(f"Moving cache file to {full_path} ...")
-        shutil.move(cache_file, full_path)
-        LOGGER.info("Cache file moved.")
+    return True
 
 
 if __name__ == "__main__":

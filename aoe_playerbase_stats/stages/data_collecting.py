@@ -6,8 +6,7 @@ import os
 import pickle
 import time
 import urllib
-
-from typing import Tuple, Dict, List
+from typing import Dict, List, Tuple
 
 # Extern
 import aiohttp
@@ -30,6 +29,12 @@ CACHE_FILE_NAME = (
     f"{NOW.strftime('%Y_%m_%d-%H_%M_%S')}.xz.pickle"
 )
 
+try:
+    os.makedirs(
+        GLOBAL_SETTINGS["FILESYSTEM"]["TEMPORARY_CACHE_FOLDER"], exist_ok=True
+    )
+except OSError:
+    raise_error(f"Invalid path name for cache path: {CACHE_FILE_NAME}")
 
 # Check for cache hit
 if os.path.exists(CACHE_FILE_NAME):
@@ -54,6 +59,20 @@ async def fetch_aoc_ref_data(
             data = await resp.json(content_type=None, encoding="utf8")
             LOGGER.debug(f"Data length: {len(data)} of aoc_ref_data")
             if SAVE_INTERMEDIATE_CACHE:
+                try:
+                    os.makedirs(
+                        os.path.dirname(
+                            GLOBAL_SETTINGS["FILESYSTEM"][
+                                "AOC_REF_DATA_FILE_PATH"
+                            ]
+                        ),
+                        exist_ok=True,
+                    )
+                except OSError:
+                    raise_error(
+                        f"Invalid path name for archive path: {GLOBAL_SETTINGS['FILESYSTEM']['AOC_REF_DATA_FILE_PATH']}"
+                    )
+
                 with open(
                     GLOBAL_SETTINGS["FILESYSTEM"]["AOC_REF_DATA_FILE_PATH"],
                     "wb",
