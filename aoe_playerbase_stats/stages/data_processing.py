@@ -2,7 +2,7 @@
 import lzma
 import os
 import pickle
-import shutil
+from shutil import copyfile, move, SameFileError
 
 # Progress bar
 from tqdm import tqdm
@@ -21,10 +21,14 @@ def backup_parquet_file(file: str) -> bool:
     folder = os.path.dirname(file)
 
     try:
-        shutil.copyfile(file, f"{folder}{filename}.bkp")
+        copyfile(file, f"{folder}/{filename}.bkp")
     except OSError:
         raise_error(
-            f"Location for backup not writable: {folder}{filename}.bkp"
+            f"Location for backup not writable: {folder}/{filename}.bkp"
+        )
+    except SameFileError:
+        raise_error(
+            f"File already exists in location: {folder}/{filename}.bkp"
         )
 
     return True
@@ -44,7 +48,7 @@ def archive_cache_file(cache_file: str) -> bool:
         raise_error(
             "Invalid path name for archive path: "
             f"{GLOBAL_SETTINGS['FILESYSTEM']['ARCHIVED_CACHE_FOLDER']}"
-            f"{filename}"
+            f"{filename} or not enough disk space."
         )
 
     full_path = (
@@ -53,7 +57,7 @@ def archive_cache_file(cache_file: str) -> bool:
 
     LOGGER.debug(f"Moving cache file to {full_path} ...")
     if not os.path.exists(full_path):
-        shutil.move(cache_file, full_path)
+        move(cache_file, full_path)
     else:
         raise_error(f"Cache file already exists in location: {full_path}")
     LOGGER.debug("Cache file archived.")

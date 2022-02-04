@@ -6,3 +6,4 @@ aoe_playerbase_stat/data_temp/**/*
 scripts/util/__pycache__
 playground.py
 aoe_playerbase_stat.egg-info/
+aoe_playerbase_stats/datadataframe.br.parq.bkp
