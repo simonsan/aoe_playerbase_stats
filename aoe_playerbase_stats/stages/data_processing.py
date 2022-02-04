@@ -1,5 +1,4 @@
 # Intern
-import logging
 import lzma
 import os
 import pickle
@@ -8,15 +7,16 @@ import shutil
 # Progress bar
 from tqdm import tqdm
 
-from ..commons.settings import CACHE_FILES, GLOBAL_SETTINGS, LOGGER
+from ..commons.settings import CACHE_FILES, GLOBAL_SETTINGS
 from ..utils.data_processor import DataProcessor
 from ..utils.error import raise_error
 
-DEBUG = True
+LOGGER = GLOBAL_SETTINGS["LOGGING"]
+
 WRITE = False
 
 
-def archive_cache_file(cache_file: str | os.path) -> bool:
+def archive_cache_file(cache_file: str) -> bool:
 
     # Stripped filename
     filename = os.path.basename(cache_file)
@@ -48,12 +48,6 @@ def archive_cache_file(cache_file: str | os.path) -> bool:
 
 
 def data_processing() -> bool:
-
-    # Set Debug logging if necessary
-    if DEBUG:
-        logging.basicConfig(level=logging.DEBUG)
-    elif not DEBUG:
-        logging.basicConfig(level=logging.INFO)
 
     if os.path.exists(GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"]):
         data_processor = DataProcessor.new_with_parquet_file(

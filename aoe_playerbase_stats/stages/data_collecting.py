@@ -15,9 +15,10 @@ import aiohttp
 from tqdm import tqdm
 
 # Intern
-from ..commons.settings import GLOBAL_SETTINGS, LOGGER
+from ..commons.settings import GLOBAL_SETTINGS
 
-DEBUG = False
+LOGGER = GLOBAL_SETTINGS["LOGGING"]
+
 CACHE = True
 GRANULAR = False
 SAVE_INTERMEDIATE_CACHE = False

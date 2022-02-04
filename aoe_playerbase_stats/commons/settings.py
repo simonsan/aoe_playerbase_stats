@@ -10,8 +10,6 @@ from typing import NamedTuple
 
 from .. import __DATA_FOLDER, __TEMPORARY_DATA_FOLDER, __WEB_FOLDER
 
-LOGGER = logging.getLogger("aoe_player_stats")
-
 CURRENT_DATE = datetime.date.isoformat(datetime.date.today())
 DATA_SET_TIMESTAMP = None
 DF_OUT = None
@@ -22,6 +20,7 @@ LeaderboardSetting = namedtuple(
 
 # Template: GLOBAL_SETTINGS['VARIABLES']['PARQUET_FILE_PATH']
 GLOBAL_SETTINGS = {
+    "LOGGING": logging.getLogger("aoe_player_stats"),
     "ARGUMENTS": {None},
     "FILESYSTEM": {
         "AOC_REF_DATA_FILE_PATH": os.path.join(

@@ -117,6 +117,7 @@ class DataProcessor(object):
         self.dataframe = pd.read_parquet(path, engine="pyarrow")
         self.with_parquet = True
 
+    @timing
     def append_to_dataframe_in_parquet(self):
         if self.contains_parquet():
             concat_df = pd.concat(
@@ -132,13 +133,12 @@ class DataProcessor(object):
         compression="brotli",
         index=True,
     ):
-        if self.contains_parquet():
-            self.dataframe.to_parquet(
-                path,
-                engine=engine,
-                compression=compression,
-                index=index,
-            )
+        self.dataframe.to_parquet(
+            path=path,
+            engine=engine,
+            compression=compression,
+            index=index,
+        )
 
     @timing
     def create_dataframe_from_collector(self):
@@ -146,7 +146,6 @@ class DataProcessor(object):
             self.dataframe_update = pd.DataFrame(self.collector)
         else:
             self.dataframe = pd.DataFrame(self.collector)
-            self.with_parquet = True
 
     def create_player_profiles(self):
         for (

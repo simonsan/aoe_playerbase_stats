@@ -23,13 +23,14 @@ from bokeh.plotting import figure, output_file, save
 from ..commons.settings import GLOBAL_SETTINGS
 from ..utils.dataframes import prepare_dataframes
 
+LOGGER = GLOBAL_SETTINGS["LOGGING"]
+
 # import datetime
 # import pandas as pd
 
 
 DEBUG_YAML = False
 DEBUG_PLOT = False
-LOGGER = logging.getLogger(__name__)
 
 
 def plotting():

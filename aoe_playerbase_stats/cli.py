@@ -23,6 +23,8 @@ Options:
 
 
 import sys
+import logging
+
 from collections.abc import Callable
 from docopt import docopt  # type: ignore
 
@@ -79,8 +81,9 @@ def main(argv=None):
     #     exit(e)
 
     if args["--verbose"]:
-        # TODO: Do something
-        pass
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
     if args["stages"]:
         if not args["<stages>"]:
