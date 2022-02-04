@@ -1,6 +1,5 @@
 # itertools handles the cycling through palette colours
 import itertools
-import logging
 
 # Extern
 # Bokeh
