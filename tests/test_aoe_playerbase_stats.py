@@ -1,0 +1,5 @@
+from aoe_playerbase_stats import __version__
+
+
+def test_version():
+    assert __version__ == '0.3.1'

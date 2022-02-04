@@ -1,3 +1,30 @@
+[tool.poetry]
+name = "aoe_playerbase_stats"
+version = "0.3.1"
+description = "Playerbase stats on AoE2:DE, AoE3:DE and AoE4 leaderboards"
+authors = ["Simon San <14062932+simonsan@users.noreply.github.com>"]
+repository = "https://github.com/simonsan/aoe_playerbase_stats"
+license = "GPL-3.0-or-later"
+readme = "README.md"
+packages = [
+    { include = "aoe_playerbase_stats" },
+]
+
+[tool.poetry.scripts]
+aoe_playerbase_stats = "aoe_playerbase_stats.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bokeh = "^2.4.2"
+aiohttp = "^3.8.1"
+pycountry = "^22.1.10"
+pandas = "^1.4.0"
+pyarrow = "^6.0.1"
+tqdm = "^4.62.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
