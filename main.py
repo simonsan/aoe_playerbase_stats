@@ -1,4 +1,4 @@
-from aoe_playerbase_stat.cli import main
+from aoe_playerbase_stats.cli import main
 
 if __name__ == "__main__":
     main()

@@ -6,6 +6,7 @@ import pickle
 import pkgutil
 import shutil
 import sys
+from typing import Dict, List, Tuple
 
 from ..commons.settings import CACHE_FILES, GLOBAL_SETTINGS, LOGGER
 from ..utils.data_processor import DataProcessor
@@ -15,7 +16,7 @@ DEBUG = True
 WRITE = False
 
 
-def data_processing():
+def data_processing() -> bool:
 
     # Set Debug logging if necessary
     if DEBUG:

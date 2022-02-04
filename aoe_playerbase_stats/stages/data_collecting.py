@@ -5,6 +5,9 @@ import lzma
 import os
 import pickle
 import time
+import urllib
+
+from typing import Tuple, Dict, List
 
 # Extern
 import aiohttp
@@ -41,11 +44,12 @@ else:
 
 # Get aoc-ref-data
 async def fetch_aoc_ref_data(
-    session, url=GLOBAL_SETTINGS["VARIABLES"]["AOC_REF_DATA_URL"]
-):
+    session: aiohttp.ClientSession,
+    url: Tuple = GLOBAL_SETTINGS["VARIABLES"]["AOC_REF_DATA_URL"],
+) -> Tuple[Tuple[str, None], Dict | None, int | None, None]:
     LOGGER.debug("querying aoc_ref_data")
 
-    async with session.get(url) as resp:
+    async with session.get(url.geturl()) as resp:
         if resp.status == 200:
             data = await resp.json(content_type=None, encoding="utf8")
             LOGGER.debug(f"Data length: {len(data)} of aoc_ref_data")
@@ -65,7 +69,9 @@ async def fetch_aoc_ref_data(
 
 
 # Get *all* account entries from *all* leaderboards
-async def fetch_player_data(session, url, game, leaderboard):
+async def fetch_player_data(
+    session: aiohttp.ClientSession, url: Tuple, game: str, leaderboard: str
+) -> Tuple[Tuple[str, str], List, int | None, str]:
 
     start_time = time.time()
 
@@ -87,7 +93,7 @@ async def fetch_player_data(session, url, game, leaderboard):
 
     while True:
 
-        req_url = f"{url}&start={offset}&length={length}"
+        req_url = f"{url.geturl()}&start={offset}&length={length}"
 
         # LOGGER.debug(f"querying at {game}_{leaderboard} with offset {offset}")
         # LOGGER.debug(f"DEBUG REQUEST: {req_url}")
@@ -115,11 +121,12 @@ async def fetch_player_data(session, url, game, leaderboard):
                 for item in data["data"]:
                     collector.append(item)
             else:
-                LOGGER.error(
+                summary = (
                     f"Response status not 'SUCCESS != {resp.status}' for"
                     f" {game}_{leaderboard} request."
                 )
-                return ((game, leaderboard), collector, resp.status, None)
+                LOGGER.error(summary)
+                return ((game, leaderboard), collector, resp.status, summary)
 
         if len(data["data"]) < length:
             # Write data back to file
@@ -152,7 +159,7 @@ async def fetch_player_data(session, url, game, leaderboard):
 
 
 # Main
-async def fetch():
+async def fetch() -> Tuple[Dict, bool]:
 
     LOGGER.info("Data collection started.")
 
@@ -222,7 +229,7 @@ async def fetch():
     return (main_data, completion_status)
 
 
-def data_collecting():
+def data_collecting() -> bool:
 
     # Set Debug logging if necessary
     if DEBUG:
@@ -253,6 +260,7 @@ def data_collecting():
     LOGGER.info(f"Writing to cache took: {time.time() - start_time} seconds")
 
     LOGGER.info("Finished.")
+    return True
 
 
 if __name__ == "__main__":

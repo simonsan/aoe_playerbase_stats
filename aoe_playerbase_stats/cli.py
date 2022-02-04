@@ -1,107 +1,102 @@
 """
-aoe_player_stat - A Command-line tool to collect, process, analyze and
+aoe_playerbase_stats -- A Command-line tool to collect, process, analyze and
  plot Age of Empires 2: DE, Age of Empires 3: DE, and Age of Empires 4
  leaderboard data
 
+Usage:
+  aoe_playerbase_stats [stages <stages>...] [--data-file=<PATH>] [-y] [--verbose]
+  aoe_playerbase_stats (-h | --help)
+  aoe_playerbase_stats --version
 
+Arguments:
+  stages            Runs a specific stage [all, collect, process, analyse, plot]
+                    Default: all
+  -v, --version     Show version
+  -h --help         Show this screen
+
+Options:
+  -y                Do things normal users can't. E.g plotting without running
+                    other stages beforehand.
+  --verbose         Increase verbosity
+  -d, --d           Run in debug mode
 """
 
 
-import argparse
 import sys
+import os
+from typing import Dict, List
+
+from docopt import docopt  # type: ignore
+
+# from schema import Schema, And, Or, Use, SchemaError
+
+from .__version__ import __version__
+from aoe_playerbase_stats.commons.settings import GLOBAL_SETTINGS
 
 from aoe_playerbase_stats.stages.data_collecting import (
     data_collecting as collect,
 )
-from aoe_playerbase_stats.commons.settings import GLOBAL_SETTINGS
-from aoe_playerbase_stats.utils.error import raise_error
 
-# from .data_processing import data_processing as process
-# from .data_analysing import data_analysing as analyse
-# from .plotting import plotting as plot
+# from aoe_playerbase_stats.stages.data_processing import (
+#     data_processing as process,
+# )
+# from aoe_playerbase_stats.stages.data_analysing import (
+#     data_analysing as analyse,
+# )
+# from aoe_playerbase_stats.stages.plotting import plotting as plot
+from aoe_playerbase_stats.utils.error import raise_error
 
 
 def run(func, args=None):
-    if args is None:
-        return func()
-    else:
-        return func(args)
+    try:
+        if args is None:
+            return locals()[func]()
+        else:
+            return locals()[func](args)
+    except (KeyError):
+        raise_error(f"This function is not implemented: {func}")
 
 
 def main(argv=None):
-    cli = argparse.ArgumentParser(
-        "aoe-playerbase-stats",
-        description=(
-            "Command-line tool to collect, process, analyze and plot Age of"
-            " Empires 2: DE, Age of Empires 3: DE, and Age of Empires 4"
-            " leaderboard data"
-        ),
-    )
-    verbosity = cli.add_mutually_exclusive_group()
-    verbosity.add_argument(
-        "--verbose",
-        "-v",
-        action="store_true",
-        default=False,
-        help="increase verbosity",
-    )
-    verbosity.add_argument(
-        "--quiet",
-        "-q",
-        action="store_true",
-        default=False,
-        help="decrease verbosity",
+    """entry point for the command line interface"""
+
+    args = docopt(
+        __doc__, argv=argv, version=__package__ + " v" + __version__, help=True
     )
 
-    cli.add_argument(
-        "-y",
-        dest="no_order",
-        action="store_true",
-        default=False,
-        help="Do things normal users can't. E.g plotting without "
-        "running other stages beforehand.",
-    )
+    # TODO: Schema validation
+    # schema = Schema(
+    #     {
+    #         "--data-file": [
+    #             None,
+    #             Use(open, error="Data file should be readable"),
+    #         ],
+    #         "PATH": And(os.path.exists, error="PATH should exist"),
+    #     }
+    # )
+    # try:
+    #     args = schema.validate(args)
+    # except SchemaError as e:
+    #     exit(e)
 
-    cli.add_argument(
-        "--stage",
-        "-s",
-        action="store",
-        dest="stages",
-        help=(
-            "Run a specific stage.  Default: 'all'."
-            "Possible values: ['all', 'collect', 'process', "
-            "'analyse', 'plot']. You can also mix them, e.g. 'collect,"
-            "process' (no whitespace)"
-        ),
-        default="all",
-        required=False,
-    )
-
-    cli.add_argument(
-        "--datafile-path",
-        "-d",
-        dest="datafile_path",
-        help="Use another datafile than ours",
-        action="store",
-    )
-
-    args = cli.parse_args()
-
-    # TODO: Actually do something
-    if args.verbose:
-        pass
-    if args.quiet:
+    if args["--verbose"]:
+        # TODO: Do something
         pass
 
-    split = args.stages.split(",")
-    if "all" in split:
-        filtered_stages = GLOBAL_SETTINGS["VARIABLES"]["KNOWN_STAGES"]
+    if args["stages"]:
+        if not args["<stages>"]:
+            # Defaults to all stages if no stage is given
+            filtered_stages = GLOBAL_SETTINGS["VARIABLES"]["KNOWN_STAGES"]
+        elif "all" in args["<stages>"]:
+            filtered_stages = GLOBAL_SETTINGS["VARIABLES"]["KNOWN_STAGES"]
+        else:
+            filtered_stages = [
+                stage
+                for stage in GLOBAL_SETTINGS["VARIABLES"]["KNOWN_STAGES"]
+                if stage in args["<stages>"]
+            ]
     else:
-        filtered_stages = [
-            stage
-            for stage in GLOBAL_SETTINGS["VARIABLES"]["KNOWN_STAGES"]
-            if stage in split
-        ]
+        filtered_stages = GLOBAL_SETTINGS["VARIABLES"]["KNOWN_STAGES"]
 
     # TODO: What about other stages. Run "analyse without process and collect?"
     # We need a function here that checks for the presence of a file in a file
@@ -121,7 +116,7 @@ def main(argv=None):
             "process" not in filtered_stages
             or "analyse" not in filtered_stages
         )
-        and not args.no_order
+        and not args["-y"]
     ):
         raise_error(
             "Can't create a plot without processing and analysing stage. "
@@ -130,7 +125,10 @@ def main(argv=None):
         )
 
     for stage in filtered_stages:
-        print(stage)
-        # run(stage)
-        collect()
+        run(globals()[stage]())
+
+    # TODO: DEBUG
+    print(args)
+    print(filtered_stages)
+
     sys.exit(0)
