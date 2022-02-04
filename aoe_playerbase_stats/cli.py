@@ -119,7 +119,7 @@ def main(argv=None):
 
     for stage in filtered_stages:
         # TODO: DEBUG
-        if stage in ["collect", "analyse", "plot"]:
+        if stage in ["collect", "process", "plot"]:
             print(f"Ignored stage {stage}!")
         else:
             globals()[stage]()

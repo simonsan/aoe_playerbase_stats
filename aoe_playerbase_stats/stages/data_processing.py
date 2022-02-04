@@ -92,7 +92,7 @@ def data_processing() -> bool:
     pbar = tqdm(
         total=len(CACHE_FILES),
         desc="Processing cache file",
-        unit=" file",
+        unit=" files",
         initial=0,
     )
 
