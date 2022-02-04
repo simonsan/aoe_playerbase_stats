@@ -25,7 +25,6 @@ Options:
 import sys
 import logging
 
-from collections.abc import Callable
 from docopt import docopt  # type: ignore
 
 # from schema import Schema, And, Or, Use, SchemaError
@@ -33,6 +32,8 @@ from docopt import docopt  # type: ignore
 from .__version__ import __version__
 from aoe_playerbase_stats.commons.settings import GLOBAL_SETTINGS
 
+# These are not found because we call them dynamically with
+# globals()[func]()
 from aoe_playerbase_stats.stages.data_collecting import (
     data_collecting as collect,
 )
@@ -46,16 +47,6 @@ from aoe_playerbase_stats.stages.data_processing import (
 # )
 # from aoe_playerbase_stats.stages.plotting import plotting as plot
 from aoe_playerbase_stats.utils.error import raise_error
-
-
-def run(func: Callable, args=None) -> bool:
-    try:
-        if args is None:
-            return locals()[func]()
-        else:
-            return locals()[func](args)
-    except (KeyError):
-        raise_error(f"This function is not implemented: {func}")
 
 
 def main(argv=None):
@@ -128,10 +119,10 @@ def main(argv=None):
 
     for stage in filtered_stages:
         # TODO: DEBUG
-        if stage in ["collect"]:
+        if stage in ["collect", "analyse", "plot"]:
             print(f"Ignored stage {stage}!")
         else:
-            run(globals()[stage]())
+            globals()[stage]()
 
     # TODO: DEBUG
     print(args)

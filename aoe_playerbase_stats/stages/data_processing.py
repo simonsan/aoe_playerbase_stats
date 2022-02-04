@@ -16,6 +16,20 @@ LOGGER = GLOBAL_SETTINGS["LOGGING"]
 WRITE = False
 
 
+def backup_parquet_file(file: str) -> bool:
+    filename = os.path.basename(file)
+    folder = os.path.dirname(file)
+
+    try:
+        shutil.copyfile(file, f"{folder}{filename}.bkp")
+    except OSError:
+        raise_error(
+            f"Location for backup not writable: {folder}{filename}.bkp"
+        )
+
+    return True
+
+
 def archive_cache_file(cache_file: str) -> bool:
 
     # Stripped filename
@@ -102,11 +116,19 @@ def data_processing() -> bool:
 
         pbar.update(1)
 
+    pbar.close()
+
     # Creates the dataframes from collected data
     data_processor.produce_dataframe()
 
     LOGGER.info("Updating/exporting parquet file ...")
-    data_processor.export_dataframe_to_parquet()
+    try:
+        backup_parquet_file(GLOBAL_SETTINGS["FILESYSTEM"]["PARQUET_FILE_PATH"])
+        data_processor.export_dataframe_to_parquet()
+    except OSError:
+        raise_error(
+            "Please check if you have enough disk space. OS threw an error."
+        )
 
     # Archive cache files
     for file in CACHE_FILES:

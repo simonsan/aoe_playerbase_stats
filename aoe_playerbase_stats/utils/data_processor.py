@@ -1,15 +1,17 @@
 import datetime
 import hashlib
-
 import os
 from typing import List
 
 import pandas as pd
 
+# Progress bar
+from tqdm import tqdm
 
 from ..commons.settings import GLOBAL_SETTINGS
 from .decorators import timing
 from .leaderboard_entry import LeaderboardEntry
+
 
 # TODO: Set default value, meaning this will only be
 # able to be used for ones own datasets
@@ -35,7 +37,6 @@ class DataProcessor(object):
         d.import_dataframe_from_parquet(path)
         return d
 
-    @timing
     def new_without_parquet_file():
         d = DataProcessor()
         d.set_parquet(False)
@@ -54,6 +55,13 @@ class DataProcessor(object):
         for (game, leaderboard, _, _, _,) in GLOBAL_SETTINGS[
             "VARIABLES"
         ]["LEADERBOARD_SETTINGS"]:
+
+            pbar = tqdm(
+                total=len(data[game][leaderboard]),
+                desc=f"Processing {game}::{leaderboard} entries",
+                unit=" entries",
+                initial=0,
+            )
 
             for entry in data[game][leaderboard]:
                 self.collector.append(
@@ -93,6 +101,9 @@ class DataProcessor(object):
                         last_match=entry["last_match"],
                     ).__dict__
                 )
+                pbar.update(1)
+
+            pbar.close()
 
     def pseudonymise(plaintext):
         ###
