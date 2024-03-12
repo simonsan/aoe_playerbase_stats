@@ -1,28 +1,28 @@
-name: update leaderboard data
-on:
-  schedule:
-    - cron: "0 1 * * *"
+# name: update leaderboard data
+# on:
+#   schedule:
+#     - cron: "0 1 * * *"
 
-jobs:
-  deploy:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-20.04
+#     steps:
+#       - uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.x"
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: "3.x"
 
-      - name: Install dependencies
-        run: pip install -e .
+#       - name: Install dependencies
+#         run: pip install -e .
 
-      - name: Fetch data and update data file
-        run: python update_data.py
+#       - name: Fetch data and update data file
+#         run: python update_data.py
 
-      - name: Update repository with new data
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "LeaderboardUpdater"
-          git commit -am "chore: Update leaderboard data"
-          git push origin HEAD:main
+#       - name: Update repository with new data
+#         run: |
+#           git config --local user.email "action@github.com"
+#           git config --local user.name "LeaderboardUpdater"
+#           git commit -am "chore: Update leaderboard data"
+#           git push origin HEAD:main
